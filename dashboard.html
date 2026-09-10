@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verinvo Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#F6F8F8;
+  --panel:#FFFFFF;
+  --ink:#0F2A2E;
+  --sec:#4A5B5E;
+  --mut:#8A9A9C;
+  --line:#E7ECEC;
+  --sidebar:#0B1F24;
+  --sidebar-mut:#7C9296;
+  --sidebar-active:#14343B;
+  --teal:#12B2A6;
+  --teal-ink:#0E8F86;
+  --teal-deep:#0C6B63;
+  --mint-1:#EAF6F0;
+  --mint-2:#DCF0E6;
+  --mint-line:#CDE8D8;
+  --blue:#4FA3DC;
+  --blue-soft:#EAF4FB;
+  --purple:#9B87E8;
+  --purple-soft:#EDE9FB;
+  --good:#1E9E63;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --sh:0 1px 2px rgba(15,42,46,.04),0 6px 20px rgba(15,42,46,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums}
+.app{display:flex;min-height:100vh}
+
+/* ===== sidebar ===== */
+.sidebar{width:248px;background:var(--sidebar);color:#fff;flex:none;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{width:64px;height:64px;background:#0F262B;display:flex;align-items:center;justify-content:center}
+.logo svg{width:34px;height:34px}
+.navwrap{padding:14px 14px 24px}
+.navgroup{margin-bottom:22px}
+.grouphead{display:flex;align-items:center;justify-content:space-between;color:var(--sidebar-mut);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:6px 10px}
+.grouphead .chev{width:14px;height:14px;opacity:.7}
+.nav{display:flex;align-items:center;gap:12px;color:#C6D4D6;font-size:14px;font-weight:600;padding:9px 12px;border-radius:9px;text-decoration:none;margin:1px 0}
+.nav:hover{background:#12292F}
+.nav.on{background:var(--sidebar-active);color:#fff}
+.nav .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55;flex:none;margin-left:2px}
+
+/* ===== main ===== */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{height:64px;display:flex;align-items:center;gap:18px;padding:0 30px;border-bottom:1px solid var(--line);background:var(--panel)}
+.crumb{font-size:19px;font-weight:700}
+.crumb .sep{color:var(--mut);margin:0 8px;font-weight:500}
+.crumb .cur{color:var(--teal-ink)}
+.spacer{flex:1}
+.orgpill{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:26px;padding:6px 6px 6px 14px;font-weight:600;font-size:14px}
+.orgpill .diamond{width:16px;height:16px;color:var(--teal);flex:none}
+.orgpill .change{background:var(--teal);color:#fff;border:0;font-weight:700;font-size:12.5px;padding:6px 13px;border-radius:20px}
+.golive{display:flex;align-items:center;gap:9px;background:var(--sidebar);color:#fff;border:0;font-weight:700;font-size:14px;padding:10px 18px;border-radius:26px}
+.golive .live{width:8px;height:8px;border-radius:50%;background:#2ED47A}
+.bell{position:relative;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center}
+.bell .cnt{position:absolute;top:-4px;right:-4px;background:#E0483C;color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#F0A868,#E38B4B);flex:none}
+
+.content{padding:22px 30px 40px}
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tab{padding:10px 2px 14px;font-size:15px;font-weight:600;color:var(--mut);border-bottom:2px solid transparent;background:none;border-top:0;border-left:0;border-right:0;cursor:pointer}
+.tab.on{color:var(--teal-ink);border-bottom-color:var(--teal)}
+.ranges{display:flex;gap:26px;margin-bottom:22px}
+.range{font-size:14.5px;font-weight:600;color:var(--sec);cursor:pointer;background:none;border:0;padding:2px}
+.range.on{color:var(--teal-ink);font-weight:700}
+
+/* ===== FTA banner ===== */
+.fta{background:linear-gradient(105deg,#E8F4FB 0%,#EEF6FB 45%,#F4FAFC 100%);border-radius:20px;padding:26px 30px;display:flex;align-items:center;gap:30px;margin-bottom:20px}
+.fta .lab{font-size:22px;font-weight:700;color:#173A44;flex:none;width:70px}
+.fta .barcol{flex:1;min-width:0}
+.fta .cap{color:var(--teal-ink);font-size:15px;font-weight:600;margin-bottom:12px}
+.track{height:9px;border-radius:6px;background:#DCEAF2;overflow:hidden}
+.track > i{display:block;height:100%;border-radius:6px}
+.fta .track > i{background:linear-gradient(90deg,#5BA9DE,#4F9FD6);width:98%}
+.chip{display:inline-block;margin-top:14px;background:#fff;border-radius:9px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--ink);box-shadow:0 1px 3px rgba(15,42,46,.06)}
+.fta .stats{display:flex;gap:44px;flex:none;padding-right:6px}
+.stat .big{font-size:34px;font-weight:700;color:var(--teal-ink);line-height:1}
+.stat .sub{font-size:12.5px;color:var(--sec);margin-top:6px}
+.ftatag{display:flex;align-items:center;gap:6px;align-self:flex-start;font-size:12px;font-weight:700;color:var(--good)}
+.ftatag .code{color:var(--mut)}
+.check{width:18px;height:18px;color:var(--good);flex:none}
+
+/* ===== connector grid ===== */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.ccard{border-radius:18px;padding:22px 22px 26px;position:relative;box-shadow:var(--sh)}
+.ccard.mint{background:var(--mint-1);border:1px solid var(--mint-line)}
+.ccard.mint.strong{background:var(--mint-2)}
+.ccard.plain{background:var(--panel);border:1px solid var(--line)}
+.ctag{position:absolute;top:18px;right:18px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--mut)}
+.cname{font-size:20px;font-weight:700;margin:2px 0 0}
+.csub{display:flex;align-items:center;justify-content:space-between;color:var(--sec);font-size:14px;font-weight:500;margin-top:2px}
+.csub .chev{width:16px;height:16px;color:var(--mut)}
+.metric{margin-top:20px}
+.metric .mlab{color:var(--sec);font-size:14px;font-weight:500;margin-bottom:9px}
+.metric .chip{margin-top:11px}
+.bar-teal > i{background:linear-gradient(90deg,#2FC2A8,#17A794)}
+.bar-purple{background:#E4DDF7}
+.bar-purple > i{background:linear-gradient(90deg,#A794EC,#8E77E4)}
+.seg{height:9px;border-radius:6px;background:#CDE8D8;display:flex;gap:4px;overflow:hidden}
+.seg > i{flex:1;background:#127A5E;border-radius:2px}
+.seg > i.off{background:#BFE0CE}
+
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.fta{flex-wrap:wrap}}
+@media(max-width:720px){.sidebar{display:none}.grid{grid-template-columns:1fr}.fta .stats{gap:26px}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none"><path d="M8 8h20a4 4 0 0 1 0 8H14a4 4 0 0 0 0 8h18" stroke="#12B2A6" stroke-width="5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="navwrap">
+      <div class="navgroup">
+        <div class="grouphead"><span>▊ Dashboard</span><svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <a class="nav on" href="#">Analytics</a>
+        <a class="nav" href="#">Risk and Health</a>
+      </div>
+      <div class="navgroup">
+        <div class="grouphead"><span>⑃ Integration Hub</span><svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <a class="nav" href="#">Link EmaraTax</a>
+        <a class="nav" href="#">Data Source</a>
+        <a class="nav" href="#">API Hub</a>
+      </div>
+      <div class="navgroup">
+        <div class="grouphead"><span>▤ Invoices</span><svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <a class="nav" href="#">Create Invoice</a>
+        <a class="nav" href="#">CSV Upload</a>
+        <a class="nav" href="#">Send Invoices</a>
+        <a class="nav" href="#">Outgoing Invoices</a>
+      </div>
+      <div class="navgroup">
+        <div class="grouphead"><span>⇄ Matching</span><svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <a class="nav" href="#">AR/AP vs eInvoicing</a>
+        <a class="nav" href="#">Reconciliations</a>
+      </div>
+      <div class="navgroup">
+        <div class="grouphead"><span>▦ Marketplace</span><svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <a class="nav" href="#">eSignature</a>
+        <a class="nav" href="#">POS Solution</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb">Dashboard<span class="sep">›</span><span class="cur">Analytics</span></div>
+      <div class="spacer"></div>
+      <div class="orgpill">
+        <svg class="diamond" viewBox="0 0 24 24" fill="none"><path d="M12 2l10 10-10 10L2 12z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        Oxinus Holdings
+        <button class="change">Change</button>
+      </div>
+      <button class="golive"><span class="live"></span>Go Live</button>
+      <button class="bell">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0" stroke="#0F2A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="cnt">13</span>
+      </button>
+      <div class="avatar"></div>
+    </header>
+
+    <main class="content">
+      <div class="tabs">
+        <button class="tab on">Health Scheme</button>
+        <button class="tab">Analytics</button>
+      </div>
+      <div class="ranges">
+        <button class="range on">Today</button>
+        <button class="range">Last 7 Days</button>
+        <button class="range">This Month</button>
+        <button class="range">Custom range</button>
+      </div>
+
+      <!-- FTA banner -->
+      <section class="fta">
+        <div class="lab">FTA</div>
+        <div class="barcol">
+          <div class="cap">Invoices Received</div>
+          <div class="track"><i></i></div>
+          <span class="chip">Approved 18</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="big num">98%</div><div class="sub">FTA Validation Rate</div></div>
+          <div class="stat">
+            <div class="ftatag"><svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="code">C5</span></div>
+            <div class="big num">2.s</div><div class="sub">Avg. Clearance Time</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Connector cards -->
+      <section class="grid">
+        <!-- Data Source -->
+        <div class="ccard mint">
+          <div class="ctag"><svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1E9E63" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#1E9E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>C1</div>
+          <h3 class="cname">Data Source</h3>
+          <div class="metric"><div class="mlab">Invoices Sent</div><div class="track bar-teal"><i style="width:100%"></i></div><span class="chip">Success 20</span></div>
+          <div class="metric"><div class="mlab">Invoices Received</div><div class="track bar-teal"><i style="width:6%"></i></div><span class="chip">Received 0</span></div>
+          <div class="metric"><div class="mlab">Connection Status</div><div class="seg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div><span class="chip">Connected 8</span></div>
+        </div>
+
+        <!-- Verinvo -->
+        <div class="ccard mint strong">
+          <div class="ctag"><svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1E9E63" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#1E9E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>C2</div>
+          <h3 class="cname">Verinvo</h3>
+          <div class="metric"><div class="mlab">Invoices from Data Source</div><div class="track bar-teal"><i style="width:100%"></i></div><span class="chip">Received 20</span></div>
+          <div class="metric"><div class="mlab">Invoices Sent</div><div class="track bar-teal"><i style="width:8%"></i></div><span class="chip">Success 0</span></div>
+          <div class="metric"><div class="mlab">Invoices Received</div><div class="track bar-teal"><i style="width:8%"></i></div><span class="chip">Received 0</span></div>
+        </div>
+
+        <!-- ASP -->
+        <div class="ccard plain">
+          <div class="ctag"><svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1E9E63" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#1E9E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>C3</div>
+          <h3 class="cname">ASP</h3>
+          <div class="csub">Esyasoft <svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="metric"><div class="mlab">Invoices Received</div><div class="track bar-purple"><i style="width:100%"></i></div><span class="chip">Received 1</span></div>
+          <div class="metric"><div class="mlab">Invoices Sent</div><div class="track bar-purple"><i style="width:100%"></i></div><span class="chip">Success 1</span></div>
+        </div>
+
+        <!-- Esyasoft -->
+        <div class="ccard plain">
+          <div class="ctag"><svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1E9E63" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#1E9E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>C4</div>
+          <h3 class="cname">Esyasoft</h3>
+          <div class="metric"><div class="mlab">Invoices Received</div><div class="track bar-purple"><i style="width:100%"></i></div><span class="chip">Received 1</span></div>
+          <div class="metric"><div class="mlab">Invoices Sent</div><div class="track bar-purple"><i style="width:100%"></i></div><span class="chip">Success 1</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</body>
+</html>
