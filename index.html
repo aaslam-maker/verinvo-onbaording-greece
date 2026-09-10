@@ -4,11 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Verinvo Onboarding — Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 :root{
-  --bg:#F1F3F7;--card:#FFFFFF;--ink:#1E2634;--sec:#5A6472;--mut:#8B94A3;
-  --line:#E8EBF0;--line2:#DCE1E9;--soft:#F4F6F9;--navy:#1E2634;
+  --bg:#F5F8F8;--card:#FFFFFF;--ink:#0F2A2E;--sec:#4A5B5E;--mut:#8A9A9C;
+  --line:#E7ECEC;--line2:#D8E0E0;--soft:#F1F5F5;--navy:#0F2A2E;
   --blue:#2F6BE8;--green:#1B9E63;--red:#E0483C;--amber:#E0900C;
+  --sidebar:#0B1F24;--sidebar-mut:#8AA0A3;--sidebar-hover:#12292F;--sidebar-active:#14343B;
+  --mint-1:#EAF6F0;--mint-line:#CDE8D8;
   --brand:#2F6BE8;--brand600:#2457C4;--brand-bg:#E9F0FD;
   --teal:var(--brand);--teal600:var(--brand600);--teal-bg:var(--brand-bg);
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -44,31 +49,31 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 
 /* ===== shell ===== */
 .app{display:flex;min-height:100vh}
-.sidebar{width:212px;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 14px;position:sticky;top:0;height:100vh;flex:none}
-.brandblock{display:flex;align-items:center;gap:10px;padding:4px 6px 16px}
-.brandblock .bl{width:38px;height:38px;border-radius:11px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex:none}
-.brandblock .bn{font-weight:800;font-size:14px;line-height:1.15}
-.brandblock .bs{font-size:9.5px;letter-spacing:.08em;color:var(--mut);font-weight:800;text-transform:uppercase;margin-top:2px}
-.addbtn{width:100%;border:0;background:var(--brand);color:#fff;font-weight:800;font-size:13.5px;padding:11px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
-.addbtn:hover{filter:brightness(.95)}
-.nav{width:100%;border:0;background:transparent;color:var(--sec);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:700;margin-bottom:2px}
+.sidebar{width:236px;background:var(--sidebar);color:#fff;border-right:0;display:flex;flex-direction:column;padding:18px 14px;position:sticky;top:0;height:100vh;flex:none;overflow-y:auto}
+.brandblock{display:flex;align-items:center;gap:11px;padding:4px 6px 18px}
+.brandblock .bl{width:40px;height:40px;border-radius:12px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;flex:none}
+.brandblock .bn{font-weight:800;font-size:14.5px;line-height:1.15;color:#fff}
+.brandblock .bs{font-size:9.5px;letter-spacing:.08em;color:var(--sidebar-mut);font-weight:800;text-transform:uppercase;margin-top:3px}
+.addbtn{width:100%;border:0;background:var(--brand);color:#fff;font-weight:700;font-size:13.5px;padding:12px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.addbtn:hover{filter:brightness(1.06)}
+.nav{width:100%;border:0;background:transparent;color:#C6D4D6;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;margin-bottom:2px}
 .nav svg{flex:none;opacity:.85}
-.nav:hover{background:var(--soft)}
-.nav.on{background:var(--navy);color:#fff}
-.nav .cnt{margin-left:auto;font-size:11px;font-weight:800;background:var(--soft);color:var(--sec);border-radius:20px;padding:1px 8px}
+.nav:hover{background:var(--sidebar-hover);color:#fff}
+.nav.on{background:var(--sidebar-active);color:#fff}
+.nav .cnt{margin-left:auto;font-size:11px;font-weight:800;background:rgba(255,255,255,.1);color:#C6D4D6;border-radius:20px;padding:1px 8px}
 .nav.on .cnt{background:rgba(255,255,255,.18);color:#fff}
-.nav .cnt.alert{background:#FDEAE8;color:var(--red)}
-.side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:12px}
-.rolepill{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:11px;background:var(--soft)}
+.nav .cnt.alert{background:#5A2521;color:#FCA79E}
+.side-foot{margin-top:auto;border-top:1px solid rgba(255,255,255,.09);padding-top:12px}
+.rolepill{display:flex;align-items:center;gap:9px;padding:8px;border-radius:11px;background:var(--sidebar-hover)}
 .rolepill .ra{width:30px;height:30px;border-radius:9px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
-.rolepill .rt{font-size:12px;font-weight:800;line-height:1.1}.rolepill .rr{font-size:10.5px;color:var(--mut);font-weight:700}
-.rolepill .sw{margin-left:auto;border:1px solid var(--line2);background:#fff;color:var(--sec);font-weight:800;font-size:10.5px;border-radius:8px;padding:5px 8px}
-.rolepill .sw:hover{background:#fff;border-color:var(--mut)}
+.rolepill .rt{font-size:12px;font-weight:800;line-height:1.1;color:#fff}.rolepill .rr{font-size:10.5px;color:var(--sidebar-mut);font-weight:700}
+.rolepill .sw{margin-left:auto;border:1px solid rgba(255,255,255,.16);background:transparent;color:#C6D4D6;font-weight:800;font-size:10.5px;border-radius:8px;padding:5px 8px}
+.rolepill .sw:hover{border-color:rgba(255,255,255,.4);color:#fff}
 
 .main{flex:1;min-width:0}
 .content{padding:24px 28px 90px;max-width:1240px}
 .phead{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px}
-.phead h1{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em}
+.phead h1{font-size:25px;font-weight:700;margin:0;letter-spacing:-.02em}
 .phead p{margin:4px 0 0;color:var(--sec);font-size:13px}
 .userpill{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line2);background:#fff;border-radius:20px;padding:5px 12px 5px 6px;font-size:12.5px;font-weight:800;color:var(--sec)}
 .userpill .ua{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800}
@@ -87,11 +92,11 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .toggle button.on{background:var(--navy);color:#fff}
 
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:14px}
-.statc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--sh)}
+.statc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 19px;box-shadow:var(--sh)}
 .statc .lb{font-size:12px;color:var(--sec);font-weight:800}
 .statc b{display:block;font-size:29px;font-weight:800;line-height:1;margin:8px 0 5px;letter-spacing:-.02em}
 .statc .sub{font-size:11.5px;color:var(--mut);font-weight:600}
-.metricstrip{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:20px}
+.metricstrip{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:20px}
 .metricstrip .m{padding:15px 18px;border-right:1px solid var(--line)}
 .metricstrip .m:last-child{border-right:0}
 .metricstrip .ml{font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
@@ -99,7 +104,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .metricstrip .ms{font-size:11px;color:var(--mut);margin-top:2px}
 .seclabel{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 12px}
 .grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-bottom:20px}
-.pcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:18px 20px}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);padding:20px 22px}
 .pcard .hh{font-size:15px;font-weight:800}
 .pcard .hs{font-size:12px;color:var(--sec);margin-top:2px}
 .legend{display:flex;gap:14px;font-size:11.5px;font-weight:700;color:var(--sec)}
