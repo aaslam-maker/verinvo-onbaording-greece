@@ -102,6 +102,23 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .metricstrip .ml{font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
 .metricstrip .mv{font-size:17px;font-weight:800;margin-top:5px}
 .metricstrip .ms{font-size:11px;color:var(--mut);margin-top:2px}
+/* admin stage strip */
+.stagestrip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:16px}
+.stagetile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;cursor:pointer;transition:.12s;text-align:left;position:relative}
+.stagetile:hover{border-color:var(--line2);box-shadow:var(--sh)}
+.stagetile.on{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-bg)}
+.stagetile .sn{font-size:10.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.03em;display:flex;align-items:center;gap:6px}
+.stagetile .sn b{width:6px;height:6px;border-radius:50%;flex:none}
+.stagetile .sv{font-size:23px;font-weight:800;margin-top:8px;letter-spacing:-.02em;line-height:1}
+.stagetile .sc{font-size:10.5px;color:var(--mut);font-weight:600;margin-top:4px}
+.stagetile .sc.warn{color:var(--red)}
+.selink{border:1px solid var(--line2);border-radius:10px;padding:9px 32px 9px 13px;font-size:12.5px;font-weight:800;color:var(--sec);background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A9A9C' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 11px center;-webkit-appearance:none;appearance:none;cursor:pointer}
+.selink:focus{outline:2px solid var(--brand);outline-offset:1px}
+.stepbadge{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:.02em;vertical-align:middle;margin-left:7px}
+.sb-done{background:#E4F6EC;color:var(--green)}
+.sb-cur{background:var(--brand-bg);color:var(--brand600)}
+.sb-next{background:#FCF1DB;color:var(--amber)}
+.sb-pen{background:var(--soft);color:var(--mut)}
 .seclabel{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 12px}
 .grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-bottom:20px}
 .pcard{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);padding:20px 22px}
@@ -175,7 +192,8 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .search{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;background:#fff;color:var(--mut);font-size:13px;min-width:250px}
 .search input{border:0;outline:0;font-size:13px;width:100%;background:transparent;color:var(--ink)}
 .dd{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:10px;padding:9px 13px;font-size:12.5px;font-weight:800;color:var(--sec);background:#fff}
-.tablecard{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);overflow:hidden}
+.tablecard{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);overflow-x:auto}
+.tablecard table{min-width:760px}
 table{border-collapse:collapse;width:100%;font-size:13px}
 thead th{text-align:left;font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:12px 18px;border-bottom:1px solid var(--line)}
 tbody td{padding:12px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -190,7 +208,7 @@ tbody tr:hover{background:var(--soft)}
 .sp-amber{background:#FCF1DB;color:var(--amber)}
 .sp-blue{background:#E7EEFB;color:var(--brand)}
 .sp-green{background:#E4F6EC;color:var(--green)}
-.rtag{font-size:11px;font-weight:800;padding:2px 9px;border-radius:6px}
+.rtag{font-size:11px;font-weight:800;padding:2px 9px;border-radius:6px;white-space:nowrap;display:inline-block}
 .doit{border:1px solid var(--line2);background:#fff;color:var(--ink);font-weight:800;font-size:12px;padding:6px 13px;border-radius:9px}
 .doit:hover{background:var(--soft)}
 .over{color:var(--red);font-weight:800}
@@ -268,6 +286,20 @@ tbody tr:hover{background:var(--soft)}
 .vtl li.done .mk{background:var(--brand);border-color:var(--brand)}
 .vtl li.cur .mk{border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-bg)}
 .vtl .t{font-weight:800;font-size:13px}.vtl .d{font-size:12px;color:var(--mut)}
+.stepsla{font-size:11px;font-weight:700;color:var(--sec);margin-top:5px;display:inline-flex;align-items:center;gap:6px;background:var(--soft);border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+.stepsla.over{color:var(--red);background:#FDEAE8;border-color:#F6D4D0}
+/* activity trail */
+.acttl{margin-top:10px}
+.act{display:flex;gap:11px;padding:0 0 14px}
+.actdot{width:9px;height:9px;border-radius:50%;background:var(--line2);flex:none;margin-top:4px;position:relative}
+.act:not(:last-child) .actdot::after{content:"";position:absolute;left:50%;top:13px;transform:translateX(-50%);width:2px;height:34px;background:var(--line2)}
+.actdot.new{background:var(--brand);box-shadow:0 0 0 3px var(--brand-bg)}
+.actbody{min-width:0}
+.actt{font-size:13px;font-weight:700;line-height:1.3}
+.actm{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:11px;color:var(--mut)}
+.actwho{font-weight:800;color:var(--sec)}
+.acttag{font-weight:800;font-size:9.5px;letter-spacing:.02em;background:var(--soft);border:1px solid var(--line);color:var(--sec);border-radius:20px;padding:1px 7px}
+.actago{margin-left:auto;white-space:nowrap}
 .shared{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--brand600);background:var(--brand-bg);border:1px solid #CFE0F4;border-radius:10px;padding:9px 12px;margin-top:12px}
 .doc{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
 .doc:last-child{border-bottom:0}
@@ -283,7 +315,8 @@ tbody tr:hover{background:var(--soft)}
 .aprow{display:flex;gap:8px}
 .apgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .apgrid label{font-size:11px;font-weight:800;color:var(--sec);display:flex;flex-direction:column;gap:5px}
-.apgrid select{border:1px solid var(--line2);border-radius:9px;padding:9px 10px;font-size:13px;font-weight:700;background:#fff;color:var(--ink)}
+.apgrid select{border:1px solid var(--line2);border-radius:9px;padding:9px 32px 9px 11px;font-size:13px;font-weight:700;color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A9A9C' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 11px center;width:100%}
+.apgrid select:focus{outline:2px solid var(--brand);outline-offset:1px}
 .aptask{display:flex;align-items:flex-start;gap:9px;font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:10px}
 .aptask.wait{color:var(--amber)}.aptask.done{color:var(--green)}
 .aptask svg{margin-top:1px;flex:none}
@@ -381,7 +414,7 @@ tbody tr:hover{background:var(--soft)}
 @keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
 .livehero h2{font-size:24px;margin:0 0 6px}.livehero p{color:var(--sec);margin:0 auto 18px;max-width:420px}
 
-@media(max-width:920px){.roles{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.msgcols{grid-template-columns:1fr}.two{grid-template-columns:1fr}.metricstrip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:920px){.roles{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.msgcols{grid-template-columns:1fr}.two{grid-template-columns:1fr}.metricstrip{grid-template-columns:repeat(2,1fr)}.stagestrip{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -430,6 +463,35 @@ const roleName=r=>({admin:'Verinvo Admin',reseller:'Reseller',sales:'Admin Sales
 
 /* data */
 const STEPS=['Package','Details','Authorize','Pay','Setup','Go-live'];
+const STEP_FULL=['Package','Company details','Authorization & declaration','Payment','Setup & code','Go-live'];
+const STEP_DESC=[
+ 'Client picked a plan and got the ONESYS info pack.',
+ 'Details form and phone bill returned, checked and filled in.',
+ 'Accountant authorized ONESYS in Taxisnet and filed the myDATA declaration.',
+ 'First-year subscription paid and confirmed.',
+ 'Registered in Verinvo, API keys issued to the billing system.',
+ 'Test document passed — the client is issuing live to myDATA.'
+];
+// observational status of the CURRENT step, for roles that only watch (admin / ONESYS)
+const STEP_NOW=[
+ 'Info pack sent — waiting for the client to start.',
+ 'Waiting on the details form and the phone bill (ΦΕΚ line details).',
+ 'With the accountant & ONESYS — Taxisnet authorization and myDATA declaration.',
+ 'Payment is open and being confirmed.',
+ 'With ONESYS — registering the client and issuing API keys.',
+ 'ONESYS is running the test document and confirming go-live.'
+];
+// target working-days per step (README §2) — Company details is the known 4–5 day stall
+const STEP_TARGET=[1,5,1.5,3,2,2];
+// past-tense audit events, one per completed step, with who did it
+const STEP_EVENT=[
+ c=>({who:c.owner,tag:c.reseller,text:'Sent the ONESYS info pack & details form'}),
+ c=>({who:'Client',tag:'Owner',text:'Returned the details form & phone bill'}),
+ c=>({who:'Accountant',tag:'Accountant',text:'Authorized ONESYS in Taxisnet & filed myDATA'}),
+ c=>({who:'Client',tag:'Owner',text:'Paid the first-year subscription — receipt verified'}),
+ c=>({who:'ONESYS',tag:'Provider',text:'Registered the client & issued API keys'}),
+ c=>({who:'ONESYS',tag:'Provider',text:'Passed the test document & confirmed go-live'})
+];
 const PLANS=[{docs:'1.500',price:120},{docs:'15.000',price:180},{docs:'45.000',price:300},{docs:'75.000',price:410},{docs:'100.000',price:520},{docs:'150.000',price:750},{docs:'300.000',price:1100}];
 const packPrice={'1.500':120,'15.000':180,'45.000':300,'75.000':410,'100.000':520,'150.000':750,'300.000':1100};
 // seed: name, city, pack, stage, state, days, reseller, owner
@@ -490,6 +552,7 @@ const COLS={
 const COL_ORDER=['wants','sent','todecl','details','awaiting','pay','setup','golive','live'];
 
 let nav='overview',filter='all',ovScope='mine',drawerId=null,drawerTab='steps',msgSel=0;
+let adFilter={q:'',res:'all',stage:'all'};
 function scoped(){
  if(role==='reseller')return clients.filter(c=>c.reseller==='Spotlight');
  if(role==='onesys')return clients.filter(c=>c.stage>=3);
@@ -555,6 +618,24 @@ function fillContent(){
  else if(nav==='clients')c.innerHTML=clientsHTML();
  else if(nav==='messages'){c.innerHTML=messagesHTML();wireMessages();}
  wireContent();
+ if(role==='admin')wireAdmin();
+}
+function wireAdmin(){
+ const q=$('#adq');if(q)q.oninput=()=>{adFilter.q=q.value;const p=q.selectionStart;fillContent();const q2=$('#adq');if(q2){q2.focus();q2.setSelectionRange(p,p);}};
+ const rs=$('#adres');if(rs)rs.onchange=()=>{adFilter.res=rs.value;fillContent();};
+ const sg=$('#adstg');if(sg)sg.onchange=()=>{adFilter.stage=sg.value;fillContent();};
+ const cl=$('#adclear');if(cl)cl.onclick=()=>{adFilter={q:'',res:'all',stage:'all'};fillContent();};
+ document.querySelectorAll('.stagetile').forEach(t=>t.onclick=()=>{adFilter.stage=adFilter.stage===t.dataset.stage?'all':t.dataset.stage;fillContent();});
+ const csv=$('#csv');if(csv)csv.onclick=()=>exportAdminCSV();
+}
+function exportAdminCSV(){
+ const rows=adminRows();
+ const head=['#','Client','City','VAT','Reseller','Package','Stage','Owner','Days','Status'];
+ const esc=v=>`"${String(v).replace(/"/g,'""')}"`;
+ const lines=[head.join(',')].concat(rows.map((c,i)=>[i+1,c.name,c.city,c.vat,c.reseller,c.pack,c.stage>6?'Live':c.stage+' · '+STEP_FULL[c.stage-1],c.owner,c.stage>6?'':c.days,COLS[c.stage>6?'live':bucket(c)].name].map(esc).join(',')));
+ const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='verinvo-master-register.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(a.href);
+ toast('Exported '+rows.length+' rows to CSV');
 }
 function userpill(){const R=ROLES[role];return `<div class="userpill"><span class="ua">${initials(R.user)}</span>${R.user} ${IC.chev}</div>`;}
 
@@ -655,18 +736,44 @@ function clientsHTML(){
 }
 
 /* ===== admin register ===== */
+function adminRows(){
+ return clients.filter(c=>{
+  if(adFilter.res!=='all'&&c.reseller!==adFilter.res)return false;
+  const stg=c.stage>6?'live':String(c.stage);
+  if(adFilter.stage!=='all'&&stg!==adFilter.stage)return false;
+  if(adFilter.q){const q=adFilter.q.toLowerCase();if(!(c.name.toLowerCase().includes(q)||c.vat.toLowerCase().includes(q)||c.city.toLowerCase().includes(q)))return false;}
+  return true;
+ });
+}
 function adminHTML(){
- const rows=clients;
+ const rows=adminRows();
+ const resellers=[...new Set(clients.map(c=>c.reseller))];
+ const stgColor=['var(--brand)','var(--brand)','var(--amber)','var(--amber)','var(--brand)','var(--green)','var(--green)'];
+ // stage counts respect the reseller filter, so the strip and table agree
+ const base=clients.filter(c=>adFilter.res==='all'||c.reseller===adFilter.res);
+ const stageDefs=[['1','Package'],['2','Details'],['3','Authorize'],['4','Pay'],['5','Setup'],['6','Go-live'],['live','Live']];
+ const countFor=k=>base.filter(c=>(c.stage>6?'live':String(c.stage))===k).length;
+ const lateFor=k=>k==='live'?0:base.filter(c=>(c.stage>6?'live':String(c.stage))===k&&(c.days>=4||c.state==='alert')).length;
+ const tiles=stageDefs.map((s,i)=>{const n=countFor(s[0]);const late=lateFor(s[0]);const on=adFilter.stage===s[0];
+  return `<button class="stagetile ${on?'on':''}" data-stage="${s[0]}"><div class="sn"><b style="background:${stgColor[i]}"></b>${s[1]}</div><div class="sv num">${n}</div><div class="sc ${late?'warn':''}">${s[0]==='live'?'issuing':(late?late+' past target':'on track')}</div></button>`;}).join('');
  const mp=c=>{let h='';for(let i=1;i<=6;i++)h+=`<i style="display:inline-block;width:11px;height:4px;border-radius:2px;margin-right:2px;background:${i<=Math.min(c.stage,6)?(c.stage>6?'var(--green)':'var(--brand)'):'var(--line2)'}"></i>`;return h;};
- return `<div class="phead"><div><h1>Master register</h1><p>Every client across every reseller — the whole platform on one sheet.</p></div>${userpill()}</div>
-  <div class="toolbar"><div class="search">${IC.search}<input placeholder="Search client or VAT…"></div><div class="dd">All resellers ${IC.chev}</div><div class="dd">All stages ${IC.chev}</div><button class="btn" style="margin-left:auto" id="csv">${IC.dl} Export CSV</button></div>
+ const resOpts=`<option value="all">All resellers</option>`+resellers.map(r=>`<option value="${r}" ${adFilter.res===r?'selected':''}>${r}</option>`).join('');
+ const stageOpts=`<option value="all">All stages</option>`+stageDefs.map(s=>`<option value="${s[0]}" ${adFilter.stage===s[0]?'selected':''}>${s[0]==='live'?'Live':s[0]+' · '+s[1]}</option>`).join('');
+ const activeFilter=adFilter.stage!=='all'||adFilter.res!=='all'||adFilter.q;
+ return `<div class="phead"><div><h1>Master register</h1><p>Every business, every reseller, every stage — one live sheet instead of files going back and forth.</p></div>${userpill()}</div>
+  <div class="stagestrip">${tiles}</div>
+  <div class="toolbar"><div class="search">${IC.search}<input id="adq" placeholder="Search name, VAT or city…" value="${adFilter.q}"></div>
+   <select class="selink" id="adres">${resOpts}</select>
+   <select class="selink" id="adstg">${stageOpts}</select>
+   ${activeFilter?`<button class="btn" id="adclear">Clear</button>`:''}
+   <button class="btn" style="margin-left:auto" id="csv">${IC.dl} Export ${rows.length} rows</button></div>
   <div class="tablecard"><table><thead><tr><th style="width:34px">#</th><th>Client</th><th>VAT</th><th>Reseller</th><th>Package</th><th>Stage</th><th>Progress</th><th>Owner</th><th>Days</th><th>Status</th></tr></thead>
-   <tbody>${rows.map((c,i)=>`<tr data-id="${c.id}"><td class="num" style="color:var(--mut);font-weight:700">${i+1}</td>
+   <tbody>${rows.length?rows.map((c,i)=>`<tr data-id="${c.id}"><td class="num" style="color:var(--mut);font-weight:700">${i+1}</td>
     <td><div class="cname">${c.name}</div><div class="csub">${c.city}</div></td><td class="num">${c.vat}</td>
     <td><span class="rtag" style="background:${c.reseller==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${c.reseller==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${c.reseller}</span></td>
     <td class="num">${c.pack}</td><td>${c.stage>6?'Live':c.stage+' · '+STEPS[c.stage-1]}</td><td style="white-space:nowrap">${mp(c)}</td>
-    <td>${c.owner}</td><td class="num" style="color:${c.days>=4?'var(--red)':'var(--sec)'}">${c.stage>6?'—':c.days}</td><td>${stagePill(c)}</td></tr>`).join('')}</tbody></table></div>
-  <div style="margin-top:12px;font-size:12px;color:var(--mut)">${rows.length} clients · ${[...new Set(rows.map(c=>c.reseller))].length} resellers · click any row to open the file</div>`;
+    <td>${c.owner}</td><td class="num" style="color:${c.days>=4?'var(--red)':'var(--sec)'}">${c.stage>6?'—':c.days}</td><td>${stagePill(c)}</td></tr>`).join(''):`<tr><td colspan="10" style="text-align:center;color:var(--mut);padding:34px 0">No clients match these filters.</td></tr>`}</tbody></table></div>
+  <div style="margin-top:12px;font-size:12px;color:var(--mut)">Showing ${rows.length} of ${clients.length} clients · ${resellers.length} resellers · click any row to open the file</div>`;
 }
 
 /* ===== messages ===== */
@@ -746,19 +853,43 @@ function docsFor(c){const st=c.stage,alert=c.state==='alert';
 function renderDrawer(){
  const c=clients.find(x=>x.id===drawerId);const d=$('#drawer');
  d.innerHTML=`<div class="drawer-h"><div class="top"><div><div style="font-weight:800;font-size:17px">${c.name}</div><div style="font-size:12px;color:var(--mut);font-weight:600">${c.city} · VAT ${c.vat} · ${c.reseller} · ${c.owner}</div></div><button class="x" id="dx">×</button></div>
-   <div class="dtabs">${[['steps','Steps'],['docs','Documents'],['msgs','Messages']].map(t=>`<button class="dtab ${drawerTab===t[0]?'on':''}" data-dt="${t[0]}">${t[1]}</button>`).join('')}</div></div>
+   <div class="dtabs">${[['steps','Steps'],['docs','Documents'],['msgs','Messages'],['activity','Activity']].map(t=>`<button class="dtab ${drawerTab===t[0]?'on':''}" data-dt="${t[0]}">${t[1]}</button>`).join('')}</div></div>
   <div class="drawer-b" id="drawerbody">${drawerBody(c)}</div>
   <div class="drawer-f"><button class="btn ${(role==='sales'||role==='reseller')?'btn-primary':''} btn-block" id="viewas">${role==='onesys'?'Preview the client onboarding':"Open the client's view"} ${IC.arrow}</button></div>`;
  $('#dx').onclick=closeCase;
- d.querySelectorAll('[data-dt]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.dt;$('#drawerbody').innerHTML=drawerBody(c);wireDrawerBody(c);});
+ d.querySelectorAll('[data-dt]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.dt;d.querySelectorAll('[data-dt]').forEach(x=>x.classList.toggle('on',x.dataset.dt===drawerTab));$('#drawerbody').innerHTML=drawerBody(c);wireDrawerBody(c);$('#drawerbody').scrollTop=0;});
  const va=$('#viewas');if(va)va.onclick=()=>{closeCase();flow.customer=c.name;const map={1:'landing',2:'identify',3:'gov',4:'signpay',5:'provision',6:'provision',7:'live'};flow.screen=map[c.stage]||'landing';enterCustomer();};
  wireDrawerBody(c);
 }
-function drawerBody(c){if(drawerTab==='docs')return docsBody(c);if(drawerTab==='msgs')return msgsBody(c);return stepsBody(c);}
+function drawerBody(c){if(drawerTab==='docs')return docsBody(c);if(drawerTab==='msgs')return msgsBody(c);if(drawerTab==='activity')return activityBody(c);return stepsBody(c);}
 function stepsBody(c){
- const steps=STEPS.map((s,i)=>{const st=c.stage>6?'done':(i+1<c.stage?'done':(i+1===c.stage?'cur':''));const desc=i+1===c.stage?COLS[bucket(c)].act:(i+1<c.stage||c.stage>6?'Completed':'Pending');return `<li class="${st}"><span class="mk"></span><div class="t">${s}</div><div class="d">${desc}</div></li>`;}).join('');
+ // sales/reseller get the actionable instruction on the current step; watchers get the status
+ const watcher=role==='admin'||role==='onesys';
+ const steps=STEPS.map((s,i)=>{const n=i+1;
+  const done=c.stage>6||n<c.stage;const cur=!done&&n===c.stage&&c.stage<=6;
+  const st=done?'done':(cur?'cur':'');
+  const badge=done?['done','Done']:(cur?['cur','Now']:(n===c.stage+1?['next','Next']:['pen','Pending']));
+  const desc=cur?(watcher?STEP_NOW[i]:COLS[bucket(c)].act):STEP_DESC[i];
+  const late=cur&&c.days>=STEP_TARGET[i];
+  const sla=cur?`<div class="stepsla ${late?'over':''}">Day ${c.days} in this step · target ${STEP_TARGET[i]}d${late?' · past target':''}</div>`:'';
+  return `<li class="${st}"><span class="mk"></span><div class="t">${STEP_FULL[i]}<span class="stepbadge sb-${badge[0]}">${badge[1]}</span></div><div class="d">${desc}</div>${sla}</li>`;}).join('');
+ const pct=c.stage>6?100:Math.round(Math.min(c.stage-1,6)/6*100);
  return actionPanel(c)+partiesBlock(c)
-  +`<div class="lab" style="margin-top:16px">Progress · 6 steps</div><ul class="vtl">${steps}</ul>`;
+  +`<div class="lab" style="margin-top:16px;display:flex;justify-content:space-between"><span>Where this client is · 6 steps</span><span style="color:var(--mut)">${c.stage>6?'Live':pct+'% done'}</span></div><ul class="vtl">${steps}</ul>`;
+}
+function activityBody(c){
+ // synthesise a plausible audit trail from the client's progress — newest first
+ const done=c.stage>6?6:c.stage-1;
+ const ev=[];
+ ev.push({who:c.reseller,tag:'Reseller',text:`Added ${c.name} to the platform`,day:done*2+c.days+2});
+ for(let i=0;i<done;i++){const e=STEP_EVENT[i](c);ev.push({...e,day:(done-i)*2+c.days-1});}
+ ev.sort((a,b)=>a.day-b.day); // most recent (smallest days-ago) first
+ const ago=d=>d<=0?'today':d===1?'yesterday':d+'d ago';
+ const rows=ev.map((e,i)=>`<div class="act"><span class="actdot ${i===0?'new':''}"></span><div class="actbody"><div class="actt">${e.text}</div><div class="actm"><span class="actwho">${e.who}</span><span class="acttag">${e.tag}</span><span class="actago">${ago(e.day)}</span></div></div></div>`).join('');
+ return `<div class="lab">Activity &amp; audit trail</div>
+  <div class="party-intro">Every status change on the shared record — no more reading it off three separate Excels.</div>
+  <div class="acttl">${rows}</div>
+  <div class="shared" style="margin-top:14px">${IC.bolt} Overrides by Verinvo Admin are stamped here too, so support changes are never silent.</div>`;
 }
 /* what this role can actually DO on the case */
 function providerTask(c){
@@ -783,11 +914,12 @@ function actionPanel(c){
  if(role==='admin'){
   const owners=['Maria K.','Nikos P.','Eleni V.','Giorgos M.'];
   const stages=[[1,'1 · Package'],[2,'2 · Details'],[3,'3 · Authorize'],[4,'4 · Pay'],[5,'5 · Setup'],[6,'6 · Go-live'],[7,'Live']];
-  return `<div class="actpanel"><div class="aplab">Platform controls</div>
+  return `<div class="actpanel"><div class="aplab">Correct this client's record</div>
+    <div class="apnote" style="margin:0 0 12px">When ${c.reseller} calls for help, fix the stage or owner here — no emailing a spreadsheet back and forth. Everyone sees the change instantly.</div>
     <div class="apgrid"><label>Stage<select id="adstage">${stages.map(s=>`<option value="${s[0]}" ${c.stage===s[0]?'selected':''}>${s[1]}</option>`).join('')}</select></label>
       <label>Owner<select id="adowner">${owners.map(o=>`<option ${c.owner===o?'selected':''}>${o}</option>`).join('')}</select></label></div>
-    <div class="apnote">Correct the record on behalf of ${c.reseller} — for support and overrides. Every change is logged to the audit trail.</div>
-    <button class="btn btn-primary btn-block" id="adapply">Apply changes</button></div>`;
+    <div class="apnote">Saved to the shared record and logged to the audit trail.</div>
+    <button class="btn btn-primary btn-block" id="adapply">Save to the record</button></div>`;
  }
  if(role==='onesys'){
   const t=providerTask(c);
