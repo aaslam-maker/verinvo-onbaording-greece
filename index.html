@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verinvo Onboarding — Platform</title>
+<style>
+:root{
+  --bg:#F1F3F7;--card:#FFFFFF;--ink:#1E2634;--sec:#5A6472;--mut:#8B94A3;
+  --line:#E8EBF0;--line2:#DCE1E9;--soft:#F4F6F9;--navy:#1E2634;
+  --blue:#2F6BE8;--green:#1B9E63;--red:#E0483C;--amber:#E0900C;
+  --brand:#2F6BE8;--brand600:#2457C4;--brand-bg:#E9F0FD;
+  --teal:var(--brand);--teal600:var(--brand600);--teal-bg:var(--brand-bg);
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --sh:0 1px 2px rgba(24,34,48,.04),0 4px 16px rgba(24,34,48,.05);
+  --sh-lg:0 24px 64px rgba(24,34,48,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
+.num{font-variant-numeric:tabular-nums}
+.red{color:var(--red)}.green{color:var(--green)}.blue{color:var(--brand)}.amber{color:var(--amber)}
+
+/* ===== launcher ===== */
+#launcher{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 22px;background:radial-gradient(1100px 520px at 50% -8%,#E9EEF6,transparent),var(--bg)}
+.lh-badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--sec);background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 13px;margin-bottom:16px}
+.lh-badge i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.lh-top{text-align:center;margin-bottom:28px}
+.lh-top h1{font-size:27px;font-weight:800;letter-spacing:-.02em;margin:0}
+.lh-top p{color:var(--sec);margin:8px auto 0;max-width:560px}
+.roles{display:grid;grid-template-columns:repeat(3,minmax(0,272px));gap:16px;max-width:900px}
+.rolecard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;text-align:left;box-shadow:var(--sh);transition:.14s;position:relative;overflow:hidden}
+.rolecard:hover{transform:translateY(-3px);box-shadow:var(--sh-lg);border-color:var(--line2)}
+.rc-logo{width:44px;height:44px;border-radius:13px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;margin-bottom:14px}
+.rolecard h3{margin:0;font-size:16px;font-weight:800}
+.rolecard .who{font-size:12px;color:var(--mut);font-weight:700;margin-top:2px}
+.rolecard .desc{font-size:13px;color:var(--sec);margin:11px 0 14px;min-height:52px}
+.brandline{font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px}
+.rolecard .go{position:absolute;right:18px;bottom:18px;color:var(--mut);opacity:0;transition:.14s}
+.rolecard:hover .go{opacity:1}
+.lh-note{margin-top:26px;max-width:820px;text-align:center;font-size:12.5px;color:var(--mut);background:#fff;border:1px dashed var(--line2);border-radius:14px;padding:13px 18px}
+.lh-note b{color:var(--sec)}
+
+/* ===== shell ===== */
+.app{display:flex;min-height:100vh}
+.sidebar{width:212px;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 14px;position:sticky;top:0;height:100vh;flex:none}
+.brandblock{display:flex;align-items:center;gap:10px;padding:4px 6px 16px}
+.brandblock .bl{width:38px;height:38px;border-radius:11px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex:none}
+.brandblock .bn{font-weight:800;font-size:14px;line-height:1.15}
+.brandblock .bs{font-size:9.5px;letter-spacing:.08em;color:var(--mut);font-weight:800;text-transform:uppercase;margin-top:2px}
+.addbtn{width:100%;border:0;background:var(--brand);color:#fff;font-weight:800;font-size:13.5px;padding:11px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.addbtn:hover{filter:brightness(.95)}
+.nav{width:100%;border:0;background:transparent;color:var(--sec);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:700;margin-bottom:2px}
+.nav svg{flex:none;opacity:.85}
+.nav:hover{background:var(--soft)}
+.nav.on{background:var(--navy);color:#fff}
+.nav .cnt{margin-left:auto;font-size:11px;font-weight:800;background:var(--soft);color:var(--sec);border-radius:20px;padding:1px 8px}
+.nav.on .cnt{background:rgba(255,255,255,.18);color:#fff}
+.nav .cnt.alert{background:#FDEAE8;color:var(--red)}
+.side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:12px}
+.rolepill{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:11px;background:var(--soft)}
+.rolepill .ra{width:30px;height:30px;border-radius:9px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.rolepill .rt{font-size:12px;font-weight:800;line-height:1.1}.rolepill .rr{font-size:10.5px;color:var(--mut);font-weight:700}
+.rolepill .sw{margin-left:auto;border:1px solid var(--line2);background:#fff;color:var(--sec);font-weight:800;font-size:10.5px;border-radius:8px;padding:5px 8px}
+.rolepill .sw:hover{background:#fff;border-color:var(--mut)}
+
+.main{flex:1;min-width:0}
+.content{padding:24px 28px 90px;max-width:1240px}
+.phead{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px}
+.phead h1{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em}
+.phead p{margin:4px 0 0;color:var(--sec);font-size:13px}
+.userpill{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line2);background:#fff;border-radius:20px;padding:5px 12px 5px 6px;font-size:12.5px;font-weight:800;color:var(--sec)}
+.userpill .ua{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800}
+
+.btn{border:1px solid var(--line2);background:#fff;color:var(--ink);font-size:13px;font-weight:800;padding:9px 14px;border-radius:10px;display:inline-flex;align-items:center;gap:7px;transition:.12s}
+.btn:hover{background:var(--soft)}
+.btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}.btn-primary:hover{filter:brightness(.95)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-lg{padding:12px 20px;font-size:15px;border-radius:12px}
+.btn-block{width:100%;justify-content:center}
+.btn svg{flex:none}
+
+.toggle{display:inline-flex;background:#fff;border:1px solid var(--line2);border-radius:11px;padding:3px;gap:2px}
+.toggle button{border:0;background:transparent;color:var(--sec);font-weight:800;font-size:12.5px;padding:7px 14px;border-radius:8px}
+.toggle button.on{background:var(--navy);color:#fff}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:14px}
+.statc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--sh)}
+.statc .lb{font-size:12px;color:var(--sec);font-weight:800}
+.statc b{display:block;font-size:29px;font-weight:800;line-height:1;margin:8px 0 5px;letter-spacing:-.02em}
+.statc .sub{font-size:11.5px;color:var(--mut);font-weight:600}
+.metricstrip{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:20px}
+.metricstrip .m{padding:15px 18px;border-right:1px solid var(--line)}
+.metricstrip .m:last-child{border-right:0}
+.metricstrip .ml{font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.metricstrip .mv{font-size:17px;font-weight:800;margin-top:5px}
+.metricstrip .ms{font-size:11px;color:var(--mut);margin-top:2px}
+.seclabel{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 12px}
+.grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-bottom:20px}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:18px 20px}
+.pcard .hh{font-size:15px;font-weight:800}
+.pcard .hs{font-size:12px;color:var(--sec);margin-top:2px}
+.legend{display:flex;gap:14px;font-size:11.5px;font-weight:700;color:var(--sec)}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:middle}
+/* bar chart */
+.bars{display:flex;align-items:flex-end;gap:12px;height:190px;margin-top:18px;padding-top:26px}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}
+.barcol .cap{position:absolute;top:-24px;text-align:center;font-size:12px;font-weight:800}
+.barcol .cap small{display:block;font-size:10.5px;color:var(--green);font-weight:800}
+.barstack{width:60%;max-width:34px;background:var(--brand);border-radius:6px 6px 0 0;position:relative;overflow:hidden;display:flex;flex-direction:column-reverse}
+.barstack .live{background:var(--green);width:100%}
+.barcol .xl{margin-top:8px;font-size:11px;color:var(--mut);font-weight:700}
+/* donut */
+.donutwrap{display:flex;align-items:center;gap:18px;margin-top:14px}
+.donut{width:120px;height:120px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;position:relative}
+.donut::after{content:"";position:absolute;width:74px;height:74px;background:#fff;border-radius:50%}
+.donut .dc{position:relative;z-index:1;text-align:center}
+.donut .dc b{font-size:19px;font-weight:800;display:block;line-height:1}.donut .dc span{font-size:10px;color:var(--mut);font-weight:700}
+.dleg{display:flex;flex-direction:column;gap:9px}
+.dleg .di{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.dleg .di i{width:9px;height:9px;border-radius:3px;flex:none}
+.dleg .di b{font-weight:800}.dleg .di span{color:var(--mut);font-size:11.5px}
+/* quota */
+.qhead{display:flex;align-items:baseline;gap:8px}
+.qhead b{font-size:24px;font-weight:800;color:var(--brand)}.qhead span{margin-left:auto;font-size:12px;color:var(--mut);font-weight:700}
+.qbar{height:9px;border-radius:6px;background:var(--soft);margin:10px 0 6px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--brand);border-radius:6px}
+.qnote{font-size:11.5px;color:var(--mut)}
+.qrow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:1px solid var(--line);font-size:13px;font-weight:800}
+.qrow .qv{color:var(--green)}
+.qmini{height:6px;border-radius:4px;background:var(--soft);width:120px;overflow:hidden;margin-left:auto;margin-right:12px}
+.qmini i{display:block;height:100%}
+
+/* ===== kanban ===== */
+.kbar{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);display:flex;gap:0;margin-bottom:14px}
+.kbar .kb{padding:14px 20px;border-right:1px solid var(--line)}
+.kbar .kb:last-child{border-right:0}
+.kbar .kl{font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.kbar .kv{font-size:17px;font-weight:800;margin-top:4px}
+.kbar .kv small{font-size:12px;color:var(--sec);font-weight:700}
+.kfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.kfilters .fp{border:1px solid var(--line2);background:#fff;color:var(--sec);font-weight:800;font-size:12px;padding:6px 13px;border-radius:20px}
+.kfilters .fp.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.kgroups{display:flex;gap:16px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin:14px 0 8px}
+.kgroups .g i{width:8px;height:8px;border-radius:3px;display:inline-block;margin-right:6px}
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px}
+.kcol{flex:0 0 236px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:10px}
+.kcol .ch{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 10px}
+.kcol .ch .cn{font-size:12.5px;font-weight:800}
+.kcol .ch .cc{font-size:11px;font-weight:800;color:var(--mut);background:#fff;border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+.kcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px;box-shadow:0 1px 2px rgba(24,34,48,.04);cursor:pointer;transition:.12s}
+.kcard:hover{border-color:var(--line2);box-shadow:var(--sh)}
+.kcard .kn{font-weight:800;font-size:13px;margin-bottom:5px;line-height:1.25}
+.kcard .ka{font-size:12px;color:var(--sec);margin-bottom:9px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.tg{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.02em}
+.tg-blue{background:#E7EEFB;color:var(--brand)}.tg-red{background:#FDEAE8;color:var(--red)}.tg-green{background:#E4F6EC;color:var(--green)}.tg-amber{background:#FCF1DB;color:var(--amber)}
+.kmeta{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--mut);font-weight:700;margin-bottom:9px}
+.av{width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.kprog{display:flex;align-items:center;gap:8px}
+.kprog .pb{flex:1;height:5px;border-radius:3px;background:var(--soft);overflow:hidden}
+.kprog .pb i{display:block;height:100%;background:var(--brand);border-radius:3px}
+.kprog .pv{font-size:10.5px;font-weight:800;color:var(--sec)}
+.kprog .eu{font-size:10.5px;font-weight:800;color:var(--mut)}
+
+/* ===== tables ===== */
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;background:#fff;color:var(--mut);font-size:13px;min-width:250px}
+.search input{border:0;outline:0;font-size:13px;width:100%;background:transparent;color:var(--ink)}
+.dd{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:10px;padding:9px 13px;font-size:12.5px;font-weight:800;color:var(--sec);background:#fff}
+.tablecard{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);overflow:hidden}
+table{border-collapse:collapse;width:100%;font-size:13px}
+thead th{text-align:left;font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:12px 18px;border-bottom:1px solid var(--line)}
+tbody td{padding:12px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--soft)}
+.cname{font-weight:800}.csub{font-size:11.5px;color:var(--mut);font-weight:600}
+.tav{width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--sec);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;border:1px solid var(--line)}
+.namecell{display:flex;align-items:center;gap:11px}
+.spill{font-size:12px;font-weight:800;padding:4px 11px;border-radius:8px;white-space:nowrap;display:inline-block}
+.sp-gray{background:var(--soft);color:var(--sec);border:1px solid var(--line)}
+.sp-amber{background:#FCF1DB;color:var(--amber)}
+.sp-blue{background:#E7EEFB;color:var(--brand)}
+.sp-green{background:#E4F6EC;color:var(--green)}
+.rtag{font-size:11px;font-weight:800;padding:2px 9px;border-radius:6px}
+.doit{border:1px solid var(--line2);background:#fff;color:var(--ink);font-weight:800;font-size:12px;padding:6px 13px;border-radius:9px}
+.doit:hover{background:var(--soft)}
+.over{color:var(--red);font-weight:800}
+
+/* ===== messages ===== */
+.msgcols{display:grid;grid-template-columns:400px 1fr;gap:16px}
+.threadlist{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);overflow:hidden}
+.tl-h{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-weight:800;font-size:14px}
+.thread{padding:14px 18px;border-bottom:1px solid var(--line);border-left:3px solid transparent;cursor:pointer}
+.thread:hover{background:var(--soft)}
+.thread.on{background:var(--soft);border-left-color:var(--brand)}
+.thread .tt{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.thread .cn2{font-weight:800;font-size:13px}
+.thread .chn{margin-left:auto;font-size:9.5px;font-weight:800;color:var(--mut);letter-spacing:.04em}
+.thread .sub2{font-size:12px;color:var(--sec);margin-bottom:6px}
+.thread .row3{display:flex;align-items:center;gap:8px}
+.stt{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px}
+.stt-read{background:#FDEAE8;color:var(--red)}
+.stt-rep{background:#E4F6EC;color:var(--green)}
+.stt-wait{background:#FCF1DB;color:var(--amber)}
+.stt-none{background:var(--soft);color:var(--sec);border:1px solid var(--line)}
+.stt-bounce{background:#FDEAE8;color:var(--red)}
+.thread .tm{font-size:11px;color:var(--mut);font-weight:700}
+.conv{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.conv-h{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.conv-h .cn3{font-weight:800;font-size:15px}
+.conv-h .cs3{font-size:11.5px;color:var(--mut);font-weight:700}
+.conv-b{padding:18px 20px;display:flex;flex-direction:column;gap:14px;flex:1}
+.bubble{max-width:82%}
+.bubble.out{align-self:flex-start}
+.bubble.inb{align-self:flex-end}
+.bubble .bx{border-radius:12px;padding:11px 14px;font-size:13px}
+.bubble.out .bx{background:#EEF3FC;color:var(--ink)}
+.bubble.inb .bx{background:var(--soft);color:var(--ink)}
+.bubble .bt{font-weight:800;font-size:11px;color:var(--brand);margin-bottom:4px}
+.bubble .meta2{font-size:10.5px;color:var(--mut);font-weight:700;margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.trk{font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px}
+.trk-g{background:#E4F6EC;color:var(--green)}.trk-b{background:#FDEAE8;color:var(--red)}.trk-n{background:var(--soft);color:var(--sec)}
+.composer{padding:14px 20px;border-top:1px solid var(--line)}
+.tplrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tpl{border:1px solid var(--line2);background:#fff;color:var(--sec);font-weight:800;font-size:11.5px;padding:5px 11px;border-radius:20px}
+.tpl.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.compbox{border:1px solid var(--line2);border-radius:11px;padding:12px 14px;color:var(--mut);font-size:13px;min-height:64px}
+
+/* ===== drawer ===== */
+.scrim{position:fixed;inset:0;background:rgba(24,34,48,.34);backdrop-filter:blur(2px);z-index:40;display:none;align-items:center;justify-content:center;padding:20px}
+.scrim.open{display:flex}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:440px;box-shadow:var(--sh-lg);overflow:hidden}
+.modal-h{padding:18px 20px 6px}.modal-h h3{margin:0;font-size:17px;font-weight:800}
+.modal-b{padding:8px 20px 20px}.modal-f{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;background:var(--soft)}
+.field{margin-bottom:14px}.field label{display:block;font-size:12px;font-weight:800;color:var(--sec);margin-bottom:5px}
+.field input,.field select{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;color:var(--ink)}
+.field input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-bg)}
+.drawer{position:fixed;top:0;right:0;height:100%;width:452px;max-width:94vw;background:#fff;z-index:45;box-shadow:-16px 0 50px rgba(0,0,0,.16);transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-h{padding:18px 20px;border-bottom:1px solid var(--line)}
+.drawer-h .top{display:flex;align-items:flex-start;gap:10px}
+.dtabs{display:flex;gap:5px;margin-top:14px}
+.dtab{border:1px solid var(--line2);background:#fff;color:var(--sec);font-size:12px;font-weight:800;padding:6px 12px;border-radius:20px}
+.dtab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.drawer-b{padding:18px 20px;overflow:auto;flex:1}
+.drawer-f{padding:14px 20px;border-top:1px solid var(--line);background:var(--soft)}
+.x{margin-left:auto;border:0;background:transparent;color:var(--mut);font-size:20px;line-height:1;padding:2px 6px;border-radius:8px}.x:hover{background:var(--soft)}
+.lab{font-size:11px;font-weight:800;color:var(--mut);letter-spacing:.02em;margin:2px 0 8px;text-transform:uppercase}
+.parties{display:flex;flex-direction:column;gap:9px}
+.party{display:flex;align-items:center;gap:10px;font-size:13px}
+.pav{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none}
+.party .role{color:var(--mut);font-size:12px}
+.party .tagm{margin-left:auto;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px;background:var(--soft);border:1px solid var(--line);color:var(--sec)}
+.vtl{margin:10px 0 0;padding:0;list-style:none}
+.vtl li{position:relative;padding:0 0 15px 26px}
+.vtl li::before{content:"";position:absolute;left:7px;top:16px;bottom:0;width:2px;background:var(--line2)}
+.vtl li:last-child::before{display:none}
+.vtl .mk{position:absolute;left:0;top:1px;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--line2)}
+.vtl li.done .mk{background:var(--brand);border-color:var(--brand)}
+.vtl li.cur .mk{border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-bg)}
+.vtl .t{font-weight:800;font-size:13px}.vtl .d{font-size:12px;color:var(--mut)}
+.shared{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--brand600);background:var(--brand-bg);border:1px solid #CFE0F4;border-radius:10px;padding:9px 12px;margin-top:12px}
+.doc{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.doc:last-child{border-bottom:0}
+.dkind{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex:none}
+.doc .dn{font-weight:800;font-size:13px}.doc .dm{font-size:11.5px;color:var(--mut)}
+.dstate{margin-left:auto;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px}
+.ds-received{background:#E4F6EC;color:var(--green)}.ds-sent{background:var(--soft);color:var(--sec);border:1px solid var(--line)}
+.ds-missing{background:#FDEAE8;color:var(--red)}.ds-optional{background:var(--soft);color:var(--mut);border:1px solid var(--line)}
+.remind{display:flex;gap:8px;margin-top:12px}
+.actpanel{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
+.aplab{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.apnote{font-size:12px;color:var(--sec);margin:0 0 10px;line-height:1.45}
+.aprow{display:flex;gap:8px}
+.apgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.apgrid label{font-size:11px;font-weight:800;color:var(--sec);display:flex;flex-direction:column;gap:5px}
+.apgrid select{border:1px solid var(--line2);border-radius:9px;padding:9px 10px;font-size:13px;font-weight:700;background:#fff;color:var(--ink)}
+.aptask{display:flex;align-items:flex-start;gap:9px;font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:10px}
+.aptask.wait{color:var(--amber)}.aptask.done{color:var(--green)}
+.aptask svg{margin-top:1px;flex:none}
+.party-intro{font-size:12px;color:var(--sec);margin:-2px 0 10px;line-height:1.45}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:12px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.24);opacity:0;transition:.22s;z-index:60;display:flex;align-items:center;gap:9px;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== wizard ===== */
+#customer{min-height:100vh;background:var(--bg)}
+.cust-top{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 22px}
+.cust-top .l{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px}
+.cust-top .logo2{width:28px;height:28px;border-radius:9px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.cust-top .exit{margin-left:auto;border:0;background:transparent;color:var(--sec);font-weight:800;font-size:12.5px;display:flex;gap:6px;align-items:center}
+.poweredby{font-size:10.5px;color:var(--mut);font-weight:700}
+.chome{max-width:780px;margin:0 auto;padding:24px 22px 90px}
+.chero{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--sh);margin-bottom:16px}
+.chero .sm{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.chero h1{font-size:22px;font-weight:800;margin:4px 0 16px;letter-spacing:-.01em}
+.cprog{height:10px;border-radius:6px;background:var(--soft);overflow:hidden;margin-bottom:8px}
+.cprog i{display:block;height:100%;background:var(--brand);border-radius:6px;transition:width .4s}
+.cstatus{font-size:14px;color:var(--sec);margin-bottom:16px}
+.cstep{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.cstep:last-child{border-bottom:0}
+.cstep .ci{width:28px;height:28px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.cstep .ci.done{background:var(--brand);color:#fff}
+.cstep .ci.cur{background:var(--brand-bg);color:var(--brand600);border:2px solid var(--brand)}
+.cstep .ci.pend{background:var(--soft);color:var(--mut);border:1px solid var(--line2)}
+.cstep .cn{font-weight:800;font-size:14px}
+.cstep .cd{font-size:12px;color:var(--mut)}
+.cstep .cact{margin-left:auto}
+.wizwrap{max-width:700px;margin:0 auto;padding:26px 22px 90px}
+.stepper{display:flex;align-items:center;margin:4px 0 24px}
+.stepper .st{display:flex;align-items:center;gap:9px;flex:1}.stepper .st:last-child{flex:none}
+.stepper .circ{width:30px;height:30px;border-radius:50%;border:2px solid var(--line2);background:#fff;color:var(--mut);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.stepper .lbl{font-size:12px;color:var(--mut);font-weight:800;white-space:nowrap}
+.stepper .line{flex:1;height:2px;background:var(--line2);margin:0 9px;border-radius:2px}
+.stepper .st.done .circ{background:var(--brand);border-color:var(--brand);color:#fff}
+.stepper .st.cur .circ{border-color:var(--brand);color:var(--brand);box-shadow:0 0 0 4px var(--brand-bg)}
+.stepper .st.cur .lbl{color:var(--ink)}.stepper .st.done .line{background:var(--brand)}
+.screen{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--sh)}
+.screen h2{margin:0 0 4px;font-size:20px;font-weight:800;letter-spacing:-.01em}
+.screen .lead{margin:0 0 20px;color:var(--sec);font-size:14px}
+.navrow{display:flex;gap:10px;justify-content:space-between;margin-top:24px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:12px;color:var(--mut);margin-top:5px}
+.field.done input{background:var(--soft)}
+.otp{display:flex;gap:9px;justify-content:center;margin:18px 0}
+.otp input{width:44px;height:52px;text-align:center;font-size:22px;font-weight:800;border:1px solid var(--line2);border-radius:12px}
+.otp input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-bg)}
+.lookcard{border:1px dashed var(--line2);border-radius:14px;padding:16px;margin-top:6px}
+.lookcard.filled{border-style:solid;border-color:var(--brand-bg);background:var(--soft)}
+.plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.planopt{border:1.5px solid var(--line2);border-radius:14px;padding:14px;position:relative;transition:.12s}
+.planopt:hover{border-color:var(--brand)}
+.planopt.sel{border-color:var(--brand);background:var(--brand-bg)}
+.planopt .docs{font-weight:800;font-size:15px}.planopt .sub{font-size:12px;color:var(--mut)}
+.planopt .price{margin-top:8px;font-size:14px;font-weight:800;color:var(--brand600)}
+.planopt .tick{position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:50%;background:var(--brand);color:#fff;display:none;align-items:center;justify-content:center}
+.planopt.sel .tick{display:flex}
+.dropzone{border:1.5px dashed var(--line2);border-radius:12px;padding:18px;text-align:center;color:var(--mut);font-size:13px;background:var(--soft)}
+.dropzone.has{border-color:var(--brand);color:var(--brand600);background:var(--brand-bg)}
+.summary{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:6px}
+.summary .row{display:flex;justify-content:space-between;padding:11px 15px;font-size:13.5px;border-bottom:1px solid var(--line)}
+.summary .row:last-child{border-bottom:0;font-weight:800;background:var(--soft)}
+.summary .row span:first-child{color:var(--sec)}
+.paycard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.paycard .ph{display:flex;align-items:center;gap:10px;margin-bottom:10px}.paycard .ph b{font-size:14.5px}.paycard .ph .st{margin-left:auto}
+.brandtag{font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px}
+.brandtag.digink{background:#EDEBFB;color:#5B50C6}.brandtag.stripe{background:#E7EEFB;color:var(--brand)}
+.sigpad{border:1px dashed var(--line2);border-radius:10px;height:70px;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:13px;font-style:italic;background:var(--soft)}
+.sigpad.signed{border-style:solid;border-color:var(--brand-bg);color:var(--ink);font-style:normal}
+.sig-name{font-family:"Segoe Script","Bradley Hand",cursive;font-size:26px}
+.task{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.task .th{display:flex;align-items:center;gap:10px;margin-bottom:6px}.task .th b{font-size:14.5px}.task .th .st{margin-left:auto}
+.task .desc{font-size:13px;color:var(--sec);margin-bottom:12px}
+.prefill{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--sec);margin-bottom:12px}
+.prefill code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--ink);font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px}
+.chip i{width:7px;height:7px;border-radius:50%}
+.chip.todo{background:var(--soft);color:var(--sec);border:1px solid var(--line)}.chip.todo i{background:var(--mut)}
+.chip.wait{background:#FCF1DB;color:var(--amber)}.chip.wait i{background:var(--amber);animation:pulse 1.3s infinite}
+.chip.ok{background:#E4F6EC;color:var(--green)}.chip.ok i{background:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.provlist{list-style:none;margin:8px 0 0;padding:0}
+.provitem{display:flex;align-items:center;gap:12px;padding:12px 4px;font-size:14px;border-bottom:1px solid var(--line)}
+.provitem:last-child{border-bottom:0}.provitem .ic{width:24px;height:24px;flex:none;display:flex;align-items:center;justify-content:center}
+.provitem.pending{color:var(--mut)}
+.spin{width:18px;height:18px;border:2px solid var(--line2);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.checkc{width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center}
+.dotpending{width:9px;height:9px;border-radius:50%;background:var(--line2)}
+.livehero{text-align:center;padding:12px 0 4px}
+.livebadge{width:74px;height:74px;border-radius:50%;background:var(--brand-bg);color:var(--brand600);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;animation:pop .4s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.livehero h2{font-size:24px;margin:0 0 6px}.livehero p{color:var(--sec);margin:0 auto 18px;max-width:420px}
+
+@media(max-width:920px){.roles{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.msgcols{grid-template-columns:1fr}.two{grid-template-columns:1fr}.metricstrip{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="launcher"></div>
+<div id="shell" style="display:none"></div>
+<div id="customer" style="display:none"></div>
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const IC={
+ check:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+ plus:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+ arrow:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+ back:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+ bolt:'<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>',
+ chev:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+ search:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
+ dl:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>',
+ spark:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+ logo:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17l9-10"/></svg>',
+ nOverview:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg>',
+ nClients:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17 20a5.5 5.5 0 0 0-2-4.3"/></svg>',
+ nPipe:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="10" rx="1.5"/><rect x="16" y="4" width="5" height="13" rx="1.5"/></svg>',
+ nMsg:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+ nGrid:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+ bell:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>'
+};
+const initials=n=>n.replace(/[^\p{L} ]/gu,'').trim().split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const eur=n=>'€ '+n.toLocaleString('en-US');
+const $=s=>document.querySelector(s);
+function toast(m){const t=$('#toast');t.innerHTML=IC.check+'<span>'+m+'</span>';t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+
+/* roles */
+const ROLES={
+ admin:{brand:'Verinvo',logo:'V',accent:'#12A594',accent600:'#0E7F72',accentBg:'#E4F5F2',tag:'Platform admin',workspace:'PLATFORM ADMIN',kind:'admin',user:'Admin'},
+ reseller:{brand:'Spotlight',logo:'S',accent:'#2F6BE8',accent600:'#2457C4',accentBg:'#E9F0FD',tag:'Reseller · powered by Verinvo',workspace:'RESELLER WORKSPACE',kind:'sales',reseller:'Spotlight',user:'Maria K.'},
+ sales:{brand:'Verinvo',logo:'V',accent:'#12A594',accent600:'#0E7F72',accentBg:'#E4F5F2',tag:'Sales · onboarding',workspace:'ONBOARDING WORKSPACE',kind:'sales',user:'Sales'},
+ onesys:{brand:'ONESYS',logo:'O',accent:'#DE6A3A',accent600:'#BF562B',accentBg:'#FBEEE7',tag:'Provider partner',workspace:'PROVIDER WORKSPACE',kind:'onesys',user:'Partner'},
+ client:{brand:'ONESYS',logo:'O',accent:'#DE6A3A',accent600:'#BF562B',accentBg:'#FBEEE7',tag:'Client onboarding',kind:'client'}
+};
+let role='reseller';
+function setTheme(r){const s=document.documentElement.style;s.setProperty('--brand',r.accent);s.setProperty('--brand600',r.accent600);s.setProperty('--brand-bg',r.accentBg);}
+const roleName=r=>({admin:'Verinvo Admin',reseller:'Reseller',sales:'Admin Sales',onesys:'ONESYS Partner',client:'Client'}[r]);
+
+/* data */
+const STEPS=['Package','Details','Authorize','Pay','Setup','Go-live'];
+const PLANS=[{docs:'1.500',price:120},{docs:'15.000',price:180},{docs:'45.000',price:300},{docs:'75.000',price:410},{docs:'100.000',price:520},{docs:'150.000',price:750},{docs:'300.000',price:1100}];
+const packPrice={'1.500':120,'15.000':180,'45.000':300,'75.000':410,'100.000':520,'150.000':750,'300.000':1100};
+// seed: name, city, pack, stage, state, days, reseller, owner
+const SEED=[
+ ['Blue Wave Travel Ο.Ε.','Rhodes','15.000',1,'move',1,'Spotlight','Maria K.'],
+ ['Κτήμα Νεμέας Ε.Π.Ε.','Nemea','75.000',1,'move',1,'Spotlight','Maria K.'],
+ ['Nordwind Shipping Ο.Ε.','Piraeus','45.000',1,'move',1,'Spotlight','Nikos P.'],
+ ['Ζαχαροπλαστείο Άνθος Ε.Π.Ε.','Patra','300.000',2,'move',7,'Spotlight','Maria K.'],
+ ['Meltemi Beach Bar Α.Ε.','Athens','45.000',2,'move',7,'Spotlight','Nikos P.'],
+ ['Παγωτά Κρήτης ΙΚΕ','Chania','100.000',2,'move',5,'Spotlight','Eleni V.'],
+ ['Aetos Security Α.Ε.','Volos','300.000',2,'move',3,'Spotlight','Maria K.'],
+ ['Βιβλιοπωλείο Λόγος Ε.Π.Ε.','Rhodes','520',2,'alert',6,'Spotlight','Maria K.'],
+ ['Οπτικά Κοντού Ε.Π.Ε.','Rhodes','1.500',2,'wait',3,'Spotlight','Nikos P.'],
+ ['Delta Logistics ΙΚΕ','Piraeus','150.000',2,'alert',5,'Spotlight','Nikos P.'],
+ ['Ταβέρνα Ο Μανώλης ΙΚΕ','Athens','15.000',2,'wait',3,'Spotlight','Eleni V.'],
+ ['Thermi Pharma Ο.Ε.','Thessaloniki','15.000',3,'wait',3,'Spotlight','Nikos P.'],
+ ['Φαρμακείο Παπαδάκη ΙΚΕ','Heraklion','75.000',3,'wait',3,'Spotlight','Eleni V.'],
+ ['Ελαιώνες Καλαμάτας Ο.Ε.','Kalamata','45.000',3,'move',2,'Spotlight','Maria K.'],
+ ['Ionian Hotels Α.Ε.','Corfu','300.000',3,'wait',4,'Aegean IT','Giorgos M.'],
+ ['Μεταλλικά Βόλου Ο.Ε.','Volos','75.000',3,'move',3,'Aegean IT','Giorgos M.'],
+ ['Zenith Electronics Α.Ε.','Thessaloniki','100.000',4,'wait',1,'Spotlight','Nikos P.'],
+ ['Attica Motors Ο.Ε.','Athens','45.000',4,'wait',2,'Spotlight','Maria K.'],
+ ['Olympus Fitness ΙΚΕ','Larissa','15.000',4,'move',1,'Aegean IT','Giorgos M.'],
+ ['Καφέ Ολύμπια Α.Ε.','Patra','1.500',5,'move',0,'Spotlight','Eleni V.'],
+ ['Τυροκομεία Ηπείρου Α.Ε.','Larissa','15.000',5,'move',0,'Aegean IT','Giorgos M.'],
+ ['Aegean Foods','Rhodes','45.000',6,'move',0,'Spotlight','Maria K.'],
+ ['Σούπερ Μάρκετ Ήλιος Ε.Π.Ε.','Athens','150.000',6,'move',0,'Spotlight','Nikos P.'],
+ ['Vergina Foods','Thessaloniki','75.000',7,'live',0,'Spotlight','Eleni V.'],
+ ['Cyclades Rentals Ε.Π.Ε.','Piraeus','45.000',7,'live',0,'Spotlight','Maria K.'],
+ ['Ανθοπωλείο Ίρις','Chania','15.000',7,'live',0,'Aegean IT','Giorgos M.']
+];
+let clients=SEED.map((s,i)=>({id:i+1,name:s[0],city:s[1],pack:s[2],stage:s[3],state:s[4],days:s[5],reseller:s[6],owner:s[7],vat:(40000000+i*318137%59999999).toString().padStart(8,'0').slice(0,9),acct:s[4]==='wait'||s[4]==='alert'?'pending':'ok'}));
+// override a couple of vats to the real sample
+clients[1].vat='55722508';clients[10].vat='094117852';
+const val=c=>packPrice[c.pack]||120;
+
+/* kanban bucketing */
+function bucket(c){
+ if(c.stage>6)return 'live';
+ if(c.stage===1)return c.state==='move'?'wants':'sent';
+ if(c.stage===2)return 'details';
+ if(c.stage===3)return c.state==='move'?'todecl':'awaiting';
+ if(c.stage===4)return 'pay';
+ if(c.stage===5)return 'setup';
+ return 'golive';
+}
+const COLS={
+ wants:{name:'Wants provider',grp:'move',tag:'WANTS PROVIDER',tc:'blue',act:'Send the packages and the details form.'},
+ sent:{name:'Send · info sent',grp:'move',tag:'SEND · INFO SENT',tc:'blue',act:'Waiting on the completed details form.'},
+ details:{name:'Details incomplete',grp:'wait',tag:'DETAILS INCOMPLETE',tc:'red',act:'Fields missing — chase them.'},
+ awaiting:{name:'Awaiting acceptance',grp:'wait',tag:'AWAITING',tc:'blue',act:'Authorization pending with the accountant.'},
+ todecl:{name:'To Do Declaration',grp:'move',tag:'TO DO DECLARATION',tc:'red',act:'myDATA declaration still to file.'},
+ pay:{name:'Awaiting payment',grp:'wait',tag:'NON PAID',tc:'red',act:'Payment open — send the reminder.'},
+ setup:{name:'Setup & code',grp:'move',tag:'SETUP',tc:'blue',act:'Hand the details to the technician.'},
+ golive:{name:'Go-live',grp:'move',tag:'GO-LIVE',tc:'green',act:'Final checks — issuing setup.'},
+ live:{name:'Live',grp:'done',tag:'LIVE',tc:'green',act:'Live — issuing to myDATA.'}
+};
+const COL_ORDER=['wants','sent','todecl','details','awaiting','pay','setup','golive','live'];
+
+let nav='overview',filter='all',ovScope='mine',drawerId=null,drawerTab='steps',msgSel=0;
+function scoped(){
+ if(role==='reseller')return clients.filter(c=>c.reseller==='Spotlight');
+ if(role==='onesys')return clients.filter(c=>c.stage>=3);
+ return clients;
+}
+
+/* ===== launcher ===== */
+const LAUNCH=[
+ {r:'admin',for:'Oxinus / Verinvo',desc:'Every reseller and every client across the whole platform, in one simple register.',brand:'Verinvo',bc:'#12A594',bg:'#E4F5F2'},
+ {r:'reseller',for:'Spotlight',desc:'Their own full sales workspace — pipeline, messages, documents. They resell as a tenant.',brand:'Spotlight · powered by Verinvo',bc:'#2F6BE8',bg:'#E9F0FD'},
+ {r:'sales',for:'Sales team',desc:'The same workspace, used internally: reminders over email & Viber, per-step tracking.',brand:'Verinvo',bc:'#12A594',bg:'#E4F5F2'},
+ {r:'onesys',for:'ONESYS',desc:'Clients reaching authorization, provisioning and go-live on the provider side.',brand:'ONESYS',bc:'#DE6A3A',bg:'#FBEEE7'},
+ {r:'client',for:'The business onboarding',desc:'Only their own onboarding — in the ONESYS brand. Verinvo stays invisible.',brand:'ONESYS',bc:'#DE6A3A',bg:'#FBEEE7'}
+];
+function renderLauncher(){
+ $('#shell').style.display='none';$('#customer').style.display='none';$('#launcher').style.display='flex';
+ setTheme(ROLES.reseller);
+ $('#launcher').innerHTML=`
+  <div class="lh-top"><div class="lh-badge"><i></i> Prototype · simulated data</div>
+   <h1>View the platform as…</h1>
+   <p>One white-label onboarding platform, five kinds of access. Pick a role to see what that person sees — and which brand they see it in.</p></div>
+  <div class="roles">${LAUNCH.map(l=>`<button class="rolecard" data-r="${l.r}">
+    <div class="rc-logo" style="background:${l.bc}">${ROLES[l.r].logo}</div>
+    <h3>${roleName(l.r)}</h3><div class="who">${l.for}</div>
+    <div class="desc">${l.desc}</div>
+    <span class="brandline" style="background:${l.bg};color:${l.bc}">${IC.bolt} sees ${l.brand}</span>
+    <span class="go">${IC.arrow}</span></button>`).join('')}</div>
+  <div class="lh-note"><b>How access works:</b> Spotlight is a reseller tenant (own clients only) · Verinvo admins see everything · the client sees only their own case, branded as ONESYS. Verinvo is white-label and never shown to the client.</div>`;
+ $('#launcher').querySelectorAll('.rolecard').forEach(b=>b.onclick=()=>enterRole(b.dataset.r));
+}
+function enterRole(r){role=r;setTheme(ROLES[r]);filter='all';ovScope='mine';
+ if(ROLES[r].kind==='client'){flow={screen:'landing',customer:'Ταβέρνα Ο Μανώλης',looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};renderClientHome();return;}
+ nav=ROLES[r].kind==='onesys'?'pipeline':(role==='admin'?'register':'overview');
+ renderApp();
+}
+
+/* ===== shell ===== */
+function navItems(){
+ if(role==='admin')return [{k:'register',ic:'nGrid',lb:'Register'}];
+ if(role==='onesys')return [{k:'pipeline',ic:'nPipe',lb:'Provisioning'},{k:'clients',ic:'nClients',lb:'Clients'}];
+ return [{k:'overview',ic:'nOverview',lb:'Overview'},{k:'pipeline',ic:'nPipe',lb:'Pipeline'},{k:'clients',ic:'nClients',lb:'Clients'},{k:'messages',ic:'nMsg',lb:'Messages'}];
+}
+function sidebar(){const R=ROLES[role];const counts={clients:scoped().length,messages:6};
+ return `<aside class="sidebar">
+  <div class="brandblock"><div class="bl" style="background:${R.accent}">${R.logo}</div><div><div class="bn">${R.brand}</div><div class="bs">${R.workspace}</div></div></div>
+  <button class="addbtn" id="invite">${IC.plus} Invite client</button>
+  ${navItems().map(n=>`<button class="nav ${n.k===nav?'on':''}" data-nav="${n.k}">${IC[n.ic]}<span>${n.lb}</span>${counts[n.k]?`<span class="cnt ${n.k==='messages'?'alert':''}">${counts[n.k]}</span>`:''}</button>`).join('')}
+  <div class="side-foot"><div class="rolepill"><div class="ra" style="background:${R.accent}">${R.logo}</div><div><div class="rt">${roleName(role)}</div><div class="rr">${R.user}</div></div><button class="sw" id="switchrole">Switch</button></div></div>
+ </aside>`;
+}
+function renderApp(){
+ $('#launcher').style.display='none';$('#customer').style.display='none';$('#shell').style.display='block';
+ $('#shell').innerHTML=`<div class="app">${sidebar()}<div class="main"><div class="content" id="content"></div></div></div>`;
+ $('#shell').querySelectorAll('.nav').forEach(b=>b.onclick=()=>{nav=b.dataset.nav;renderApp();});
+ $('#switchrole').onclick=renderLauncher;$('#invite').onclick=openInvite;
+ fillContent();
+}
+function fillContent(){
+ const c=$('#content');if(!c)return;
+ if(role==='admin')c.innerHTML=adminHTML();
+ else if(nav==='overview')c.innerHTML=overviewHTML();
+ else if(nav==='pipeline')c.innerHTML=kanbanHTML();
+ else if(nav==='clients')c.innerHTML=clientsHTML();
+ else if(nav==='messages'){c.innerHTML=messagesHTML();wireMessages();}
+ wireContent();
+}
+function userpill(){const R=ROLES[role];return `<div class="userpill"><span class="ua">${initials(R.user)}</span>${R.user} ${IC.chev}</div>`;}
+
+/* ===== overview ===== */
+function ovPool(){let p=scoped();const u=ROLES[role].user;if(ovScope==='mine'&&p.some(c=>c.owner===u))p=p.filter(c=>c.owner===u);return p;}
+function overviewHTML(){
+ const p=scoped();
+ const total=p.length;
+ const openC=p.filter(c=>c.stage<7);const open=openC.length;
+ const past=p.filter(c=>c.days>=4||c.state==='alert').length;
+ const waiting=p.filter(c=>c.state==='wait').length;
+ const live=p.filter(c=>c.stage>6).length;
+ const onTrack=Math.max(open-past,0);
+ const livePct=total?Math.round(live/total*100):0;
+ const liveEnd=total?live/total*100:0,trackEnd=total?(live+onTrack)/total*100:0;
+ const openVal=openC.reduce((s,c)=>s+val(c),0);
+ const wonVal=p.filter(c=>c.stage>6).reduce((s,c)=>s+val(c),0);
+ const closeSoon=openC.filter(c=>c.stage>=5).reduce((s,c)=>s+val(c),0);
+ const nextM=openC.filter(c=>c.stage===3||c.stage===4).reduce((s,c)=>s+val(c),0);
+ const later=openC.filter(c=>c.stage<=2).reduce((s,c)=>s+val(c),0);
+ const target=Math.max(Math.round(openVal*1.2),1);const maxRow=Math.max(closeSoon,nextM,later,1);
+ const months=[['Jan',28,7],['Feb',33,9],['Mar',30,10],['Apr',38,8],['May',43,9],['Jun',41,10],['Jul',36,8],['Aug',25,8],['Sep',47,4]];
+ const maxA=50;
+ const bars=months.map(([m,a,pc])=>`<div class="barcol"><div class="cap">${a}<small>${pc}%</small></div><div class="barstack" style="height:${a/maxA*100}%"><div class="live" style="height:${pc+8}%"></div></div><div class="xl">${m}</div></div>`).join('');
+ return `<div class="phead"><div><h1>${role==='reseller'?'Spotlight overview':'Overview'}</h1><p>Your book — every stage, and what is slipping.</p></div>${userpill()}</div>
+  <div style="margin:2px 0 16px;font-size:12px;color:var(--mut);font-weight:700">${total} clients on the book, ${open} still open</div>
+  <div class="stats">
+   <div class="statc"><div class="lb">Open clients</div><b class="num">${open}</b><div class="sub">in progress</div></div>
+   <div class="statc"><div class="lb">Past target</div><b class="num red">${past}</b><div class="sub">need a nudge</div></div>
+   <div class="statc"><div class="lb">Waiting on client</div><b class="num amber">${waiting}</b><div class="sub">ball with them</div></div>
+   <div class="statc"><div class="lb">Live</div><b class="num green">${live}</b><div class="sub">issuing</div></div></div>
+  <div class="metricstrip">
+   <div class="m"><div class="ml">Avg time to live</div><div class="mv">10.0d</div><div class="ms">target 12d</div></div>
+   <div class="m"><div class="ml">Slowest stage</div><div class="mv">Details</div><div class="ms">4.5d vs 5</div></div>
+   <div class="m"><div class="ml">Open pipeline</div><div class="mv">${eur(openVal)}</div><div class="ms">first-year subs</div></div>
+   <div class="m"><div class="ml">Register accuracy</div><div class="mv">100%</div><div class="ms">single live record</div></div></div>
+  <div class="seclabel">Volume and conversion</div>
+  <div class="grid2">
+   <div class="pcard"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="hh">New clients per month</div><div class="hs">Added, and the share that reached live · last 9 months</div></div><div class="legend"><span><i style="background:var(--brand)"></i>Added</span><span><i style="background:var(--green)"></i>Went live</span></div></div><div class="bars">${bars}</div></div>
+   <div class="pcard"><div class="hh">Conversion</div><div class="hs">The book right now, by state</div>
+    <div class="donutwrap"><div class="donut" style="background:conic-gradient(var(--green) 0 ${liveEnd}%,var(--brand) ${liveEnd}% ${trackEnd}%,var(--red) ${trackEnd}% 100%)"><div class="dc"><b>${livePct}%</b><span>live</span></div></div>
+     <div class="dleg"><div class="di"><i style="background:var(--green)"></i><div><b>${live}</b> <span>Live and issuing</span></div></div><div class="di"><i style="background:var(--brand)"></i><div><b>${onTrack}</b> <span>On track</span></div></div><div class="di"><i style="background:var(--red)"></i><div><b>${past}</b> <span>Past target</span></div></div></div></div></div></div>
+  <div class="seclabel">Money</div>
+  <div class="grid2">
+   <div class="pcard"><div class="hh">Pipeline value over time</div><div class="hs">Weighted from open first-year subscriptions · last 9 months</div>
+    <div class="bars" style="height:150px;padding-top:20px">${[6.4,8.3,8.2,11,11,10,9.4,7,11].map((v,i)=>`<div class="barcol"><div class="cap" style="font-size:11px">€${v}k</div><div class="barstack" style="height:${v/12*100}%;background:var(--brand)"></div><div class="xl">${months[i][0]}</div></div>`).join('')}</div></div>
+   <div class="pcard"><div class="hh">Forecast against quota</div><div class="hs">Stage-weighted, so early deals count less</div>
+    <div class="qhead" style="margin-top:12px"><b>${eur(openVal)}</b><span>of ${eur(target)}</span></div><div class="qbar"><i style="width:${Math.round(openVal/target*100)}%"></i></div><div class="qnote">${eur(wonVal)} won · ${eur(openVal)} weighted from open · ${Math.round(openVal/target*100)}% of quota</div>
+    <div style="margin-top:8px"><div class="qrow" style="border-top:0"><span>Closing this month</span><span class="qmini"><i style="width:${Math.round(closeSoon/maxRow*100)}%;background:var(--green)"></i></span><span class="qv">${eur(closeSoon)}</span></div>
+     <div class="qrow"><span>Next month</span><span class="qmini"><i style="width:${Math.round(nextM/maxRow*100)}%;background:var(--brand)"></i></span><span class="qv">${eur(nextM)}</span></div>
+     <div class="qrow"><span>Later or at risk</span><span class="qmini"><i style="width:${Math.round(later/maxRow*100)}%;background:var(--amber)"></i></span><span class="qv">${eur(later)}</span></div></div></div></div>`;
+}
+
+/* ===== kanban ===== */
+function kanbanHTML(){
+ const pool=scoped().filter(c=>{if(filter==='open')return c.stage<7;if(filter==='past')return c.days>=4||c.state==='alert';if(filter==='big')return val(c)>=300;return true;});
+ const board=pool.filter(c=>c.stage<7);
+ const byCol={};COL_ORDER.forEach(k=>byCol[k]=[]);board.forEach(c=>byCol[bucket(c)].push(c));
+ const openVal=board.reduce((s,c)=>s+val(c),0);
+ const stuck=board.filter(c=>c.days>=4||c.state==='alert');const stuckVal=stuck.reduce((s,c)=>s+val(c),0);
+ const live=pool.filter(c=>c.stage>6);const wonVal=live.reduce((s,c)=>s+val(c),0);
+ const grpCount=g=>Object.keys(COLS).filter(k=>COLS[k].grp===g).reduce((s,k)=>s+(byCol[k]?byCol[k].length:0),0);
+ const card=c=>{const b=COLS[bucket(c)];const late=c.days>=4||c.state==='alert';const pct=Math.round(Math.min(c.stage,6)/6*100);
+  return `<div class="kcard" data-id="${c.id}"><div class="kn">${c.name}</div><div class="ka">${b.act}</div>
+   <div class="tags"><span class="tg tg-${b.tc}">${b.tag}</span>${late?'<span class="tg tg-red">PAST TARGET</span>':''}</div>
+   <div class="kmeta"><span class="av">${initials(c.owner)}</span>${c.owner.split(' ')[0]} · day ${c.days}</div>
+   <div class="kprog"><span class="pb"><i style="width:${pct}%"></i></span><span class="pv">${pct}%</span><span class="eu">${eur(val(c))}</span></div></div>`;};
+ const col=k=>`<div class="kcol"><div class="ch"><span class="cn">${COLS[k].name}</span><span class="cc">${byCol[k].length}</span></div>${byCol[k].map(card).join('')||'<div style="font-size:11px;color:var(--mut);text-align:center;padding:14px 0">—</div>'}</div>`;
+ return `<div class="phead"><div><h1>${role==='onesys'?'Provisioning':'Pipeline'}</h1><p>Every client as a card in the stage they are sitting in — move them along or see what is stuck.</p></div>${userpill()}</div>
+  <div class="kbar"><div class="kb"><div class="kl">Open · value</div><div class="kv">${board.length} · ${eur(openVal)}</div></div><div class="kb"><div class="kl">Stuck past target</div><div class="kv red">${stuck.length} · ${eur(stuckVal)}</div></div><div class="kb"><div class="kl">Won this year</div><div class="kv green">${eur(wonVal)}</div></div></div>
+  <div class="kfilters">${[['all','Everything'],['open','Open only'],['past','Past target'],['big','€ 300 and up']].map(f=>`<button class="fp ${filter===f[0]?'on':''}" data-f="${f[0]}">${f[1]}</button>`).join('')}<span style="margin-left:auto;font-size:12px;color:var(--mut);font-weight:700;align-self:center">${board.length} cards on the board</span></div>
+  <div class="kgroups"><span class="g"><i style="background:var(--brand)"></i>Our move · ${grpCount('move')}</span><span class="g"><i style="background:var(--amber)"></i>Waiting on them · ${grpCount('wait')}</span><span class="g"><i style="background:var(--green)"></i>Done · ${pool.filter(c=>c.stage>6).length}</span></div>
+  <div class="board">${COL_ORDER.map(col).join('')}</div>`;
+}
+
+/* ===== clients table ===== */
+function stagePill(c){if(c.stage>6)return '<span class="spill sp-green">Live</span>';
+ const b=bucket(c);const map={wants:'sp-blue',sent:'sp-gray',details:'sp-amber',awaiting:'sp-blue',todecl:'sp-blue',pay:'sp-gray',setup:'sp-blue',golive:'sp-green'};
+ return `<span class="spill ${map[b]}">${COLS[b].name}</span>`;}
+function clientsHTML(){
+ const pool=scoped();const showRes=role!=='reseller';
+ const rtag=r=>`<span class="rtag" style="background:${r==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${r==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${r}</span>`;
+ return `<div class="phead"><div><h1>${role==='onesys'?'Provider clients':'Clients'}</h1><p>Everything on the book${showRes?' across resellers':''}, live or still onboarding — this is the record, not a copy of it.</p></div>
+   <button class="btn" style="margin-left:auto" id="csv">${IC.dl} Export CSV</button></div>
+  <div class="stats" style="margin-bottom:16px">
+   <div class="statc"><div class="lb">Open clients</div><b class="num">${pool.filter(c=>c.stage<7).length}</b><div class="sub">in progress</div></div>
+   <div class="statc"><div class="lb">Past target</div><b class="num red">${pool.filter(c=>c.days>=4||c.state==='alert').length}</b><div class="sub">need a nudge</div></div>
+   <div class="statc"><div class="lb">Waiting on client</div><b class="num amber">${pool.filter(c=>c.state==='wait').length}</b><div class="sub">ball with them</div></div>
+   <div class="statc"><div class="lb">Live</div><b class="num green">${pool.filter(c=>c.stage>6).length}</b><div class="sub">issuing</div></div></div>
+  <div class="toolbar"><div class="search">${IC.search}<input placeholder="Name, VAT or city"></div><div class="dd">Filter by stage ${IC.chev}</div>${showRes?'<div class="dd">All resellers '+IC.chev+'</div>':''}<span style="margin-left:auto;font-size:12px;color:var(--mut);font-weight:700">${pool.length} of ${pool.length} rows</span></div>
+  <div class="tablecard"><table><thead><tr><th>Client</th>${showRes?'<th>Reseller</th>':''}<th>VAT</th><th>Package</th><th>Stage</th><th>Owner</th><th>Due</th><th></th></tr></thead>
+   <tbody>${pool.map(c=>{const late=c.days>=4||c.state==='alert';return `<tr data-id="${c.id}">
+    <td><div class="namecell"><span class="tav">${initials(c.name)}</span><div><div class="cname">${c.name}</div><div class="csub">${c.city}</div></div></div></td>
+    ${showRes?`<td>${rtag(c.reseller)}</td>`:''}
+    <td class="num">${c.vat}</td><td class="num">${c.pack}</td><td>${stagePill(c)}</td><td>${c.owner}</td>
+    <td>${c.stage>6?'<span class="csub">—</span>':(late?`<span class="over">${c.days}d over</span>`:`<span class="csub">day ${c.days}</span>`)}</td>
+    <td><button class="doit" data-id="${c.id}">Open</button></td></tr>`;}).join('')}</tbody></table></div>`;
+}
+
+/* ===== admin register ===== */
+function adminHTML(){
+ const rows=clients;
+ const mp=c=>{let h='';for(let i=1;i<=6;i++)h+=`<i style="display:inline-block;width:11px;height:4px;border-radius:2px;margin-right:2px;background:${i<=Math.min(c.stage,6)?(c.stage>6?'var(--green)':'var(--brand)'):'var(--line2)'}"></i>`;return h;};
+ return `<div class="phead"><div><h1>Master register</h1><p>Every client across every reseller — the whole platform on one sheet.</p></div>${userpill()}</div>
+  <div class="toolbar"><div class="search">${IC.search}<input placeholder="Search client or VAT…"></div><div class="dd">All resellers ${IC.chev}</div><div class="dd">All stages ${IC.chev}</div><button class="btn" style="margin-left:auto" id="csv">${IC.dl} Export CSV</button></div>
+  <div class="tablecard"><table><thead><tr><th style="width:34px">#</th><th>Client</th><th>VAT</th><th>Reseller</th><th>Package</th><th>Stage</th><th>Progress</th><th>Owner</th><th>Days</th><th>Status</th></tr></thead>
+   <tbody>${rows.map((c,i)=>`<tr data-id="${c.id}"><td class="num" style="color:var(--mut);font-weight:700">${i+1}</td>
+    <td><div class="cname">${c.name}</div><div class="csub">${c.city}</div></td><td class="num">${c.vat}</td>
+    <td><span class="rtag" style="background:${c.reseller==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${c.reseller==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${c.reseller}</span></td>
+    <td class="num">${c.pack}</td><td>${c.stage>6?'Live':c.stage+' · '+STEPS[c.stage-1]}</td><td style="white-space:nowrap">${mp(c)}</td>
+    <td>${c.owner}</td><td class="num" style="color:${c.days>=4?'var(--red)':'var(--sec)'}">${c.stage>6?'—':c.days}</td><td>${stagePill(c)}</td></tr>`).join('')}</tbody></table></div>
+  <div style="margin-top:12px;font-size:12px;color:var(--mut)">${rows.length} clients · ${[...new Set(rows.map(c=>c.reseller))].length} resellers · click any row to open the file</div>`;
+}
+
+/* ===== messages ===== */
+function threadsFor(){
+ const pool=scoped();const pick=[pool.find(c=>c.vat==='55722508'),...pool.filter(c=>c.stage>=2)].filter(Boolean);
+ const uniq=[...new Map(pick.map(c=>[c.id,c])).values()].slice(0,6);
+ return uniq.map(c=>{const late=c.days>=4||c.state==='alert';
+  let ch='Email',stt='none',sttl='NO REPLY',sub='Authorization and declaration of the provider',tm=c.days+'d ago';
+  if(c.stage===2&&c.state!=='alert'){ch='Email';stt='read';sttl='READ, NO REPLY';sub='Package options and cancellation policy';}
+  if(c.state==='alert'){ch='WhatsApp';stt='bounce';sttl='BOUNCED';sub='The two fields still missing from your form';}
+  if(c.stage>=4){ch='Viber';stt='rep';sttl='REPLIED';sub='Payment of '+eur(val(c))+' — reference is your VAT';tm='today';}
+  if(c.stage===3&&c.state==='move'){ch='Email';stt='wait';sttl='AWAITING REPLY';sub='Reminder — the myDATA declaration';}
+  return {c,ch,stt,sttl,sub,tm};});
+}
+function messagesHTML(){
+ const th=threadsFor();if(msgSel>=th.length)msgSel=0;const sel=th[msgSel];const c=sel.c;
+ return `<div class="phead"><div><h1>Messages &amp; tracking</h1><p>Every thread with a client, and what happened after you pressed send.</p></div>${userpill()}</div>
+  <div class="stats" style="grid-template-columns:repeat(5,1fr);margin-bottom:16px">
+   <div class="statc"><div class="lb">Sent this week</div><b class="num">184</b><div class="sub">126 by automation</div></div>
+   <div class="statc"><div class="lb">Opened / read</div><b class="num blue">71%</b><div class="sub">131 of 184</div></div>
+   <div class="statc"><div class="lb">Replied</div><b class="num green">38%</b><div class="sub">70 answered</div></div>
+   <div class="statc"><div class="lb">Awaiting reply</div><b class="num amber">23</b><div class="sub">9 past 48h</div></div>
+   <div class="statc"><div class="lb">Not delivered</div><b class="num red">4</b><div class="sub">wrong number</div></div></div>
+  <div class="kfilters" style="margin-bottom:14px">${['All channels','Email','Viber','WhatsApp'].map((x,i)=>`<button class="fp ${i===0?'on':''}">${x}</button>`).join('')}</div>
+  <div class="msgcols">
+   <div class="threadlist"><div class="tl-h"><span>Threads</span><span style="color:var(--mut);font-size:12px">${th.length} of ${th.length}</span></div>
+    ${th.map((t,i)=>`<div class="thread ${i===msgSel?'on':''}" data-i="${i}"><div class="tt"><span class="cn2">${t.c.name}</span><span class="chn">${t.ch.toUpperCase()}</span></div><div class="sub2">${t.sub}</div><div class="row3"><span class="stt stt-${t.stt==='none'?'none':t.stt==='read'?'read':t.stt==='rep'?'rep':t.stt==='bounce'?'bounce':'wait'}">${t.sttl}</span><span class="tm">${t.tm}</span></div></div>`).join('')}</div>
+   <div class="conv"><div class="conv-h"><div style="flex:1"><div class="cn3">${c.name}</div><div class="cs3">${c.city} · VAT ${c.vat} · 3 messages</div></div><button class="btn" id="openrec">Open record</button></div>
+    <div class="conv-b">
+     <div class="bubble out"><div class="bx"><div class="bt">Activation instructions</div>Καλημέρα, please create the authorization for VAT 801361524 in TAXIS, then submit the declaration in myDATA. The manual is attached; your accountant is copied in.</div><div class="meta2">You · Email · 14 Aug 10:02 <span class="trk trk-g">DELIVERED</span><span class="trk trk-g">OPENED 3×</span><span class="trk trk-g">ATTACHMENT OPENED</span><span class="trk trk-n">NO REPLY</span></div></div>
+     <div class="bubble inb"><div class="bx">Ευχαριστώ, θα το δούμε με τον λογιστή μας.</div><div class="meta2">Client · Email · 14 Aug 12:20</div></div>
+     <div class="bubble out"><div class="bx"><div class="bt">Reminder · authorization</div>Καλημέρα, just checking whether the authorization went through — we cannot file the declaration until it is accepted.</div><div class="meta2">You · Email · today 09:00 · by automation <span class="trk trk-g">DELIVERED</span><span class="trk trk-g">OPENED</span><span class="trk trk-g">LINK CLICKED</span></div></div></div>
+    <div class="composer"><div class="tplrow"><span class="tpl on">Email</span><span class="tpl">Viber</span><span class="tpl">WhatsApp</span><span class="tpl">Chase what is missing</span><span class="tpl">Authorization guide</span><span class="tpl">Payment reminder</span></div>
+     <div class="compbox">Write your reply, or pick a template…</div>
+     <div style="display:flex;gap:10px;margin-top:12px"><button class="btn btn-primary" id="sendmsg">Send on Email</button><button class="btn" id="follow">Schedule a follow-up</button><span style="align-self:center;font-size:11.5px;color:var(--mut)">Every send is logged on the record with opens and clicks.</span></div></div></div></div>`;
+}
+function wireMessages(){
+ document.querySelectorAll('.thread').forEach(t=>t.onclick=()=>{msgSel=+t.dataset.i;const c=$('#content');c.innerHTML=messagesHTML();wireMessages();});
+ const s=$('#sendmsg');if(s)s.onclick=()=>toast('Message sent · logged on the record');
+ const f=$('#follow');if(f)f.onclick=()=>toast('Follow-up scheduled');
+ const o=$('#openrec');if(o)o.onclick=()=>{const th=threadsFor();openCase(th[msgSel].c.id);};
+}
+
+function wireContent(){
+ document.querySelectorAll('.kfilters [data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderApp();});
+ document.querySelectorAll('[data-ov]').forEach(b=>b.onclick=()=>{ovScope=b.dataset.ov;renderApp();});
+ const csv=$('#csv');if(csv)csv.onclick=()=>toast('Exported to CSV');
+ document.querySelectorAll('#content .kcard').forEach(k=>k.onclick=()=>openCase(+k.dataset.id));
+ document.querySelectorAll('#content tbody tr').forEach(tr=>tr.onclick=()=>openCase(+tr.dataset.id));
+ document.querySelectorAll('.doit').forEach(b=>b.onclick=e=>{e.stopPropagation();openCase(+b.dataset.id);});
+}
+
+/* ===== invite ===== */
+function openInvite(){
+ $('#scrim').innerHTML=`<div class="modal"><div class="modal-h"><h3>Invite a client</h3></div>
+  <div class="modal-b"><div class="field"><label>Business name</label><input id="ivn" placeholder="e.g. Ταβέρνα Ο Μανώλης"></div>
+   <div class="field"><label>Viber number</label><input id="ivp" placeholder="+30 …"></div>
+   <div style="background:var(--brand-bg);border:1px solid #CFE0F4;border-radius:12px;padding:13px 15px;font-size:13px"><div style="display:flex;gap:8px;align-items:center;font-weight:800;color:var(--brand600);margin-bottom:6px;font-size:12.5px">${IC.bolt} Viber invitation preview</div>Hi! You've been invited to set up ONESYS e-invoicing. Tap to begin — about 10 minutes.</div></div>
+  <div class="modal-f"><button class="btn" id="ivc">Cancel</button><button class="btn btn-primary" id="ivs">${IC.bolt} Send Viber invite</button></div></div>`;
+ $('#scrim').classList.add('open');
+ $('#ivc').onclick=closeScrim;
+ $('#ivs').onclick=()=>{const n=($('#ivn').value||'New client').trim();clients.unshift({id:Date.now(),name:n,city:'—',vat:'—',reseller:'Spotlight',pack:'15.000',owner:ROLES[role].user,stage:1,state:'move',days:0,acct:'pending'});closeScrim();renderApp();toast('Viber invite sent to '+n);};
+}
+function closeScrim(){$('#scrim').classList.remove('open');$('#scrim').innerHTML='';}
+
+/* ===== case drawer ===== */
+function openCase(id){drawerId=id;drawerTab='steps';renderDrawer();$('#drawer').classList.add('open');$('#scrim').classList.add('open');$('#scrim').onclick=closeCase;}
+function closeCase(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open');$('#scrim').onclick=null;$('#scrim').innerHTML='';}
+function docsFor(c){const st=c.stage,alert=c.state==='alert';
+ const d=[{name:'ONESYS price list.pdf',kind:'PDF',state:'sent',meta:'Sent to the client'},{name:'Cancellation policy.pdf',kind:'PDF',state:'sent',meta:'Sent to the client'}];
+ if(st>=2){d.push({name:'ONESYS details form.xlsx',kind:'XLSX',state:st>2?'received':(alert?'missing':'received'),meta:st>2?'Returned · 18/22 valid':'Waiting on the client'});
+  d.push({name:'Phone bill.pdf',kind:'PDF',state:st>2?'received':'missing',meta:'Alternative internet line (ΦΕΚ)'});
+  d.push({name:'GEMI certificate.pdf',kind:'PDF',state:'optional',meta:'Only if not on the form'});}
+ if(st>=3){d.push({name:'TAXIS authorization manual.docx',kind:'DOCX',state:'sent',meta:'Sent to the accountant'});d.push({name:'Declaration screenshot.png',kind:'PNG',state:st>3?'received':'missing',meta:'From the accountant'});}
+ if(st>=4)d.push({name:'Payment proof.pdf',kind:'PDF',state:st>4?'received':'missing',meta:'Screenshot or bank line'});
+ if(st>=5)d.push({name:'Contract.pdf',kind:'PDF',state:'received',meta:'Signed'});return d;}
+function renderDrawer(){
+ const c=clients.find(x=>x.id===drawerId);const d=$('#drawer');
+ d.innerHTML=`<div class="drawer-h"><div class="top"><div><div style="font-weight:800;font-size:17px">${c.name}</div><div style="font-size:12px;color:var(--mut);font-weight:600">${c.city} · VAT ${c.vat} · ${c.reseller} · ${c.owner}</div></div><button class="x" id="dx">×</button></div>
+   <div class="dtabs">${[['steps','Steps'],['docs','Documents'],['msgs','Messages']].map(t=>`<button class="dtab ${drawerTab===t[0]?'on':''}" data-dt="${t[0]}">${t[1]}</button>`).join('')}</div></div>
+  <div class="drawer-b" id="drawerbody">${drawerBody(c)}</div>
+  <div class="drawer-f"><button class="btn ${(role==='sales'||role==='reseller')?'btn-primary':''} btn-block" id="viewas">${role==='onesys'?'Preview the client onboarding':"Open the client's view"} ${IC.arrow}</button></div>`;
+ $('#dx').onclick=closeCase;
+ d.querySelectorAll('[data-dt]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.dt;$('#drawerbody').innerHTML=drawerBody(c);wireDrawerBody(c);});
+ const va=$('#viewas');if(va)va.onclick=()=>{closeCase();flow.customer=c.name;const map={1:'landing',2:'identify',3:'gov',4:'signpay',5:'provision',6:'provision',7:'live'};flow.screen=map[c.stage]||'landing';enterCustomer();};
+ wireDrawerBody(c);
+}
+function drawerBody(c){if(drawerTab==='docs')return docsBody(c);if(drawerTab==='msgs')return msgsBody(c);return stepsBody(c);}
+function stepsBody(c){
+ const steps=STEPS.map((s,i)=>{const st=c.stage>6?'done':(i+1<c.stage?'done':(i+1===c.stage?'cur':''));const desc=i+1===c.stage?COLS[bucket(c)].act:(i+1<c.stage||c.stage>6?'Completed':'Pending');return `<li class="${st}"><span class="mk"></span><div class="t">${s}</div><div class="d">${desc}</div></li>`;}).join('');
+ return actionPanel(c)+partiesBlock(c)
+  +`<div class="lab" style="margin-top:16px">Progress · 6 steps</div><ul class="vtl">${steps}</ul>`;
+}
+/* what this role can actually DO on the case */
+function providerTask(c){
+ if(c.stage>6)return {done:true,label:'Live — issuing to myDATA. Nothing left to provision.'};
+ if(c.stage===3)return {label:'Accept the Taxisnet authorization and the myDATA declaration for this client.',btn:'Accept authorization',next:()=>{c.stage=4;c.state='wait';c.status='Awaiting payment';c.days=0;c.acct='ok';}};
+ if(c.stage===4)return {wait:true,label:'Payment is open with the reseller — nothing for the provider to do until it clears.'};
+ if(c.stage===5)return {label:'Register the client in Verinvo (OX HOME), generate API keys and push them to the billing system.',btn:'Provision & issue keys',next:()=>{c.stage=6;c.state='move';c.status='Go-live in progress';c.days=0;}};
+ if(c.stage===6)return {label:'Run the functional test document through myDATA, then confirm go-live.',btn:'Confirm go-live',next:()=>{c.stage=7;c.state='live';c.status='Live';c.days=0;}};
+ return {wait:true,label:'Not yet at the provisioning stage.'};
+}
+function salesTask(c){
+ if(c.stage>6)return {done:true,label:'Live and issuing to myDATA. Nothing to chase here.'};
+ if(c.stage===1)return {label:'Send the ONESYS packages and the details form so they can start.',primary:{id:'sSend',t:'Send info pack on Viber',adv:()=>{c.stage=2;c.state='wait';c.status='Details form not returned';c.days=0;},msg:'Info pack sent'},secondary:{id:'sEmail',t:'Send by email',toast:'Info pack emailed'}};
+ if(c.stage===2)return {label:c.state==='alert'?'Their Viber bounced — reach them another way and finish the missing fields.':'Waiting on the completed details form and the phone bill.',primary:c.state==='alert'?{id:'sAlt',t:'Try email instead',toast:'Emailed the client'}:{id:'sChase',t:'Chase on Viber',toast:'Viber nudge sent'},secondary:{id:'sRecv',t:'Details complete →',adv:()=>{c.stage=3;c.state='wait';c.status='Awaiting authorization';c.days=0;c.acct='ok';},msg:'Moved to Authorize'}};
+ if(c.stage===3)return {waitOn:'the accountant & ONESYS',label:'The accountant authorizes ONESYS in Taxisnet and files the myDATA declaration; ONESYS then accepts. You can nudge — not complete it.',primary:{id:'sAcct',t:'Remind the accountant',toast:'Reminder sent to the accountant'}};
+ if(c.stage===4)return {label:'Payment is open — send the link, then confirm once it clears.',primary:{id:'sPay',t:'Send payment link',toast:'Payment link sent on Viber'},secondary:{id:'sPaid',t:'Mark paid →',adv:()=>{c.stage=5;c.state='move';c.status='With ONESYS · provisioning';c.days=0;},msg:'Payment confirmed'}};
+ if(c.stage===5)return {waitOn:'ONESYS',label:'With ONESYS now — registering the client and issuing API keys. Nothing for you to do.'};
+ if(c.stage===6)return {waitOn:'ONESYS',label:'ONESYS is running the test document and confirming go-live.'};
+ return {label:'—'};
+}
+function actionPanel(c){
+ if(role==='admin'){
+  const owners=['Maria K.','Nikos P.','Eleni V.','Giorgos M.'];
+  const stages=[[1,'1 · Package'],[2,'2 · Details'],[3,'3 · Authorize'],[4,'4 · Pay'],[5,'5 · Setup'],[6,'6 · Go-live'],[7,'Live']];
+  return `<div class="actpanel"><div class="aplab">Platform controls</div>
+    <div class="apgrid"><label>Stage<select id="adstage">${stages.map(s=>`<option value="${s[0]}" ${c.stage===s[0]?'selected':''}>${s[1]}</option>`).join('')}</select></label>
+      <label>Owner<select id="adowner">${owners.map(o=>`<option ${c.owner===o?'selected':''}>${o}</option>`).join('')}</select></label></div>
+    <div class="apnote">Correct the record on behalf of ${c.reseller} — for support and overrides. Every change is logged to the audit trail.</div>
+    <button class="btn btn-primary btn-block" id="adapply">Apply changes</button></div>`;
+ }
+ if(role==='onesys'){
+  const t=providerTask(c);
+  return `<div class="actpanel"><div class="aplab">Provider action — ONESYS</div>
+    <div class="aptask ${t.wait?'wait':t.done?'done':''}">${t.done?IC.check:(t.wait?'⏳':IC.bolt)}<span>${t.label}</span></div>
+    ${t.btn?`<button class="btn btn-primary btn-block" id="onesysdo">${t.btn}</button>`:''}</div>`;
+ }
+ const t=salesTask(c);const stepName=STEPS[Math.min(c.stage,6)-1];
+ const mkbtn=(bb,cls)=>bb?`<button class="btn ${cls}" id="${bb.id}">${bb.t}</button>`:'';
+ return `<div class="actpanel"><div class="aplab">Move it along · ${c.stage>6?'Live':stepName}</div>
+   <div class="aptask ${t.waitOn?'wait':t.done?'done':''}">${t.done?IC.check:(t.waitOn?'⏳':IC.bolt)}<span>${t.label}</span></div>
+   ${t.waitOn?`<div class="apnote">The ball is with ${t.waitOn} — it moves here on its own once they act.</div>`:''}
+   ${(t.primary||t.secondary)?`<div class="aprow">${mkbtn(t.primary,'btn-primary')}${mkbtn(t.secondary,'')}</div>`:''}</div>`;
+}
+function partiesBlock(c){
+ const P=(bg,in_,t,r,tag)=>`<div class="party"><span class="pav" style="background:${bg}">${in_}</span><div><div style="font-weight:800">${t}</div><div class="role">${r}</div></div><span class="tagm">${tag}</span></div>`;
+ const owner=P('#3E8AE0',initials(c.name),'Store owner','Signs & sends the paperwork','Owner');
+ const acct=P('#1FA98A','AC','Accountant',c.acct==='ok'?'Joined · files the declaration':'Invite pending',c.acct==='ok'?'Active':'Pending');
+ const sales=P('var(--navy)',initials(c.owner),c.owner,'Onboarding · '+c.reseller,'Sales');
+ const onesys=P('#DE6A3A','ON','ONESYS provisioning','Authorization, keys & go-live','Provider');
+ const reseller=P('#2F6BE8',initials(c.reseller),c.reseller,'Reseller · brought this client','Reseller');
+ if(role==='onesys')return `<div class="lab">Handover to you</div><div class="party-intro">${c.reseller} has closed the sale; this client is now with ONESYS for provisioning.</div><div class="parties">${reseller}${acct}${onesys}</div>`;
+ if(role==='admin')return `<div class="lab">Who touches this client</div><div class="party-intro">The full chain across the platform — reseller, sales owner and provider.</div><div class="parties">${reseller}${sales}${onesys}</div>`;
+ return `<div class="lab">Shared case — one status for everyone</div><div class="party-intro">No more scattered email threads: the owner, their bookkeeper and you all see this same case.</div><div class="parties">${owner}${acct}${sales}</div>`;
+}
+function docsBody(c){const docs=docsFor(c);const kc={XLSX:'#1E7A46',PDF:'#C0433C',DOCX:'#2E5FA8',PNG:'#7A4FBF'};
+ return `<div class="lab">Documents on this client</div>${docs.map(x=>`<div class="doc"><div class="dkind" style="background:${kc[x.kind]}">${x.kind}</div><div><div class="dn">${x.name}</div><div class="dm">${x.meta}</div></div><span class="dstate ds-${x.state}">${x.state}</span></div>`).join('')}<div class="shared" style="margin-top:14px">${IC.bolt} Missing documents can be requested in one message across email &amp; Viber.</div>`;}
+function msgsBody(c){
+ const m=[{ch:'Email',dir:'out',text:'Packages, prices & cancellation policy',trk:'Opened 3×',tk:'g',t:'12 Aug'}];
+ if(c.stage>=2)m.push({ch:'Viber',dir:'out',text:'A few details are still missing from your form',trk:c.state==='alert'?'Bounced':'Read',tk:c.state==='alert'?'b':'g',t:'14 Aug'});
+ if(c.stage>=3)m.push({ch:'Viber',dir:'in',text:'Ευχαριστώ, θα το δούμε με τον λογιστή μας.',trk:'',tk:'',t:'14 Aug'});
+ if(c.stage>=4)m.push({ch:'Email',dir:'out',text:'Payment instructions & IBANs',trk:c.stage>4?'Link clicked':'No reply',tk:c.stage>4?'g':'n',t:'16 Aug'});
+ return `<div class="lab">Messages &amp; tracking</div>${m.map(x=>`<div style="padding:11px 0;border-bottom:1px solid var(--line)"><div style="display:flex;align-items:center;gap:8px;font-size:11px;margin-bottom:4px"><span class="stt ${x.ch==='Email'?'stt-none':'stt-wait'}" style="${x.ch==='Viber'?'background:#EFEBFA;color:#6D5BC7':''}">${x.ch}</span><span style="color:var(--mut);font-weight:700">${x.dir==='in'?'client replied':'sent by us'}</span><span style="margin-left:auto;color:var(--mut)">${x.t}</span></div><div style="font-size:13px;${x.dir==='in'?'background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 11px;display:inline-block':''}">${x.text}</div>${x.trk?`<div style="margin-top:6px"><span class="trk trk-${x.tk}">${x.trk}</span></div>`:''}</div>`).join('')}<div class="remind"><button class="btn" id="remEmail">Remind by email</button><button class="btn btn-primary" id="remViber">${IC.bolt} Remind on Viber</button></div>`;}
+function wireDrawerBody(c){
+ const re=$('#remEmail'),rv=$('#remViber');if(re)re.onclick=()=>toast('Email reminder queued for '+c.name);if(rv)rv.onclick=()=>toast('Viber reminder sent to '+c.name);
+ if(role==='sales'||role==='reseller'){const t=salesTask(c);[t.primary,t.secondary].forEach(bb=>{if(!bb)return;const el=$('#'+bb.id);if(el)el.onclick=()=>{if(bb.adv){bb.adv();refreshAfterAction((bb.msg||'Status updated')+' · '+c.name);}else toast(bb.toast||'Done');};});}
+ const od=$('#onesysdo');if(od)od.onclick=()=>{const t=providerTask(c);if(t.next)t.next();refreshAfterAction('Status updated · '+c.name);};
+ const ad=$('#adapply');if(ad)ad.onclick=()=>{c.stage=+$('#adstage').value;c.owner=$('#adowner').value;if(c.stage>6){c.state='live';c.status='Live';}else if(c.state==='live'){c.state='move';c.status='In progress';}refreshAfterAction('Record updated · '+c.name);};
+}
+function refreshAfterAction(msg){drawerTab='steps';renderDrawer();fillContent();toast(msg);}
+
+/* ===== client wizard ===== */
+let flow={screen:'landing',customer:'Ταβέρνα Ο Μανώλης',looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};
+const WSCREENS=['landing','verify','identify','plan','signpay','gov','provision','live'];
+const wstage={landing:0,verify:1,identify:1,plan:2,signpay:3,gov:4,provision:5,live:6};
+const WSTEPS=['Identify','Plan','Sign & pay','Authorize','Go-live'];
+function enterCustomer(){setTheme(ROLES.client);$('#launcher').style.display='none';$('#shell').style.display='none';$('#customer').style.display='block';renderWizard();}
+function exitCustomer(){if(role==='client')renderClientHome();else{setTheme(ROLES[role]);renderApp();}}
+function clientProgress(){
+ const steps=[
+  {t:'Confirm your details',d:'Your company details from the registry',done:!!flow.looked,screen:'identify'},
+  {t:'Plan & payment',d:'Choose a plan, sign and pay',done:!!(flow.signed&&flow.paid),screen:'plan'},
+  {t:'Authorize & declare',d:'Taxisnet authorization + myDATA declaration',done:(flow.auth==='ok'&&flow.decl==='ok'),screen:'gov'},
+  {t:'Go live',d:'Provisioned and issuing e-invoices',done:!!flow.provDone,screen:'provision'}
+ ];
+ const doneCount=steps.filter(s=>s.done).length;const curIdx=steps.findIndex(s=>!s.done);
+ return {steps,doneCount,curIdx,pct:Math.round(doneCount/steps.length*100)};
+}
+function renderClientHome(){
+ setTheme(ROLES.client);
+ $('#launcher').style.display='none';$('#shell').style.display='none';$('#customer').style.display='block';
+ const P=clientProgress();const complete=P.curIdx<0;const cur=complete?null:P.steps[P.curIdx];
+ const chip=s=>s==='ok'?'<span class="chip ok"><i></i>Accepted</span>':s==='wait'?'<span class="chip wait"><i></i>Awaiting</span>':'<span class="chip todo"><i></i>To do</span>';
+ const providerDocs=['ONESYS price list.pdf','Cancellation policy.pdf'].concat(flow.signed?['Your signed contract.pdf']:[]);
+ const yourDocs=[{n:'Company details form',k:'looked',ok:!!flow.looked},{n:'Phone bill · alternative internet',k:'phonebill',ok:!!flow.phonebill}];
+ $('#customer').innerHTML=`
+  <div class="cust-top"><div class="l"><span class="logo2">${IC.logo}</span> ONESYS e-invoicing <span class="poweredby">· powered by Verinvo</span></div><button class="exit" id="chExit">${IC.back} Back to roles</button></div>
+  <div class="chome">
+   <div class="chero"><div class="sm">Your ONESYS setup</div><h1>${flow.customer}</h1>
+    <div class="cprog"><i style="width:${P.pct}%"></i></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);font-weight:800;margin-bottom:12px"><span>${P.pct}% complete</span><span>${P.doneCount} of ${P.steps.length} steps done</span></div>
+    <div class="cstatus">${complete?'You’re all set — ONESYS is live and issuing your e-invoices. 🎉':'Next up: <b>'+cur.t+'</b> — '+cur.d.toLowerCase()+'.'}</div>
+    ${complete?'<span class="chip ok" style="font-size:13px;padding:7px 14px"><i></i>Live &amp; issuing</span>':`<button class="btn btn-primary btn-lg" id="chContinue">${P.doneCount===0?'Start setup':'Continue setup'} ${IC.arrow}</button>`}
+   </div>
+   <div class="pcard" style="margin-bottom:16px"><div class="hh" style="margin-bottom:6px">Your steps</div>
+    ${P.steps.map((s,i)=>{const cls=s.done?'done':(i===P.curIdx?'cur':'pend');const stat=s.done?'Done':(i===P.curIdx?'Up next':'Pending');const chipcls=s.done?'ok':(i===P.curIdx?'wait':'todo');
+      return `<div class="cstep"><span class="ci ${cls}">${s.done?IC.check:i+1}</span><div><div class="cn">${s.t}</div><div class="cd">${s.d}</div></div><span class="cact chip ${chipcls}"><i></i>${stat}</span></div>`;}).join('')}
+   </div>
+   <div class="pcard" style="margin-bottom:16px"><div class="hh" style="margin-bottom:10px">Documents</div>
+    <div class="lab">From ONESYS — yours to keep</div>
+    ${providerDocs.map(n=>`<div class="doc"><div class="dkind" style="background:#C0433C">PDF</div><div><div class="dn">${n}</div><div class="dm">Tap to download</div></div><span class="dstate ds-sent">download</span></div>`).join('')}
+    <div class="lab" style="margin-top:14px">From you</div>
+    ${yourDocs.map(d=>`<div class="doc"><div class="dkind" style="background:${d.ok?'#1E7A46':'#8B94A3'};font-size:15px">${d.ok?'✓':'?'}</div><div><div class="dn">${d.n}</div><div class="dm">${d.ok?'Received — thank you':'We still need this from you'}</div></div>${d.ok?'<span class="dstate ds-received">received</span>':`<button class="btn" data-up="${d.k}">Upload</button>`}</div>`).join('')}
+   </div>
+   <div class="pcard"><div class="hh" style="margin-bottom:4px">Authorization &amp; declaration</div><div class="hs" style="margin-bottom:12px">The two government-portal steps. You and your accountant both see this status live.</div>
+    <div class="cstep"><div><div class="cn">Taxisnet authorization</div><div class="cd">Authorize ONESYS as your e-invoicing provider</div></div><span class="cact">${chip(flow.auth)}</span></div>
+    <div class="cstep"><div><div class="cn">myDATA declaration</div><div class="cd">Declare the provider with your internet details</div></div><span class="cact">${chip(flow.decl)}</span></div>
+    ${(flow.auth==='ok'&&flow.decl==='ok')?'<div class="shared" style="margin-top:14px">'+IC.check+' Both accepted — you’re ready for go-live.</div>':`<button class="btn btn-primary btn-block" id="chDecl" style="margin-top:14px">Send the declaration ${IC.arrow}</button>`}
+   </div>
+  </div>`;
+ $('#chExit').onclick=renderLauncher;
+ const cont=$('#chContinue');if(cont)cont.onclick=()=>{flow.screen=P.doneCount===0?'landing':cur.screen;enterCustomer();};
+ const decl=$('#chDecl');if(decl)decl.onclick=()=>{flow.screen='gov';enterCustomer();};
+ document.querySelectorAll('[data-up]').forEach(bn=>bn.onclick=()=>{flow[bn.dataset.up]=true;renderClientHome();toast('Document uploaded');});
+}
+function wstepper(){const cur=wstage[flow.screen];return '<div class="stepper">'+WSTEPS.map((s,i)=>{const n=i+1;const cls=n<cur?'done':(n===cur?'cur':'');const circ=n<cur?IC.check:n;return `<div class="st ${cls}"><div class="circ">${circ}</div><div class="lbl">${s}</div></div>`+(i<4?'<div class="line"></div>':'');}).join('')+'</div>';}
+function cshell(inner,showStepper=true){$('#customer').innerHTML=`<div class="cust-top"><div class="l"><span class="logo2">${IC.logo}</span> ONESYS e-invoicing <span class="poweredby">· powered by Verinvo</span></div><button class="exit" id="exitp">${IC.back} ${role==='client'?'Back to my setup':'Exit preview'}</button></div><div class="wizwrap">${showStepper?wstepper():''}<div class="screen">${inner}</div></div>`;$('#exitp').onclick=exitCustomer;}
+function wnext(){const i=WSCREENS.indexOf(flow.screen);flow.screen=WSCREENS[Math.min(i+1,WSCREENS.length-1)];renderWizard();}
+function wprev(){const i=WSCREENS.indexOf(flow.screen);flow.screen=WSCREENS[Math.max(i-1,0)];renderWizard();}
+function renderWizard(){({landing:wLanding,verify:wVerify,identify:wIdentify,plan:wPlan,signpay:wSignPay,gov:wGov,provision:wProvision,live:wLive})[flow.screen]();}
+function wLanding(){cshell(`<div style="text-align:center;padding:8px 0"><span class="logo2" style="width:48px;height:48px;font-size:22px;border-radius:14px;margin:0 auto 16px;display:flex">${IC.logo}</span><h2>Set up ONESYS e-invoicing</h2><p class="lead">You've been invited to activate electronic invoicing for <b>${flow.customer}</b>. About 10 minutes — we'll guide each step.</p><div style="display:flex;flex-direction:column;gap:9px;max-width:340px;margin:0 auto 22px;text-align:left">${['Confirm your company details','Choose a plan and pay','Authorize in Taxisnet & myDATA','Go live automatically'].map((t,i)=>`<div style="display:flex;gap:10px;align-items:center;font-size:13.5px"><span style="width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand600);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">${i+1}</span>${t}</div>`).join('')}</div><button class="btn btn-primary btn-lg" id="start">Get started ${IC.arrow}</button></div>`,false);$('#start').onclick=wnext;}
+function wVerify(){cshell(`<h2>Verify it's you</h2><p class="lead">We sent a 6-digit code over Viber. Enter it below.</p><div class="otp" id="otp">${[0,1,2,3,4,5].map(i=>`<input maxlength="1" inputmode="numeric" data-i="${i}">`).join('')}</div><div style="text-align:center"><button class="btn" id="resend" style="border:0;color:var(--brand600);background:transparent;font-weight:800">Resend over Viber</button></div><div class="navrow"><button class="btn" id="bk">${IC.back} Back</button><button class="btn btn-primary" id="nx" disabled>Verify ${IC.arrow}</button></div>`);const inps=[...document.querySelectorAll('.otp input')];inps.forEach((inp,i)=>{inp.oninput=()=>{if(inp.value&&i<5)inps[i+1].focus();$('#nx').disabled=!inps.every(x=>x.value);};inp.onkeydown=e=>{if(e.key==='Backspace'&&!inp.value&&i>0)inps[i-1].focus();};});inps[0].focus();$('#resend').onclick=()=>toast('Code re-sent over Viber');$('#bk').onclick=wprev;$('#nx').onclick=()=>{toast('Verified');wnext();};}
+function wIdentify(){const f=flow.looked;cshell(`<h2>Confirm your company details</h2><p class="lead">Enter your VAT number (AFM). We'll pull the rest from the registry so you don't fill it in by hand.</p><div class="field"><label>VAT number (AFM)</label><div style="display:flex;gap:9px"><input id="afm" placeholder="e.g. 094117852" value="${f?'094117852':''}" style="flex:1"><button class="btn btn-primary" id="look">${f?'Looked up':'Look up'}</button></div>${!f?'<div class="hint">Try any number — simulated registry lookup.</div>':''}</div><div class="lookcard ${f?'filled':''}">${f?`<div class="lab">From the business registry (GEMI / AADE) — edit if needed</div><div class="two"><div class="field done"><label>Company name</label><input value="${flow.customer}"></div><div class="field done"><label>DOY (tax office)</label><input value="ΙΒ' Athinon"></div></div><div class="two"><div class="field done"><label>GEMI / registration</label><input value="140218903000"></div><div class="field done"><label>Legal representative</label><input value="Manolis Petrou"></div></div><div class="field done"><label>Registered address</label><input value="Ermou 12, Athens 10563, Greece"></div><div class="field" style="margin-top:14px"><label>Invite your accountant (optional) — joins the same case</label><input placeholder="accountant@email.gr"></div>`:'<div style="text-align:center;color:var(--mut);font-size:13px;padding:14px 0">Company details appear here after lookup.</div>'}</div><div class="navrow"><button class="btn" id="bk">${IC.back} Back</button><button class="btn btn-primary" id="nx" ${f?'':'disabled'}>Confirm &amp; continue ${IC.arrow}</button></div>`);$('#bk').onclick=wprev;$('#look').onclick=()=>{const b=$('#look');b.innerHTML='<span class="spin" style="width:15px;height:15px;border-top-color:#fff;border-color:rgba(255,255,255,.4)"></span>';setTimeout(()=>{flow.looked=true;renderWizard();toast('Details auto-filled from registry');},850);};if(f)$('#nx').onclick=wnext;}
+function wPlan(){cshell(`<h2>Choose your plan</h2><p class="lead">Priced by the number of documents you issue per year.</p><div class="plans" id="plans">${PLANS.map((p,i)=>`<div class="planopt ${flow.plan===i?'sel':''}" data-p="${i}"><div class="tick">${IC.check}</div><div class="docs">${p.docs}</div><div class="sub">documents / year</div><div class="price">€${p.price}<span style="color:var(--mut);font-weight:600"> + VAT</span></div></div>`).join('')}</div><div class="two" style="margin-top:18px"><div class="field"><label>Coupon (optional)</label><input id="cp" placeholder="Enter code" value="${flow.coupon}"></div><div class="field"><label>Alternative internet / phone bill</label><div class="dropzone ${flow.phonebill?'has':''}" id="dz">${flow.phonebill?IC.check+' COSMOTE-bill.pdf added':'Drag &amp; drop or tap to upload'}</div></div></div>${flow.phonebill?`<div class="lookcard filled" style="margin-top:14px"><div class="lab">Read from your bill — mandatory alternative-internet details (ΦΕΚ)</div><div class="two"><div class="field done"><label>Internet provider</label><input value="COSMOTE"></div><div class="field done"><label>Connection type</label><input value="5G"></div></div><div class="two"><div class="field done"><label>Connection number</label><input value="2284053130"></div><div class="field done"><label>Contract start date</label><input value="19/05/2025"></div></div></div>`:''}<div class="navrow"><button class="btn" id="bk">${IC.back} Back</button><button class="btn btn-primary" id="nx">Review order ${IC.arrow}</button></div>`);$('#plans').onclick=e=>{const o=e.target.closest('[data-p]');if(o){flow.plan=+o.dataset.p;renderWizard();}};$('#dz').onclick=()=>{flow.phonebill=true;renderWizard();toast('Phone bill attached — details extracted');};$('#bk').onclick=wprev;$('#nx').onclick=()=>{flow.coupon=$('#cp').value;wnext();};}
+function wSignPay(){const p=PLANS[flow.plan];const vt=Math.round(p.price*.24);const tot=p.price+vt;cshell(`<h2>Sign &amp; pay</h2><p class="lead">Review, sign, and pay in one place. No bank transfer or proof screenshots.</p><div class="summary" style="margin-bottom:18px"><div class="row"><span>ONESYS plan · ${p.docs} docs/year</span><span>€${p.price}</span></div><div class="row"><span>VAT (24%)</span><span>€${vt}</span></div>${flow.coupon?`<div class="row"><span>Coupon ${flow.coupon}</span><span>applied</span></div>`:''}<div class="row"><span>Total due today</span><span>€${tot}</span></div></div><div class="paycard"><div class="ph"><b>Sign the agreement</b><span class="brandtag digink">Digink</span><span class="st">${flow.signed?'<span class="chip ok"><i></i>Signed</span>':'<span class="chip todo"><i></i>Not signed</span>'}</span></div><div class="sigpad ${flow.signed?'signed':''}" id="sig">${flow.signed?'<span class="sig-name">Manolis Petrou</span>':'Tap to sign'}</div></div><div class="paycard"><div class="ph"><b>Payment</b><span class="brandtag stripe">Stripe</span><span class="st">${flow.paid?'<span class="chip ok"><i></i>Paid €'+tot+'</span>':'<span class="chip todo"><i></i>Unpaid</span>'}</span></div>${flow.paid?'<div style="font-size:13px;color:var(--sec)">Payment confirmed instantly — the purchase record is created automatically.</div>':`<div class="field"><label>Card number</label><input placeholder="4242 4242 4242 4242"></div><div class="two"><div class="field"><label>Expiry</label><input placeholder="12 / 28"></div><div class="field"><label>CVC</label><input placeholder="123"></div></div><button class="btn btn-primary btn-block" id="pay">Pay €${tot}</button>`}</div><div class="navrow"><button class="btn" id="bk">${IC.back} Back</button><button class="btn btn-primary" id="nx" ${flow.signed&&flow.paid?'':'disabled'}>Continue ${IC.arrow}</button></div>`);$('#sig').onclick=()=>{if(flow.signed)return;flow.signed=true;renderWizard();toast('Signed via Digink');};$('#bk').onclick=wprev;if(!flow.paid&&$('#pay'))$('#pay').onclick=()=>{const b=$('#pay');b.innerHTML='<span class="spin" style="border-top-color:#fff;border-color:rgba(255,255,255,.4)"></span> Processing…';b.disabled=true;setTimeout(()=>{flow.paid=true;renderWizard();toast('Payment confirmed');},1000);};if(flow.signed&&flow.paid)$('#nx').onclick=wnext;}
+function wGov(){const both=flow.auth==='ok'&&flow.decl==='ok';const chip=s=>s==='ok'?'<span class="chip ok"><i></i>Accepted</span>':s==='wait'?'<span class="chip wait"><i></i>Awaiting</span>':'<span class="chip todo"><i></i>To do</span>';cshell(`<h2>Authorization &amp; declaration</h2><p class="lead">Two steps in the government portals. We've pre-filled the values — complete each and we'll track acceptance.</p><div class="task"><div class="th"><b>1 · Authorize ONESYS in Taxisnet</b><span class="st">${chip(flow.auth)}</span></div><div class="desc">Authorize ONESYS as your certified e-invoicing provider.</div><div class="prefill">Provider VAT (AFM): <code>801361524</code> · Provider contract no.: <code>0716</code></div>${flow.auth==='ok'?'':`<div style="display:flex;gap:9px"><button class="btn" id="opa">Open Taxisnet</button><button class="btn btn-primary" id="doa" ${flow.auth==='wait'?'disabled':''}>I've authorized</button></div>`}</div><div class="task"><div class="th"><b>2 · Complete the myDATA declaration</b><span class="st">${chip(flow.decl)}</span></div><div class="desc">Declare the provider in myDATA using your contract and internet-provider details.</div><div class="prefill">Alternative-internet (ΦΕΚ), from the bill — Provider: <code>COSMOTE</code> · Type: <code>5G</code> · Connection no.: <code>2284053130</code> · Contract start: <code>19/05/2025</code></div>${flow.decl==='ok'?'':`<div style="display:flex;gap:9px"><button class="btn" id="opd">Open myDATA</button><button class="btn btn-primary" id="dod" ${flow.decl==='wait'?'disabled':''}>I've declared</button></div>`}</div><div class="shared">${IC.bolt} Your owner and accountant both see this status live — no separate email threads.</div><div class="navrow"><button class="btn" id="bk">${IC.back} Back</button><button class="btn btn-primary" id="nx" ${both?'':'disabled'}>Continue ${IC.arrow}</button></div>`);$('#bk').onclick=wprev;const accept=k=>{flow[k]='wait';renderWizard();setTimeout(()=>{flow[k]='ok';renderWizard();toast((k==='auth'?'Authorization':'Declaration')+' accepted by ONESYS');},1200);};if($('#opa'))$('#opa').onclick=()=>toast('Opening Taxisnet…');if($('#doa'))$('#doa').onclick=()=>accept('auth');if($('#opd'))$('#opd').onclick=()=>toast('Opening myDATA…');if($('#dod'))$('#dod').onclick=()=>accept('decl');if(both)$('#nx').onclick=wnext;}
+const PROV=['Create business profile in Verinvo (OX HOME)','Generate API credentials','Push credentials to the billing system','Run functional test submission','Confirm go-live'];
+function wProvision(){cshell(`<h2>Setting you up</h2><p class="lead">Everything from here is automatic — no technician re-keying, no phone calls.</p><ul class="provlist" id="prov">${PROV.map((t,i)=>`<li class="provitem pending" data-i="${i}"><span class="ic"><span class="dotpending"></span></span>${t}</li>`).join('')}</ul><div class="navrow"><button class="btn" id="bk">${IC.back} Back</button><button class="btn btn-primary" id="nx" ${flow.provDone?'':'disabled'}>Continue ${IC.arrow}</button></div>`);$('#bk').onclick=wprev;if(flow.provDone){document.querySelectorAll('.provitem').forEach(li=>{li.className='provitem done';li.querySelector('.ic').innerHTML='<span class="checkc">'+IC.check+'</span>';});$('#nx').onclick=wnext;return;}const items=[...document.querySelectorAll('.provitem')];let i=0;const step=()=>{if(i>0){items[i-1].className='provitem done';items[i-1].querySelector('.ic').innerHTML='<span class="checkc">'+IC.check+'</span>';}if(i<items.length){items[i].className='provitem active';items[i].querySelector('.ic').innerHTML='<span class="spin"></span>';i++;setTimeout(step,760);}else{flow.provDone=true;$('#nx').disabled=false;$('#nx').onclick=wnext;toast('Setup complete');}};setTimeout(step,500);}
+function wLive(){const p=PLANS[flow.plan];cshell(`<div class="livehero"><div class="livebadge">${IC.spark}</div><h2>${flow.customer} is live 🎉</h2><p>You can now issue e-invoices. A confirmation has been sent over Viber to you and your accountant.</p><div style="max-width:400px;margin:0 auto 20px;text-align:left;background:var(--brand-bg);border:1px solid #CFE0F4;border-radius:12px;padding:13px 15px;font-size:13px"><div style="display:flex;gap:8px;align-items:center;font-weight:800;color:var(--brand600);margin-bottom:6px;font-size:12.5px">${IC.bolt} Viber confirmation</div>You're live on ONESYS e-invoicing (${p.docs} docs/year). Need help? Just reply here.</div><button class="btn btn-primary btn-lg" id="done">${role==='client'?'Back to my setup':'Back to dashboard'}</button></div>`,false);$('#done').onclick=exitCustomer;}
+
+renderLauncher();
+</script>
+</body>
+</html>
