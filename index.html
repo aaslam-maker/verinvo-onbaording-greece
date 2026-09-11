@@ -370,6 +370,11 @@ tbody tr:hover{background:var(--soft)}
 .apgrid label{font-size:11px;font-weight:800;color:var(--sec);display:flex;flex-direction:column;gap:5px}
 .apgrid select{border:1px solid var(--line2);border-radius:9px;padding:9px 32px 9px 11px;font-size:13px;font-weight:700;color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A9A9C' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 11px center;width:100%}
 .apgrid select:focus{outline:2px solid var(--brand);outline-offset:1px}
+.evrow{display:flex;flex-wrap:wrap;gap:7px}
+.evbtn{border:1px solid var(--line2);background:#fff;color:var(--sec);font-size:12px;font-weight:800;padding:7px 11px;border-radius:9px;cursor:pointer;transition:.12s}
+.evbtn:hover{background:var(--soft);border-color:var(--mut)}
+.evbtn.danger{color:var(--red);border-color:#F3D2CE}
+.evbtn.danger:hover{background:#FDEAE8}
 .aptask{display:flex;align-items:flex-start;gap:9px;font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:10px}
 .aptask.wait{color:var(--amber)}.aptask.done{color:var(--green)}
 .aptask svg{margin-top:1px;flex:none}
@@ -793,13 +798,21 @@ function clientsHTML(){
 /* ===== admin register — derived status axes (manager's lifecycle model) ===== */
 const ADMIN_ACTION=['Send info pack & details form','Collect missing business details','Verify authorization & declaration','Verify bank transfer','Complete connection test','Confirm go-live'];
 const ADMIN_TEAM=['Sales','Operations','Operations','Finance','Technical','Technical'];
-function lifecycleOf(c){if(c.stage>6)return{t:'Onboarded',cls:'tp-green'};if(c.stage===1)return{t:'Sales in Progress',cls:'tp-blue'};return{t:'Onboarding',cls:'tp-violet'};}
-function subscriptionOf(c){if(c.stage>6)return{t:'Active',cls:'tp-green'};if(c.stage===1)return{t:'Not Subscribed',cls:'tp-gray'};return{t:'Pending Activation',cls:'tp-amber'};}
-function paymentOf(c){const amt=eur(val(c));
- if(c.stage>=5)return{t:'Paid',cls:'tp-green'};
- if(c.stage===4)return c.state==='alert'?{t:'Overdue',cls:'tp-red',sub:amt+' due · overdue',red:1}:{t:'Verification Pending',cls:'tp-amber',sub:amt+' due'};
- if(c.stage===3)return c.state==='alert'?{t:'Partially Paid',cls:'tp-orange',sub:eur(Math.round(val(c)*0.5))+' due',red:1}:{t:'Awaiting Payment',cls:'tp-amber',sub:amt+' due'};
- return{t:'Not Invoiced',cls:'tp-gray'};}
+/* three independent status axes — stored on the record (c.lifeOv/subOv/payOv), else derived from setup progress */
+const LIFE_STATES=[['sales','Sales in Progress','tp-blue'],['onboarding','Onboarding','tp-violet'],['onboarded','Onboarded','tp-green'],['closed','Closed','tp-gray'],['dormant','Dormant lead','tp-gray']];
+const SUB_STATES=[['none','Not Subscribed','tp-gray'],['pending','Pending Activation','tp-amber'],['active','Active','tp-green'],['paused','Paused','tp-orange'],['ended','Ended','tp-gray']];
+const PAY_STATES=[['none','Not Invoiced','tp-gray'],['awaiting','Awaiting Payment','tp-amber'],['verifying','Verification Pending','tp-amber'],['partial','Partially Paid','tp-orange'],['overdue','Overdue','tp-red'],['paid','Paid','tp-green']];
+const stObj=(defs,code)=>{const d=defs.find(x=>x[0]===code)||defs[0];return{code:d[0],t:d[1],cls:d[2]};};
+function lifeCode(c){return c.lifeOv||(c.stage>6?'onboarded':c.stage===1?'sales':'onboarding');}
+function subCode(c){return c.subOv||(c.stage>6?'active':c.stage===1?'none':'pending');}
+function payCode(c){return c.payOv||(c.stage>=5?'paid':c.stage===4?(c.state==='alert'?'overdue':'verifying'):c.stage===3?(c.state==='alert'?'partial':'awaiting'):'none');}
+function lifecycleOf(c){return stObj(LIFE_STATES,lifeCode(c));}
+function subscriptionOf(c){return stObj(SUB_STATES,subCode(c));}
+function paymentOf(c){const o=stObj(PAY_STATES,payCode(c));const amt=eur(val(c));
+ if(o.code==='partial')return{...o,sub:eur(Math.round(val(c)*0.5))+' due',red:1};
+ if(o.code==='overdue')return{...o,sub:amt+' due · overdue',red:1};
+ if(o.code==='awaiting'||o.code==='verifying')return{...o,sub:amt+' due'};
+ return o;}
 function usageOf(c){const a=parseInt(String(c.pack).replace(/[.,]/g,''),10)||1500;
  if(c.stage>6){const pct=20+(c.id*37)%75;return{a,used:Math.round(a*pct/100),pct,high:pct>=80};}
  return{a,used:0,pct:0,high:false};}
@@ -817,8 +830,8 @@ const fmt=n=>n.toLocaleString('en-US');
 function expiryOf(c){if(c.stage<=6)return null;
  const off=(c.id*53)%400-40;const d=new Date(2026,8,11);d.setDate(d.getDate()+off);
  return{date:d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}),days:off,soon:off<=30};}
-function renewalDue(c){if(c.stage<=6)return false;const e=expiryOf(c);return(e&&e.soon)||usageOf(c).pct>=80;}
-function needsAttention(c){if(c.stage>6)return renewalDue(c);return c.state==='alert'||c.days>=4||!!paymentOf(c).red;}
+function renewalDue(c){if(c.stage<=6||subCode(c)!=='active')return false;const e=expiryOf(c);return(e&&e.soon)||usageOf(c).pct>=80;}
+function needsAttention(c){return !!paymentOf(c).red||renewalDue(c)||(c.stage<7&&(c.state==='alert'||c.days>=4));}
 const isOnboarding=c=>c.stage>=2&&c.stage<=6;
 function adminRows(){
  return clients.filter(c=>{
@@ -836,7 +849,7 @@ function adminHTML(){
  const resellers=[...new Set(clients.map(c=>c.reseller))];
  // KPI + tab counts respect the reseller filter so the tiles, tabs and sheet agree
  const base=clients.filter(c=>adFilter.res==='all'||c.reseller===adFilter.res);
- const nTotal=base.length, nActive=base.filter(c=>c.stage>6).length;
+ const nTotal=base.length, nActive=base.filter(c=>subCode(c)==='active').length;
  const nOnb=base.filter(isOnboarding).length;
  const nAtt=base.filter(needsAttention).length, nOverdue=base.filter(c=>!!paymentOf(c).red).length;
  const nRen=base.filter(renewalDue).length;
@@ -867,7 +880,7 @@ function adminHTML(){
     <td><div class="cname">${c.name}</div><div class="csub">VAT ${c.vat} · ${c.city}</div></td>
     <td><span class="rtag" style="background:${c.reseller==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${c.reseller==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${c.reseller}</span></td>
     <td><span class="tp ${lc.cls}">${lc.t}</span></td>
-    <td>${(()=>{const e=expiryOf(c);const rd=renewalDue(c);return `<span class="tp ${sub.cls}">${sub.t}</span>${e?`<div class="paysub">${e.days<0?'Expired':'Expires'} ${e.date}</div>`:''}${rd?'<div class="usehi" style="color:var(--brand600)">↻ Renewal due</div>':''}`;})()}</td>
+    <td>${(()=>{const e=expiryOf(c);const rd=renewalDue(c);const showE=e&&['active','paused'].includes(sub.code);return `<span class="tp ${sub.cls}">${sub.t}</span>${showE?`<div class="paysub">${e.days<0?'Expired':'Expires'} ${e.date}</div>`:''}${rd?'<div class="usehi" style="color:var(--brand600)">↻ Renewal due</div>':''}`;})()}</td>
     <td class="usecell"><div class="unum num">${fmt(u.a)} docs</div><div class="uused num">${u.used?fmt(u.used)+' used · '+u.pct+'%':'0 used'}</div><div class="usebar"><i class="${u.high?'hi':''}" style="width:${u.pct}%"></i></div>${u.high?'<div class="usehi">Usage high</div>':''}</td>
     <td><span class="tp ${pay.cls}">${pay.t}</span>${pay.sub?`<div class="paysub ${pay.red?'red':''}">${pay.sub}</div>`:''}</td>
     <td class="nacell"><div class="nt">${na.t}</div>${na.blk?`<div class="nb">${na.blk}</div>`:''}</td>
@@ -1015,12 +1028,24 @@ function actionPanel(c){
  if(role==='admin'){
   const owners=['Maria K.','Nikos P.','Eleni V.','Giorgos M.'];
   const stages=[[1,'1 · Package'],[2,'2 · Details'],[3,'3 · Authorize'],[4,'4 · Pay'],[5,'5 · Setup'],[6,'6 · Go-live'],[7,'Live']];
+  const opt=(defs,cur)=>defs.map(s=>`<option value="${s[0]}" ${cur===s[0]?'selected':''}>${s[1]}</option>`).join('');
+  const sc=subCode(c),pc=payCode(c);
+  const events=[];
+  if(sc==='active')events.push(['pause','Pause subscription']);
+  if(sc==='paused')events.push(['resume','Resume subscription']);
+  if(pc==='verifying'||pc==='awaiting'||pc==='partial'||pc==='overdue')events.push(['paid','✓ Verify &amp; mark Paid']);
+  if(pc!=='partial'&&pc!=='paid'&&pc!=='none')events.push(['partial','Mark partially paid']);
+  if(pc!=='overdue'&&pc!=='paid'&&pc!=='none')events.push(['overdue','Flag payment overdue']);
+  if(lifeCode(c)!=='dormant'&&c.stage===1)events.push(['dormant','Flag dormant lead']);
+  if(lifeCode(c)!=='closed')events.push(['closed','Close (lost / exit)']);
   return `<div class="actpanel"><div class="aplab">Correct this client's record</div>
-    <div class="apnote" style="margin:0 0 12px">When ${c.reseller} calls for help, fix the stage or owner here — no emailing a spreadsheet back and forth. Everyone sees the change instantly.</div>
-    <div class="apgrid"><label>Stage<select id="adstage">${stages.map(s=>`<option value="${s[0]}" ${c.stage===s[0]?'selected':''}>${s[1]}</option>`).join('')}</select></label>
+    <div class="apnote" style="margin:0 0 12px">Three tracks move independently — a late payment never rolls the lifecycle back. Every change hits the shared record and the audit trail.</div>
+    <div class="apgrid"><label>Setup stage<select id="adstage">${opt(stages,c.stage)}</select></label>
       <label>Owner<select id="adowner">${owners.map(o=>`<option ${c.owner===o?'selected':''}>${o}</option>`).join('')}</select></label></div>
-    <div class="apnote">Saved to the shared record and logged to the audit trail.</div>
-    <button class="btn btn-primary btn-block" id="adapply">Save to the record</button></div>`;
+    <div class="apgrid" style="margin-top:10px"><label>Subscription<select id="adsub">${opt(SUB_STATES,sc)}</select></label>
+      <label>Payment<select id="adpay">${opt(PAY_STATES,pc)}</select></label></div>
+    <button class="btn btn-primary btn-block" id="adapply" style="margin-top:12px">Save to the record</button>
+    ${events.length?`<div class="aplab" style="margin:16px 0 8px">Key events</div><div class="evrow">${events.map(e=>`<button class="evbtn ${e[0]==='closed'||e[0]==='overdue'||e[0]==='dormant'?'danger':''}" data-ev="${e[0]}">${e[1]}</button>`).join('')}</div>`:''}</div>`;
  }
  if(role==='onesys'){
   const t=providerTask(c);
@@ -1058,7 +1083,25 @@ function wireDrawerBody(c){
  const re=$('#remEmail'),rv=$('#remViber');if(re)re.onclick=()=>toast('Email reminder queued for '+c.name);if(rv)rv.onclick=()=>toast('Viber reminder sent to '+c.name);
  if(role==='sales'||role==='reseller'){const t=salesTask(c);[t.primary,t.secondary].forEach(bb=>{if(!bb)return;const el=$('#'+bb.id);if(el)el.onclick=()=>{if(bb.adv){bb.adv();refreshAfterAction((bb.msg||'Status updated')+' · '+c.name);}else toast(bb.toast||'Done');};});}
  const od=$('#onesysdo');if(od)od.onclick=()=>{const t=providerTask(c);if(t.next)t.next();refreshAfterAction('Status updated · '+c.name);};
- const ad=$('#adapply');if(ad)ad.onclick=()=>{c.stage=+$('#adstage').value;c.owner=$('#adowner').value;if(c.stage>6){c.state='live';c.status='Live';}else if(c.state==='live'){c.state='move';c.status='In progress';}refreshAfterAction('Record updated · '+c.name);};
+ const ad=$('#adapply');if(ad)ad.onclick=()=>{
+   c.stage=+$('#adstage').value;c.owner=$('#adowner').value;
+   const sv=$('#adsub').value,pv=$('#adpay').value;
+   c.subOv=sv===(c.stage>6?'active':c.stage===1?'none':'pending')?undefined:sv;
+   c.payOv=pv===(c.stage>=5?'paid':c.stage===4?(c.state==='alert'?'overdue':'verifying'):c.stage===3?(c.state==='alert'?'partial':'awaiting'):'none')?undefined:pv;
+   if(c.stage>6){c.state='live';c.status='Live';}else if(c.state==='live'){c.state='move';c.status='In progress';}
+   refreshAfterAction('Record updated · '+c.name);};
+ document.querySelectorAll('[data-ev]').forEach(b=>b.onclick=()=>{applyKeyEvent(c,b.dataset.ev);refreshAfterAction(EV_MSG[b.dataset.ev]+' · '+c.name);});
+}
+const EV_MSG={pause:'Subscription paused',resume:'Subscription resumed',paid:'Payment verified — marked Paid',partial:'Marked partially paid',overdue:'Payment flagged overdue',dormant:'Flagged as dormant lead',closed:'Client closed'};
+function applyKeyEvent(c,ev){
+ // lifecycle stays put — only the relevant track moves (manager's rules)
+ if(ev==='pause')c.subOv='paused';
+ else if(ev==='resume')c.subOv='active';
+ else if(ev==='paid'){c.payOv='paid';}
+ else if(ev==='partial')c.payOv='partial';
+ else if(ev==='overdue')c.payOv='overdue';
+ else if(ev==='dormant')c.lifeOv='dormant';
+ else if(ev==='closed'){c.lifeOv='closed';c.subOv='ended';}
 }
 function refreshAfterAction(msg){drawerTab='steps';renderDrawer();fillContent();toast(msg);}
 
