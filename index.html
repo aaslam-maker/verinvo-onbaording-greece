@@ -675,7 +675,7 @@ function fillContent(){
  else if(nav==='pipeline')c.innerHTML=kanbanHTML();
  else if(nav==='clients')c.innerHTML=clientsHTML();
  else if(nav==='messages'){c.innerHTML=messagesHTML();wireMessages();}
- c.classList.toggle('wide',role==='admin');
+ c.classList.toggle('wide',role==='admin'||nav==='pipeline');
  wireContent();
  if(role==='admin')wireAdmin();
 }
@@ -753,22 +753,13 @@ function overviewHTML(){
 function kanbanHTML(){
  const pool=scoped().filter(c=>{if(filter==='open')return c.stage<7;if(filter==='past')return c.days>=4||c.state==='alert';if(filter==='big')return val(c)>=300;return true;});
  const board=pool.filter(c=>c.stage<7);
- const byCol={};COL_ORDER.forEach(k=>byCol[k]=[]);board.forEach(c=>byCol[bucket(c)].push(c));
  const openVal=board.reduce((s,c)=>s+val(c),0);
  const stuck=board.filter(c=>c.days>=4||c.state==='alert');const stuckVal=stuck.reduce((s,c)=>s+val(c),0);
  const live=pool.filter(c=>c.stage>6);const wonVal=live.reduce((s,c)=>s+val(c),0);
- const grpCount=g=>Object.keys(COLS).filter(k=>COLS[k].grp===g).reduce((s,k)=>s+(byCol[k]?byCol[k].length:0),0);
- const card=c=>{const b=COLS[bucket(c)];const late=c.days>=4||c.state==='alert';const pct=Math.round(Math.min(c.stage,6)/6*100);
-  return `<div class="kcard" data-id="${c.id}"><div class="kn">${c.name}</div><div class="ka">${b.act}</div>
-   <div class="tags"><span class="tg tg-${b.tc}">${b.tag}</span>${late?'<span class="tg tg-red">PAST TARGET</span>':''}</div>
-   <div class="kmeta"><span class="av">${initials(c.owner)}</span>${c.owner.split(' ')[0]} · day ${c.days}</div>
-   <div class="kprog"><span class="pb"><i style="width:${pct}%"></i></span><span class="pv">${pct}%</span><span class="eu">${eur(val(c))}</span></div></div>`;};
- const col=k=>`<div class="kcol"><div class="ch"><span class="cn">${COLS[k].name}</span><span class="cc">${byCol[k].length}</span></div>${byCol[k].map(card).join('')||'<div style="font-size:11px;color:var(--mut);text-align:center;padding:14px 0">—</div>'}</div>`;
- return `<div class="phead"><div><h1>${role==='onesys'?'Provisioning':'Pipeline'}</h1><p>Every client as a card in the stage they are sitting in — move them along or see what is stuck.</p></div>${userpill()}</div>
+ return `<div class="phead"><div><h1>${role==='onesys'?'Provisioning':'Pipeline'}</h1><p>Every client on one sheet — the stage they are sitting in, and what is stuck.</p></div>${userpill()}</div>
   <div class="kbar"><div class="kb"><div class="kl">Open · value</div><div class="kv">${board.length} · ${eur(openVal)}</div></div><div class="kb"><div class="kl">Stuck past target</div><div class="kv red">${stuck.length} · ${eur(stuckVal)}</div></div><div class="kb"><div class="kl">Won this year</div><div class="kv green">${eur(wonVal)}</div></div></div>
-  <div class="kfilters">${[['all','Everything'],['open','Open only'],['past','Past target'],['big','€ 300 and up']].map(f=>`<button class="fp ${filter===f[0]?'on':''}" data-f="${f[0]}">${f[1]}</button>`).join('')}<span style="margin-left:auto;font-size:12px;color:var(--mut);font-weight:700;align-self:center">${board.length} cards on the board</span></div>
-  <div class="kgroups"><span class="g"><i style="background:var(--brand)"></i>Our move · ${grpCount('move')}</span><span class="g"><i style="background:var(--amber)"></i>Waiting on them · ${grpCount('wait')}</span><span class="g"><i style="background:var(--green)"></i>Done · ${pool.filter(c=>c.stage>6).length}</span></div>
-  <div class="board">${COL_ORDER.map(col).join('')}</div>`;
+  <div class="kfilters">${[['all','Everything'],['open','Open only'],['past','Past target'],['big','€ 300 and up']].map(f=>`<button class="fp ${filter===f[0]?'on':''}" data-f="${f[0]}">${f[1]}</button>`).join('')}<span style="margin-left:auto;font-size:12px;color:var(--mut);font-weight:700;align-self:center">${pool.length} clients</span></div>
+  ${regTable(pool)}`;
 }
 
 /* ===== clients table ===== */
@@ -844,6 +835,23 @@ function adminRows(){
   return true;
  });
 }
+/* shared register table — used by admin and by the (former kanban) pipeline view */
+function regTable(pool){
+ return `<div class="tablecard"><table class="adminreg"><colgroup><col style="width:14%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:6%"><col style="width:4%"></colgroup><thead><tr><th>Client</th><th>Reseller</th><th>Lifecycle</th><th>Subscription</th><th>Package &amp; usage</th><th>Payment</th><th>Next action / blocker</th><th>Action owner</th><th>Action due</th><th>Days</th></tr></thead>
+   <tbody>${pool.length?pool.map(c=>{
+    const lc=lifecycleOf(c),sub=subscriptionOf(c),pay=paymentOf(c),u=usageOf(c),na=nextActionOf(c),due=dueOf(c),team=teamOf(c);
+    return `<tr data-id="${c.id}">
+    <td><div class="cname">${c.name}</div><div class="csub">VAT ${c.vat} · ${c.city}</div></td>
+    <td><span class="rtag" style="background:${c.reseller==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${c.reseller==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${c.reseller}</span></td>
+    <td><span class="tp ${lc.cls}">${lc.t}</span></td>
+    <td>${(()=>{const e=expiryOf(c);const rd=renewalDue(c);const showE=e&&['active','paused'].includes(sub.code);return `<span class="tp ${sub.cls}">${sub.t}</span>${showE?`<div class="paysub">${e.days<0?'Expired':'Expires'} ${e.date}</div>`:''}${rd?'<div class="usehi" style="color:var(--brand600)">↻ Renewal due</div>':''}`;})()}</td>
+    <td class="usecell"><div class="unum num">${fmt(u.a)} docs</div><div class="uused num">${u.used?fmt(u.used)+' used · '+u.pct+'%':'0 used'}</div><div class="usebar"><i class="${u.high?'hi':''}" style="width:${u.pct}%"></i></div>${u.high?'<div class="usehi">Usage high</div>':''}</td>
+    <td><span class="tp ${pay.cls}">${pay.t}</span>${pay.sub?`<div class="paysub ${pay.red?'red':''}">${pay.sub}</div>`:''}</td>
+    <td class="nacell"><div class="nt">${na.t}</div>${na.blk?`<div class="nb">${na.blk}</div>`:''}</td>
+    <td>${c.stage>6?'<span class="csub">—</span>':`<div class="ownercell"><span class="oav">${initials(c.owner)}</span><div><div style="font-weight:700">${c.owner}</div><div class="ot">${team}</div></div></div>`}</td>
+    <td>${due.t==='—'?'<span class="csub">—</span>':`<div style="font-weight:700;color:${due.cls==='red'?'var(--red)':'var(--ink)'}">${due.t}</div><div class="duenote ${due.cls}">${due.note}</div>`}</td>
+    <td class="num" style="color:${c.days>=4&&c.stage<7?'var(--red)':'var(--sec)'};font-weight:700">${c.stage>6?'—':c.days+'d'}</td></tr>`;}).join(''):`<tr><td colspan="10" style="text-align:center;color:var(--mut);padding:34px 0">No clients match these filters.</td></tr>`}</tbody></table></div>`;
+}
 function adminHTML(){
  const rows=adminRows();
  const resellers=[...new Set(clients.map(c=>c.reseller))];
@@ -873,20 +881,7 @@ function adminHTML(){
    <select class="selink" id="adres">${resOpts}</select>
    <select class="selink" id="adstg">${lifeOpts}</select>
    ${activeFilter?`<button class="btn" id="adclear">Clear</button>`:''}</div>
-  <div class="tablecard"><table class="adminreg"><colgroup><col style="width:14%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:6%"><col style="width:4%"></colgroup><thead><tr><th>Client</th><th>Reseller</th><th>Lifecycle</th><th>Subscription</th><th>Package &amp; usage</th><th>Payment</th><th>Next action / blocker</th><th>Action owner</th><th>Action due</th><th>Days</th></tr></thead>
-   <tbody>${rows.length?rows.map(c=>{
-    const lc=lifecycleOf(c),sub=subscriptionOf(c),pay=paymentOf(c),u=usageOf(c),na=nextActionOf(c),due=dueOf(c),team=teamOf(c);
-    return `<tr data-id="${c.id}">
-    <td><div class="cname">${c.name}</div><div class="csub">VAT ${c.vat} · ${c.city}</div></td>
-    <td><span class="rtag" style="background:${c.reseller==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${c.reseller==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${c.reseller}</span></td>
-    <td><span class="tp ${lc.cls}">${lc.t}</span></td>
-    <td>${(()=>{const e=expiryOf(c);const rd=renewalDue(c);const showE=e&&['active','paused'].includes(sub.code);return `<span class="tp ${sub.cls}">${sub.t}</span>${showE?`<div class="paysub">${e.days<0?'Expired':'Expires'} ${e.date}</div>`:''}${rd?'<div class="usehi" style="color:var(--brand600)">↻ Renewal due</div>':''}`;})()}</td>
-    <td class="usecell"><div class="unum num">${fmt(u.a)} docs</div><div class="uused num">${u.used?fmt(u.used)+' used · '+u.pct+'%':'0 used'}</div><div class="usebar"><i class="${u.high?'hi':''}" style="width:${u.pct}%"></i></div>${u.high?'<div class="usehi">Usage high</div>':''}</td>
-    <td><span class="tp ${pay.cls}">${pay.t}</span>${pay.sub?`<div class="paysub ${pay.red?'red':''}">${pay.sub}</div>`:''}</td>
-    <td class="nacell"><div class="nt">${na.t}</div>${na.blk?`<div class="nb">${na.blk}</div>`:''}</td>
-    <td>${c.stage>6?'<span class="csub">—</span>':`<div class="ownercell"><span class="oav">${initials(c.owner)}</span><div><div style="font-weight:700">${c.owner}</div><div class="ot">${team}</div></div></div>`}</td>
-    <td>${due.t==='—'?'<span class="csub">—</span>':`<div style="font-weight:700;color:${due.cls==='red'?'var(--red)':'var(--ink)'}">${due.t}</div><div class="duenote ${due.cls}">${due.note}</div>`}</td>
-    <td class="num" style="color:${c.days>=4&&c.stage<7?'var(--red)':'var(--sec)'};font-weight:700">${c.stage>6?'—':c.days+'d'}</td></tr>`;}).join(''):`<tr><td colspan="10" style="text-align:center;color:var(--mut);padding:34px 0">No clients match these filters.</td></tr>`}</tbody></table></div>
+  ${regTable(rows)}
   <div style="margin-top:12px;font-size:12px;color:var(--mut)">Showing ${rows.length} of ${clients.length} clients · ${resellers.length} resellers · click any row to open the file</div>`;
 }
 
