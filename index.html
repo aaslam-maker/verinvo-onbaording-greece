@@ -643,15 +643,15 @@ function renderLauncher(){
 }
 function enterRole(r){role=r;setTheme(ROLES[r]);filter='all';ovScope='mine';
  if(ROLES[r].kind==='client'){flow={screen:'landing',customer:'Ταβέρνα Ο Μανώλης',looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};renderClientHome();return;}
- nav=ROLES[r].kind==='onesys'?'pipeline':(role==='admin'?'register':'overview');
+ nav=ROLES[r].kind==='onesys'?'clients':(role==='admin'?'register':'overview');
  renderApp();
 }
 
 /* ===== shell ===== */
 function navItems(){
  if(role==='admin')return [{k:'register',ic:'nGrid',lb:'Register'}];
- if(role==='onesys')return [{k:'pipeline',ic:'nPipe',lb:'Provisioning'},{k:'clients',ic:'nClients',lb:'Clients'}];
- return [{k:'overview',ic:'nOverview',lb:'Overview'},{k:'pipeline',ic:'nPipe',lb:'Pipeline'},{k:'clients',ic:'nClients',lb:'Clients'},{k:'messages',ic:'nMsg',lb:'Messages'}];
+ if(role==='onesys')return [{k:'clients',ic:'nClients',lb:'Clients'}];
+ return [{k:'overview',ic:'nOverview',lb:'Overview'},{k:'clients',ic:'nClients',lb:'Clients'},{k:'messages',ic:'nMsg',lb:'Messages'}];
 }
 function sidebar(){const R=ROLES[role];const counts={clients:scoped().length,messages:6};
  return `<aside class="sidebar">
@@ -675,7 +675,7 @@ function fillContent(){
  else if(nav==='pipeline')c.innerHTML=kanbanHTML();
  else if(nav==='clients')c.innerHTML=clientsHTML();
  else if(nav==='messages'){c.innerHTML=messagesHTML();wireMessages();}
- c.classList.toggle('wide',role==='admin'||nav==='pipeline');
+ c.classList.toggle('wide',role==='admin'||nav==='clients');
  wireContent();
  if(role==='admin')wireAdmin();
 }
@@ -687,8 +687,9 @@ function wireAdmin(){
  document.querySelectorAll('[data-tab]').forEach(t=>t.onclick=()=>{adFilter.tab=t.dataset.tab;fillContent();});
  const csv=$('#csv');if(csv)csv.onclick=()=>exportAdminCSV();
 }
-function exportAdminCSV(){
- const rows=adminRows();
+function filteredScoped(){return scoped().filter(c=>{if(filter==='open')return c.stage<7;if(filter==='past')return c.days>=4||c.state==='alert';if(filter==='wait')return c.state==='wait';if(filter==='big')return val(c)>=300;if(filter==='live')return c.stage>6;return true;});}
+function exportAdminCSV(rows){
+ rows=rows||adminRows();
  const head=['Client','VAT','City','Reseller','Lifecycle','Subscription','Package','Used','Usage %','Payment','Amount due','Next action','Blocker','Owner','Team','Action due','Days in stage'];
  const esc=v=>`"${String(v).replace(/"/g,'""')}"`;
  const lines=[head.join(',')].concat(rows.map(c=>{const lc=lifecycleOf(c),sub=subscriptionOf(c),pay=paymentOf(c),u=usageOf(c),na=nextActionOf(c),due=dueOf(c);
@@ -767,23 +768,18 @@ function stagePill(c){if(c.stage>6)return '<span class="spill sp-green">Live</sp
  const b=bucket(c);const map={wants:'sp-blue',sent:'sp-gray',details:'sp-amber',awaiting:'sp-blue',todecl:'sp-blue',pay:'sp-gray',setup:'sp-blue',golive:'sp-green'};
  return `<span class="spill ${map[b]}">${COLS[b].name}</span>`;}
 function clientsHTML(){
- const pool=scoped();const showRes=role!=='reseller';
- const rtag=r=>`<span class="rtag" style="background:${r==='Spotlight'?'#E7EEFB':'#F0ECFB'};color:${r==='Spotlight'?'#2F6BE8':'#6D5BC7'}">${r}</span>`;
- return `<div class="phead"><div><h1>${role==='onesys'?'Provider clients':'Clients'}</h1><p>Everything on the book${showRes?' across resellers':''}, live or still onboarding — this is the record, not a copy of it.</p></div>
-   <button class="btn" style="margin-left:auto" id="csv">${IC.dl} Export CSV</button></div>
+ const all=scoped();
+ const pool=filteredScoped();
+ const tiles=[['open','Open clients',all.filter(c=>c.stage<7).length,'in progress',''],
+  ['past','Past target',all.filter(c=>c.days>=4||c.state==='alert').length,'need a nudge','red'],
+  ['wait','Waiting on client',all.filter(c=>c.state==='wait').length,'ball with them','amber'],
+  ['live','Live',all.filter(c=>c.stage>6).length,'issuing','green']];
+ return `<div class="phead"><div><h1>${role==='onesys'?'Provider clients':'Clients'}</h1><p>Everything on the book, live or still onboarding — one sheet, not a copy of it.</p></div>
+   <div style="margin-left:auto;display:flex;gap:10px;align-items:center">${userpill()}<button class="btn" id="csv">${IC.dl} Export ${pool.length}</button></div></div>
   <div class="stats" style="margin-bottom:16px">
-   <div class="statc"><div class="lb">Open clients</div><b class="num">${pool.filter(c=>c.stage<7).length}</b><div class="sub">in progress</div></div>
-   <div class="statc"><div class="lb">Past target</div><b class="num red">${pool.filter(c=>c.days>=4||c.state==='alert').length}</b><div class="sub">need a nudge</div></div>
-   <div class="statc"><div class="lb">Waiting on client</div><b class="num amber">${pool.filter(c=>c.state==='wait').length}</b><div class="sub">ball with them</div></div>
-   <div class="statc"><div class="lb">Live</div><b class="num green">${pool.filter(c=>c.stage>6).length}</b><div class="sub">issuing</div></div></div>
-  <div class="toolbar"><div class="search">${IC.search}<input placeholder="Name, VAT or city"></div><div class="dd">Filter by stage ${IC.chev}</div>${showRes?'<div class="dd">All resellers '+IC.chev+'</div>':''}<span style="margin-left:auto;font-size:12px;color:var(--mut);font-weight:700">${pool.length} of ${pool.length} rows</span></div>
-  <div class="tablecard"><table><thead><tr><th>Client</th>${showRes?'<th>Reseller</th>':''}<th>VAT</th><th>Package</th><th>Stage</th><th>Owner</th><th>Due</th><th></th></tr></thead>
-   <tbody>${pool.map(c=>{const late=c.days>=4||c.state==='alert';return `<tr data-id="${c.id}">
-    <td><div class="namecell"><span class="tav">${initials(c.name)}</span><div><div class="cname">${c.name}</div><div class="csub">${c.city}</div></div></div></td>
-    ${showRes?`<td>${rtag(c.reseller)}</td>`:''}
-    <td class="num">${c.vat}</td><td class="num">${c.pack}</td><td>${stagePill(c)}</td><td>${c.owner}</td>
-    <td>${c.stage>6?'<span class="csub">—</span>':(late?`<span class="over">${c.days}d over</span>`:`<span class="csub">day ${c.days}</span>`)}</td>
-    <td><button class="doit" data-id="${c.id}">Open</button></td></tr>`;}).join('')}</tbody></table></div>`;
+   ${tiles.map(t=>`<div class="statc" style="cursor:pointer;${filter===t[0]?'border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-bg)':''}" data-f="${t[0]}"><div class="lb">${t[1]}</div><b class="num ${t[4]}">${t[2]}</b><div class="sub">${t[3]}</div></div>`).join('')}</div>
+  <div class="kfilters" style="margin-bottom:14px">${[['all','Everything'],['open','Open only'],['past','Past target'],['big','€ 300 and up']].map(f=>`<button class="fp ${filter===f[0]?'on':''}" data-f="${f[0]}">${f[1]}</button>`).join('')}<span style="margin-left:auto;font-size:12px;color:var(--mut);font-weight:700;align-self:center">${pool.length} of ${all.length}</span></div>
+  ${regTable(pool)}`;
 }
 
 /* ===== admin register — derived status axes (manager's lifecycle model) ===== */
@@ -927,9 +923,9 @@ function wireMessages(){
 }
 
 function wireContent(){
- document.querySelectorAll('.kfilters [data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderApp();});
+ document.querySelectorAll('#content [data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderApp();});
  document.querySelectorAll('[data-ov]').forEach(b=>b.onclick=()=>{ovScope=b.dataset.ov;renderApp();});
- const csv=$('#csv');if(csv)csv.onclick=()=>toast('Exported to CSV');
+ const csv=$('#csv');if(csv&&role!=='admin')csv.onclick=()=>exportAdminCSV(filteredScoped());
  document.querySelectorAll('#content .kcard').forEach(k=>k.onclick=()=>openCase(+k.dataset.id));
  document.querySelectorAll('#content tbody tr').forEach(tr=>tr.onclick=()=>openCase(+tr.dataset.id));
  document.querySelectorAll('.doit').forEach(b=>b.onclick=e=>{e.stopPropagation();openCase(+b.dataset.id);});
