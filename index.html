@@ -645,12 +645,8 @@ function renderLauncher(){
  $('#launcher').querySelectorAll('.rolecard[data-r]').forEach(b=>b.onclick=()=>enterRole(b.dataset.r));
  $('#startflow').onclick=openStartFlow;
 }
-// ── Start-flow box: replace the body with your own code that opens the flow ──
-function openStartFlow(){
- // TODO: your flow code goes here.
- flow={screen:'oxregister',channel:'email',email:'',customer:'New client',looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};
- enterCustomer();
-}
+// ── Start-flow box → opens the built Figma Make onboarding app served from /flow ──
+function openStartFlow(){window.location.href='flow/index.html';}
 function enterRole(r){role=r;setTheme(ROLES[r]);filter='all';ovScope='mine';
  if(ROLES[r].kind==='client'){flow={screen:'landing',customer:'Ταβέρνα Ο Μανώλης',looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};renderClientHome();return;}
  nav=ROLES[r].kind==='onesys'?'clients':(role==='admin'?'register':'overview');

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onboarding flow — build pending</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F4F7F7;color:#0F2A2E;font-family:Inter,-apple-system,system-ui,sans-serif;padding:24px}
+  .card{max-width:560px;background:#fff;border:1px solid #E4EAEA;border-radius:18px;padding:30px 32px;box-shadow:0 10px 30px rgba(15,42,46,.06)}
+  h1{font-size:20px;margin:0 0 8px}
+  p{color:#42565A;font-size:14px;line-height:1.6}
+  code{background:#F1F5F5;border:1px solid #E4EAEA;border-radius:6px;padding:1px 6px;font-size:13px}
+  pre{background:#0B1F24;color:#BFE9E2;border-radius:12px;padding:14px 16px;overflow:auto;font-size:12.5px;line-height:1.6}
+  a{color:#0C7C72;font-weight:700}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🚧 Onboarding flow — build pending</h1>
+  <p>This folder will hold the built <b>Figma Make</b> onboarding app (email → login → dashboard). Build it and drop the output here, then commit — the “Start onboarding flow” card links to this page.</p>
+  <p>From the unzipped <code>Generate Screen Design</code> project:</p>
+  <pre>npm install
+npm run build -- --base=./
+cp -r dist/* "flow/"   # into this repo's /flow folder
+git add flow &amp;&amp; git commit -m "Add onboarding flow build" &amp;&amp; git push</pre>
+  <p><a href="../index.html">← Back to the platform</a></p>
+</div>
+</body>
+</html>
