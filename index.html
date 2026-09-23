@@ -1150,7 +1150,7 @@ function assistFormHTML(c){
   <div id="aDetails">${assistLooked?assistDetails(c):'<div style="text-align:center;color:var(--mut);font-size:12.5px;padding:12px 0">Company details appear here after lookup.</div>'}</div>
   <div class="lab" style="margin-top:16px">Choose a package</div>
   <div class="plans" id="aPlans">${PLANS.map((p,i)=>`<div class="planopt ${assistPlan===i?'sel':''}" data-p="${i}"><div class="tick">${IC.check}</div><div class="docs">${p.docs}</div><div class="sub">docs / year</div><div class="price">€${p.price}<span style="color:var(--mut);font-weight:600"> +VAT</span></div></div>`).join('')}</div>
-  <button class="btn btn-primary btn-block" id="aSave" style="margin-top:16px" ${assistLooked&&assistPlan!=null?'':'disabled'}>Save setup</button>`;}
+  <button class="btn btn-primary btn-block" id="aSave" style="margin-top:16px" ${assistLooked&&assistPlan!=null?'':'disabled'}>${IC_MAIL} Save &amp; send payment link to client</button>`;}
 function wireAssist(c){
  const bk=$('#aBack');if(bk)bk.onclick=()=>{drawerTab='steps';renderDrawer();};
  const look=$('#aLook');if(look)look.onclick=()=>{const b=$('#aLook');b.innerHTML='<span class="spin" style="width:14px;height:14px;border-top-color:#fff;border-color:rgba(255,255,255,.4)"></span>';setTimeout(()=>{assistLooked=true;$('#drawerbody').innerHTML=assistFormHTML(c);wireAssist(c);toast('Details auto-filled from registry');},700);};
@@ -1159,7 +1159,7 @@ function wireAssist(c){
    if(!(assistLooked&&assistPlan!=null))return;
    c.pack=PLANS[assistPlan].docs;const nm=$('#aName');if(nm&&nm.value.trim())c.name=nm.value.trim();const vt=$('#aVat');if(vt&&vt.value.trim())c.vat=vt.value.trim();
    c.stage=4;c.state='wait';c.lifeOv='onboarding';c.subOv='pending';c.payOv='awaiting';c.createdBy='assisted';c.looked=true;
-   refreshAfterAction('Setup completed for '+c.name+' — client can now pay');
+   refreshAfterAction('Setup saved · payment link sent to '+c.name);
  };
 }
 const EV_MSG={pause:'Subscription paused',resume:'Subscription resumed',paid:'Payment verified — marked Paid',partial:'Marked partially paid',overdue:'Payment flagged overdue',dormant:'Flagged as inactive',closed:'Account closed'};
