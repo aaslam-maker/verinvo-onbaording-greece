@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spotlight Reseller — Automation Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#252559;--ink:#12112c;--sec:#3c3c55;--mut:#8b8ba2;--dis:#b4b4c4;
+  --line:#eeeef2;--line2:#dedee4;--bg:#f7f7f9;--panel:#fff;
+  --teal:#12B2A6;--teal600:#0E8F86;--teal-bg:#e5f7f5;
+  --purple:#756bd7;--purple-bg:#efedfb;
+  --amber:#c98a12;--amber-bg:#fbf1dc;
+  --green:#1c9d6b;--green-bg:#e3f5ec;
+  --red:#db3840;--red-bg:#fdeaea;
+  --blue:#3f6fd6;--blue-bg:#e8eefb;
+  --r1:8px;--r2:12px;--r3:20px;--pill:40px;
+  --sh:0 1px 2px rgba(20,18,44,.04),0 8px 24px rgba(20,18,44,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* ===== top bar ===== */
+.top{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;height:66px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:16px;color:var(--navy)}
+.blogo{width:38px;height:38px;flex:none}
+.bsub{font-weight:600;font-size:12px;color:var(--mut);margin-left:2px}
+.seg{margin-left:auto;display:flex;background:var(--bg);border:1px solid var(--line2);border-radius:var(--pill);padding:4px}
+.seg button{border:0;background:none;font-weight:600;font-size:13.5px;color:var(--mut);padding:8px 18px;border-radius:var(--pill)}
+.seg button.on{background:var(--navy);color:#fff}
+
+/* ===== hero ===== */
+.hero{padding:48px 0 20px}
+.ey{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--teal600);background:var(--teal-bg);padding:6px 13px;border-radius:var(--pill)}
+.hero h1{font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:18px 0 14px;max-width:16ch}
+.hero p{font-size:16.5px;line-height:1.6;color:var(--sec);max-width:60ch}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.metric{background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:20px 22px;box-shadow:var(--sh)}
+.metric .k{font-size:32px;font-weight:800;letter-spacing:-.02em}
+.metric .k.teal{color:var(--teal600)}.metric .k.red{color:var(--red)}.metric .k.green{color:var(--green)}
+.metric .l{font-size:13px;color:var(--mut);margin-top:4px;font-weight:500}
+
+/* ===== section ===== */
+.sec{padding:34px 0}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.sec-h h2{font-size:24px;font-weight:800;letter-spacing:-.01em}
+.sec-h .c{font-size:13px;color:var(--mut);font-weight:600}
+.sec-sub{font-size:14.5px;color:var(--sec);margin-bottom:24px;max-width:70ch;line-height:1.55}
+
+/* ===== stage card ===== */
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--sh);margin-bottom:22px;overflow:hidden}
+.stage-top{display:flex;align-items:center;gap:16px;padding:22px 26px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.stage-n{width:46px;height:46px;flex:none;border-radius:13px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
+.stage-tt{flex:1;min-width:180px}
+.stage-tt h3{font-size:19px;font-weight:800;letter-spacing:-.01em}
+.stage-tt .meta{font-size:12.5px;color:var(--mut);margin-top:3px;font-weight:600}
+.savepill{display:inline-flex;align-items:center;gap:7px;background:var(--green-bg);color:var(--green);font-weight:700;font-size:13px;padding:8px 15px;border-radius:var(--pill);white-space:nowrap}
+.savepill svg{width:15px;height:15px}
+.previewbtn{border:1px solid var(--line2);background:var(--panel);color:var(--navy);font-weight:700;font-size:13px;padding:9px 16px;border-radius:var(--pill);display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.previewbtn:hover{background:var(--bg)}
+.previewbtn svg{width:15px;height:15px}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.col{padding:22px 26px}
+.col.now{background:#fcfbfc}
+.col.auto{border-left:1px solid var(--line)}
+.col-h{display:flex;align-items:center;gap:9px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.col.now .col-h{color:var(--red)}
+.col.auto .col-h{color:var(--teal600)}
+.col-days{font-size:12.5px;font-weight:700;margin-bottom:14px}
+.col.now .col-days{color:var(--red)}
+.col.auto .col-days{color:var(--teal600)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.now .dot{background:var(--red)}.auto .dot{background:var(--teal)}
+ul.steps{list-style:none;display:flex;flex-direction:column;gap:11px}
+ul.steps li{display:flex;gap:11px;font-size:13.5px;line-height:1.5;color:var(--sec)}
+ul.steps li .ic{width:20px;height:20px;flex:none;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.now ul.steps li .ic{background:var(--red-bg);color:var(--red)}
+.auto ul.steps li .ic{background:var(--teal-bg);color:var(--teal600)}
+ul.steps li .ic svg{width:12px;height:12px}
+.pain{background:var(--red-bg);color:#a3242b;border-radius:var(--r1);padding:2px 6px;font-weight:600}
+.api{background:var(--purple-bg);color:var(--purple);border-radius:var(--r1);padding:2px 6px;font-weight:700;font-size:11.5px;letter-spacing:.02em}
+
+/* package table */
+.pkgtbl{margin-top:14px;border:1px solid var(--line);border-radius:var(--r1);overflow:hidden}
+.pkgtbl div{display:flex;justify-content:space-between;padding:8px 12px;font-size:12.5px;border-bottom:1px solid var(--line)}
+.pkgtbl div:last-child{border-bottom:0}
+.pkgtbl div span:first-child{color:var(--sec)}
+.pkgtbl div span:last-child{font-weight:700;color:var(--navy)}
+.pkgtbl div.hl{background:var(--teal-bg)}
+
+/* questions */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.qcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:var(--r2);padding:18px 20px;box-shadow:var(--sh)}
+.qcard h4{font-size:15px;font-weight:800;margin-bottom:6px}
+.qcard p{font-size:13.5px;color:var(--sec);line-height:1.5}
+.qcard .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--amber);background:var(--amber-bg);padding:3px 9px;border-radius:var(--pill);margin-bottom:9px;text-transform:uppercase;letter-spacing:.03em}
+
+/* ===== prototype ===== */
+.proto{padding:34px 0 60px}
+.pshell{background:var(--panel);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--sh);overflow:hidden;display:flex;min-height:620px}
+.pside{width:230px;flex:none;background:#fbfbfd;border-right:1px solid var(--line);padding:22px 16px}
+.pside .lab{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:0 8px;margin-bottom:12px}
+.wf{display:flex;flex-direction:column;gap:2px}
+.wf .st{display:flex;align-items:center;gap:12px;padding:11px 10px;border-radius:var(--r1);font-size:13.5px;font-weight:600;color:var(--mut);position:relative}
+.wf .st .num{width:26px;height:26px;flex:none;border-radius:50%;border:2px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--panel)}
+.wf .st.done .num{background:var(--teal);border-color:var(--teal);color:#fff}
+.wf .st.on{color:var(--navy);background:var(--panel);box-shadow:var(--sh)}
+.wf .st.on .num{border-color:var(--navy);color:var(--navy)}
+.wf .st:not(:last-child)::after{content:"";position:absolute;left:22px;top:38px;height:16px;width:2px;background:var(--line2)}
+.wf .st.done:not(:last-child)::after{background:var(--teal)}
+.pmain{flex:1;padding:30px 34px;display:flex;flex-direction:column;overflow:auto}
+.pmain h3{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.pmain .lead{font-size:14px;color:var(--sec);margin:6px 0 22px;line-height:1.5}
+.pbody{flex:1}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12.5px;font-weight:700;color:var(--sec);margin-bottom:6px}
+.field input,.field select{width:100%;border:1px solid var(--line2);border-radius:var(--r1);padding:11px 13px;font-size:14px;font-family:inherit;background:var(--panel)}
+.field input:focus{outline:none;border-color:var(--teal)}
+.row2{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.btn{border:0;border-radius:var(--pill);font-weight:700;font-size:14px;padding:12px 22px;display:inline-flex;align-items:center;gap:8px}
+.btn-p{background:var(--teal);color:#fff}.btn-p:hover{background:var(--teal600)}
+.btn-n{background:var(--navy);color:#fff}.btn-n:hover{filter:brightness(1.12)}
+.btn-g{background:var(--panel);border:1px solid var(--line2);color:var(--navy)}.btn-g:hover{background:var(--bg)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.pfoot{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.regcard{background:#fbfbfd;border:1px solid var(--line);border-radius:var(--r2);padding:16px 18px;margin-bottom:18px}
+.regcard .rt{font-size:12px;font-weight:700;color:var(--teal600);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+.rgrid .r .k{font-size:11px;color:var(--mut);font-weight:600}
+.rgrid .r .v{font-size:14px;font-weight:600;margin-top:2px}
+.pkgs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
+.pkg{border:2px solid var(--line2);border-radius:var(--r2);padding:14px;text-align:center;position:relative}
+.pkg.sel{border-color:var(--teal);background:var(--teal-bg)}
+.pkg .pn{font-weight:800;font-size:16px}
+.pkg .pv{font-size:11.5px;color:var(--mut);margin-top:3px}
+.pkg .pp{font-size:14px;font-weight:700;margin-top:8px;color:var(--navy)}
+.pkg .sug{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--teal);color:#fff;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:var(--pill);white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+.seg2{display:inline-flex;background:var(--bg);border:1px solid var(--line2);border-radius:var(--pill);padding:3px;margin-bottom:18px}
+.seg2 button{border:0;background:none;font-weight:600;font-size:13px;color:var(--mut);padding:8px 16px;border-radius:var(--pill)}
+.seg2 button.on{background:var(--panel);color:var(--navy);box-shadow:var(--sh)}
+.tl{display:flex;flex-direction:column;gap:0}
+.tl .ev{display:flex;gap:14px;padding-bottom:22px;position:relative}
+.tl .ev:not(:last-child)::after{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line2)}
+.tl .ev.done:not(:last-child)::after{background:var(--teal)}
+.tl .ev .mk{width:28px;height:28px;flex:none;border-radius:50%;border:2px solid var(--line2);background:var(--panel);display:flex;align-items:center;justify-content:center}
+.tl .ev.done .mk{background:var(--teal);border-color:var(--teal);color:#fff}
+.tl .ev.live .mk{border-color:var(--teal);color:var(--teal);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(18,178,166,.4)}50%{box-shadow:0 0 0 6px rgba(18,178,166,0)}}
+.tl .ev .mk svg{width:15px;height:15px}
+.tl .ev .tx .t{font-size:14px;font-weight:700}
+.tl .ev .tx .s{font-size:12.5px;color:var(--mut);margin-top:2px}
+.tl .ev .tx .api{margin-top:6px;display:inline-block}
+.callout{background:var(--purple-bg);border-radius:var(--r2);padding:14px 16px;font-size:13px;color:#4b43a6;line-height:1.5;display:flex;gap:11px;margin-top:6px}
+.callout svg{width:18px;height:18px;flex:none;color:var(--purple);margin-top:1px}
+.paybox{border:1px solid var(--line);border-radius:var(--r2);padding:20px;background:#fbfbfd;text-align:center;max-width:340px;margin:0 auto}
+.paybox .amt{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.paybox .desc{font-size:13px;color:var(--mut);margin:4px 0 16px}
+.done-hero{text-align:center;padding:24px 0}
+.done-hero .ring{width:74px;height:74px;border-radius:50%;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.done-hero .ring svg{width:38px;height:38px}
+.done-hero h3{font-size:23px}
+.done-hero p{font-size:14px;color:var(--sec);margin-top:8px;max-width:44ch;margin-left:auto;margin-right:auto;line-height:1.55}
+.statusrow{display:inline-flex;align-items:center;gap:8px;background:var(--green-bg);color:var(--green);font-weight:700;font-size:14px;padding:9px 18px;border-radius:var(--pill);margin-top:18px}
+.hide{display:none!important}
+.note-sm{font-size:12px;color:var(--mut);margin-top:10px}
+.foot{text-align:center;padding:30px 0 40px;color:var(--mut);font-size:12.5px}
+@media(max-width:860px){
+  .cols{grid-template-columns:1fr}.col.auto{border-left:0;border-top:1px solid var(--line)}
+  .metrics{grid-template-columns:1fr}.qgrid{grid-template-columns:1fr}
+  .hero h1{font-size:30px}.pshell{flex-direction:column}.pside{width:100%;border-right:0;border-bottom:1px solid var(--line)}
+  .wf{flex-direction:row;overflow:auto}.wf .st:not(:last-child)::after{display:none}
+  .pkgs{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <div class="brand"><img class="blogo" src="../ox-home/ox-logo.png" alt="OX" onerror="this.style.display='none'">Spotlight Reseller<span class="bsub">· powered by ONESYS</span></div>
+  <div class="seg">
+    <button id="tabStory" class="on" onclick="setMode('story')">Automation story</button>
+    <button id="tabProto" onclick="setMode('proto')">Live prototype</button>
+  </div>
+</div></div>
+
+<!-- ============ STORY ============ -->
+<main id="story">
+  <section class="hero"><div class="wrap">
+    <span class="ey">● For Spotlight admins</span>
+    <h1>Same 7 steps. Days of manual work, gone.</h1>
+    <p>Today, onboarding a customer to the ONESYS e-invoicing provider runs on emailed Excel files, screenshots, manual status tracking and phone calls between Sales, the customer, ONESYS and Spyros. The Spotlight reseller dashboard replaces that with a guided flow and API hand-offs to ONESYS — so admins do less, mistakes drop, and the timeline shrinks from weeks to a couple of days.</p>
+    <div class="metrics">
+      <div class="metric"><div class="k red">~12–18</div><div class="l">Business days today, end to end (manual)</div></div>
+      <div class="metric"><div class="k teal">~2–3</div><div class="l">Business days with the reseller dashboard</div></div>
+      <div class="metric"><div class="k green">0</div><div class="l">Excel files & payment screenshots to chase</div></div>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>The four automated stages</h2><span class="c">mapped from your current 7-step process</span></div>
+    <p class="sec-sub">Each card shows how the step works <b>today</b> (the manual reality from the process document) next to the <b>automated</b> Spotlight action. Click <b>Preview the screen</b> to jump into the working prototype at that stage.</p>
+    <div id="stageList"></div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2>Open questions to resolve</h2><span class="c">raised by the business</span></div>
+    <p class="sec-sub">Before the automated payment and provisioning stages are wired live, these need a decision — they change who owns the contract and how money is collected.</p>
+    <div class="qgrid">
+      <div class="qcard"><span class="tag">Contract</span><h4>Whose contract & T&C is the customer signing?</h4><p>Spotlight's, ONESYS's, or a co-branded agreement? Determines what the e-signature step in the flow presents to the customer.</p></div>
+      <div class="qcard"><span class="tag">Money</span><h4>Who collects the money?</h4><p>Does the payment flow through Spotlight or straight to ONESYS? This sets who reconciles and who issues the receipt/invoice.</p></div>
+      <div class="qcard"><span class="tag">Gateway</span><h4>Does ONESYS have a payment gateway?</h4><p>If yes, the “Pay” stage uses a hosted payment link + API confirmation. If not, Spotlight provides the gateway and pushes status to ONESYS.</p></div>
+      <div class="qcard"><span class="tag">Upgrade</span><h4>How are package upgrades handled?</h4><p>When a customer outgrows their tier (A→B→C→D by annual document volume), is it a new purchase in Spotlight Secure or an in-dashboard upgrade with a top-up payment?</p></div>
+    </div>
+  </div></section>
+  <div class="foot">Spotlight Reseller Dashboard · concept flow for review · not connected to live ONESYS APIs</div>
+</main>
+
+<!-- ============ PROTOTYPE ============ -->
+<main id="proto" class="hide">
+  <section class="proto"><div class="wrap">
+    <div class="pshell">
+      <aside class="pside">
+        <div class="lab">New onboarding</div>
+        <div class="wf" id="wfNav"></div>
+      </aside>
+      <div class="pmain" id="pmain"></div>
+    </div>
+    <div class="foot">This is a click-through concept — data is illustrative. Real hand-offs to ONESYS happen over API where you see the <span class="api" style="padding:1px 5px">API</span> tag.</div>
+  </div></section>
+</main>
+
+<script>
+const IC={
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>'
+};
+
+/* ---- stage data (from the current 7-step process doc) ---- */
+const STAGES=[
+ {n:'01',title:'Register the business',maps:'Replaces manual Steps 1–2',who:'Reseller admin · Customer',
+  nowDays:'4–7 business days',autoDays:'~15 minutes',saved:'Days of email back-and-forth → minutes',proto:0,
+  now:[
+   'Sales emails the customer an Excel for company details, the ONESYS package table, pricing and the cancellation policy.',
+   'Customer fills the Excel, picks a package, attaches a recent phone bill, and emails it back.',
+   ['Sales reviews for missing or unreadable fields — and ',{p:'chases the customer again'},' if anything is off.'],
+   ['Sales manually ',{p:'extracts the 15 company details'},' and emails them to Spyros for key issuance.'],
+   'File is uploaded to a shared Drive and a row is added to the internal tracking Excel.'
+  ],
+  auto:[
+   'Admin starts onboarding and enters the business VAT — registry details auto-fill.',
+   ['Customer verifies with email + OTP and completes ',{b:'one guided form'},' (or the admin fills it on their behalf).'],
+   ['Package is ',{b:'auto-suggested'},' from the annual document volume (A / B / C / D).'],
+   ['Phone bill uploaded inline; all data is pushed to ONESYS via ',{api:'API'},' — no Excel, no re-keying.']
+  ],pkg:true},
+
+ {n:'02',title:'Link & authorise (Taxis)',maps:'Replaces manual Steps 3–4',who:'Customer / Accountant · ONESYS',
+  nowDays:'3–5 business days',autoDays:'1–1.5 days (customer-paced)',saved:'No manual status tracking or screenshot chasing',proto:1,
+  now:[
+   'Sales hand-writes an activation email and sets the Sales Excel status to “Awaiting”.',
+   'Customer authorises ONESYS in Taxisnet and completes the provider declaration in MyData.',
+   ['Customer sends a ',{p:'screenshot as proof'},'; Sales flips an internal status from “No” to “Yes” by hand.'],
+   ['Delays pile up on ',{p:'accountant & customer responsiveness'},' and ONESYS acceptance — tracked in Excel.']
+  ],
+  auto:[
+   ['Activation + Taxis instructions are ',{b:'emailed automatically'},' the moment registration completes.'],
+   'Customer authorises in Taxisnet as usual — nothing to hand-write.',
+   ['ONESYS confirms the link back to Spotlight over ',{api:'API'},'; the dashboard shows live status.'],
+   ['Status moves Sent → Authorised → Confirmed on its own — ',{b:'no screenshots, no manual Excel'},'.']
+  ]},
+
+ {n:'03',title:'Collect payment',maps:'Replaces manual Step 5',who:'Customer · Sales · ONESYS',
+  nowDays:'1–3 business days',autoDays:'Instant on payment',saved:'Removes fraud risk & the double-check',proto:2,
+  now:[
+   'Customer either sends a payment screenshot, or Sales hunts for it in the ONESYS payment list.',
+   ['Sales manually flips the Payment field ',{p:'Red → Green'},' / Non-Paid → Paid.'],
+   ['A ',{p:'double-check exists because fraudulent proofs of payment have occurred'},'.'],
+   'Sales then updates the main Excel and tells the technical team to schedule install.'
+  ],
+  auto:[
+   ['A ',{b:'payment link'},' is emailed to the customer automatically at the right stage.'],
+   'Customer pays through the hosted gateway — no screenshots to send.',
+   ['Payment is confirmed straight from ONESYS over ',{api:'API'},' — ',{b:'no fraudulent-proof risk'},'.'],
+   ['Status flips to ',{b:'Subscribed'},' and the technical team is notified automatically.']
+  ]},
+
+ {n:'04',title:'Provision & go live',maps:'Replaces manual Steps 6–7',who:'Sales · Spyros · Customer',
+  nowDays:'0–1 working day (+ coordination)',autoDays:'~Same-day, hands-off',saved:'No manual key hand-off or approval-code calls',proto:3,
+  now:[
+   'Sales opens Spotlight Secure, adds the purchase, fills package + payment, enables the active flag, clicks Create.',
+   ['Sales contacts Spyros, who ',{p:'manually registers the 15 details'},' in the Verinvo portal.'],
+   ['Sales phones the customer for the ',{p:'approval code'},' (expires in 2 min if the email already has an account).'],
+   'Spyros generates the keys and inputs them into Spotlight before the customer can issue documents.'
+  ],
+  auto:[
+   ['The package purchase is registered in Spotlight Secure ',{b:'automatically'},' on payment.'],
+   ['The 15 details already captured at Register are provisioned to ONESYS over ',{api:'API'},' — no re-entry.'],
+   ['Keys are issued and returned via ',{api:'API'},'; the approval-code step is handled in-flow.'],
+   ['Customer can ',{b:'issue documents immediately'},' through the Spotlight ordering system.']
+  ]}
+];
+
+function frag(part){
+  if(typeof part==='string')return part;
+  if(part.p)return '<span class="pain">'+part.p+'</span>';
+  if(part.b)return '<b>'+part.b+'</b>';
+  if(part.api)return '<span class="api">'+part.api+'</span>';
+  return '';
+}
+function line(item){ return Array.isArray(item)? item.map(frag).join('') : frag(item); }
+
+const PKG=`<div class="pkgtbl">
+  <div><span>Up to 10,000 docs / yr</span><span>Package A</span></div>
+  <div class="hl"><span>10,001 – 50,000</span><span>Package B</span></div>
+  <div><span>50,001 – 100,000</span><span>Package C</span></div>
+  <div><span>100,000+</span><span>Package D</span></div></div>`;
+
+function renderStages(){
+  document.getElementById('stageList').innerHTML=STAGES.map((s,i)=>`
+  <div class="stage">
+    <div class="stage-top">
+      <div class="stage-n">${s.n}</div>
+      <div class="stage-tt"><h3>${s.title}</h3><div class="meta">${s.maps} · ${s.who}</div></div>
+      <div class="savepill">${IC.bolt}${s.saved}</div>
+      <button class="previewbtn" onclick="openProto(${s.proto})">Preview the screen ${IC.chev}</button>
+    </div>
+    <div class="cols">
+      <div class="col now">
+        <div class="col-h"><span class="dot"></span>Today · manual</div>
+        <div class="col-days">${IC_days(s.nowDays)}</div>
+        <ul class="steps">${s.now.map(it=>`<li><span class="ic">${IC.x}</span><span>${line(it)}</span></li>`).join('')}</ul>
+      </div>
+      <div class="col auto">
+        <div class="col-h"><span class="dot"></span>With Spotlight · automated</div>
+        <div class="col-days">${IC_days(s.autoDays)}</div>
+        <ul class="steps">${s.auto.map(it=>`<li><span class="ic">${IC.check}</span><span>${line(it)}</span></li>`).join('')}</ul>
+        ${s.pkg?PKG:''}
+      </div>
+    </div>
+  </div>`).join('');
+}
+function IC_days(t){return `⏱ ${t}`;}
+
+/* ---------- mode switch ---------- */
+function setMode(m){
+  document.getElementById('story').classList.toggle('hide',m!=='story');
+  document.getElementById('proto').classList.toggle('hide',m!=='proto');
+  document.getElementById('tabStory').classList.toggle('on',m==='story');
+  document.getElementById('tabProto').classList.toggle('on',m==='proto');
+  if(m==='proto')renderProto();
+  window.scrollTo(0,0);
+}
+function openProto(step){ pStep=step; setMode('proto'); }
+
+/* ---------- prototype ---------- */
+let pStep=0;
+const WF=['Register','Link & authorise','Payment','Provision & live'];
+let payMode='link', fillMode='self', pkgSel=1;
+
+function renderProto(){
+  document.getElementById('wfNav').innerHTML=WF.map((w,i)=>`
+   <div class="st ${i<pStep?'done':''} ${i===pStep?'on':''}" onclick="if(${i}<=maxReached())gotoStep(${i})">
+     <span class="num">${i<pStep?IC.check:(i+1)}</span>${w}</div>`).join('');
+  const m=document.getElementById('pmain');
+  m.innerHTML=[screenRegister,screenLink,screenPay,screenProvision][pStep]();
+  wireStep();
+}
+let _max=0; function maxReached(){return Math.max(_max,pStep);}
+function gotoStep(i){pStep=i;renderProto();}
+function next(){ _max=Math.max(_max,pStep+1); pStep=Math.min(pStep+1,3); renderProto(); }
+function back(){ pStep=Math.max(pStep-1,0); renderProto(); }
+
+function footer(nextLabel,canNext=true){
+  return `<div class="pfoot">
+    <button class="btn btn-g" onclick="back()" ${pStep===0?'disabled':''}>Back</button>
+    <button class="btn btn-p" id="nextBtn" onclick="next()" ${canNext?'':'disabled'}>${nextLabel} ${IC.chev}</button>
+  </div>`;
+}
+
+/* Step 1 – Register */
+function screenRegister(){
+  return `<h3>Register the business</h3>
+  <div class="lead">Look up the VAT to auto-fill registry details, choose who completes the form, and the package is suggested from document volume.</div>
+  <div class="pbody">
+    <div class="seg2">
+      <button class="${fillMode==='self'?'on':''}" onclick="fillMode='self';renderProto()">Customer self-completes</button>
+      <button class="${fillMode==='admin'?'on':''}" onclick="fillMode='admin';renderProto()">Fill on customer's behalf</button>
+    </div>
+    <div class="field"><label>Business VAT number</label>
+      <div class="row2"><input id="vat" value="800010000" /><button class="btn btn-n" onclick="lookup()">Look up</button></div>
+    </div>
+    <div id="regResult" class="${window.__looked?'':'hide'}">
+      <div class="regcard">
+        <div class="rt">${IC.check} Registry details · auto-filled</div>
+        <div class="rgrid">
+          <div class="r"><div class="k">Legal name</div><div class="v">Blue Wave Travel O.E.</div></div>
+          <div class="r"><div class="k">Activity</div><div class="v">Travel agency</div></div>
+          <div class="r"><div class="k">City</div><div class="v">Rhodes</div></div>
+          <div class="r"><div class="k">Tax office</div><div class="v">ΔΟΥ Ρόδου</div></div>
+        </div>
+      </div>
+      <div class="field"><label>Annual documents issued</label>
+        <select id="vol" onchange="suggestPkg()">
+          <option value="0">Up to 10,000</option>
+          <option value="1" selected>10,001 – 50,000</option>
+          <option value="2">50,001 – 100,000</option>
+          <option value="3">100,000+</option>
+        </select>
+      </div>
+      <label style="font-size:12.5px;font-weight:700;color:var(--sec);display:block;margin-bottom:10px">Package <span style="color:var(--mut);font-weight:500">· suggested from volume</span></label>
+      <div class="pkgs" id="pkgs">${['A','B','C','D'].map((p,i)=>`
+        <div class="pkg ${i===pkgSel?'sel':''}" onclick="pkgSel=${i};renderProto()">
+          ${i===pkgSel?'<span class="sug">Suggested</span>':''}
+          <div class="pn">${p}</div><div class="pv">${['≤10k','≤50k','≤100k','100k+'][i]}</div><div class="pp">€${['12','29','59','119'][i]}/mo</div>
+        </div>`).join('')}</div>
+      <div class="callout" style="margin-top:16px">${IC.info}<div>${fillMode==='self'?'The customer receives an <b>email + OTP</b> to verify and confirm this form. Their phone bill is uploaded in that same step.':'You’re completing this on the customer’s behalf. The <b>phone bill upload</b> and an OTP confirmation are still required before data is pushed to ONESYS.'} Everything is sent to ONESYS via <span class="api">API</span> — no Excel.</div></div>
+    </div>
+  </div>
+  ${footer(fillMode==='self'?'Send verification & form':'Save & continue', !!window.__looked)}`;
+}
+function lookup(){ window.__looked=true; renderProto(); }
+function suggestPkg(){ pkgSel=parseInt(document.getElementById('vol').value); renderProto(); }
+
+/* Step 2 – Link */
+function screenLink(){
+  return `<h3>Link &amp; authorise (Taxis)</h3>
+  <div class="lead">Activation instructions are emailed automatically. ONESYS confirms the Taxisnet link back to the dashboard over API — you just watch the status.</div>
+  <div class="pbody">
+    <div class="tl">
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Activation email sent automatically</div><div class="s">Taxisnet authorisation + MyData declaration instructions delivered to the customer.</div></div></div>
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Customer authorised ONESYS in Taxisnet</div><div class="s">Provider declaration completed in MyData.</div></div></div>
+      <div class="ev live"><div class="mk">${IC.clock}</div><div class="tx"><div class="t">ONESYS confirming the link…</div><div class="s">Waiting on confirmation from ONESYS.</div><span class="api">API · onesys/link-status</span></div></div>
+      <div class="ev"><div class="mk"></div><div class="tx"><div class="t">Link confirmed · ready for payment</div><div class="s">Status updates on its own — no screenshots, no manual Excel.</div></div></div>
+    </div>
+    <div class="callout" style="margin-top:20px">${IC.info}<div>Today this stage is the biggest time sink — hand-written emails, screenshot proof and manual “No → Yes” status flips. Here it’s <b>tracked live</b> and paced only by the customer.</div></div>
+  </div>
+  ${footer('Mark link confirmed →')}`;
+}
+
+/* Step 3 – Pay */
+function screenPay(){
+  return `<h3>Collect payment</h3>
+  <div class="lead">A payment link is emailed automatically and confirmed by ONESYS over API — removing the payment-screenshot fraud check that exists today.</div>
+  <div class="pbody">
+    <div class="seg2">
+      <button class="${payMode==='link'?'on':''}" onclick="payMode='link';renderProto()">Hosted payment link</button>
+      <button class="${payMode==='api'?'on':''}" onclick="payMode='api';renderProto()">Confirmed via ONESYS</button>
+    </div>
+    <div class="paybox">
+      <div style="font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.04em">Package ${['A','B','C','D'][pkgSel]} · monthly</div>
+      <div class="amt">€${['12','29','59','119'][pkgSel]}.00</div>
+      <div class="desc">Blue Wave Travel O.E. · VAT 800010000</div>
+      ${payMode==='link'
+        ? `<button class="btn btn-p" style="width:100%;justify-content:center" onclick="paid()">Send payment link to customer ${IC.mail}</button><div class="note-sm">Customer pays through the hosted gateway — no screenshot needed.</div>`
+        : `<button class="btn btn-p" style="width:100%;justify-content:center" onclick="paid()">Confirm payment from ONESYS ${IC.check}</button><div class="note-sm">Payment status pulled directly from ONESYS.</div>`}
+      <div id="paidRow" class="hide"><div class="statusrow">${IC.check} Paid · confirmed via <span class="api" style="background:#fff">API</span> → Subscribed</div></div>
+    </div>
+    <div class="callout" style="margin-top:20px">${IC.info}<div><b>Why this matters:</b> today a manual double-check exists because <b>fraudulent proofs of payment have occurred</b>. API confirmation removes the screenshot entirely.</div></div>
+  </div>
+  ${footer('Continue to provisioning →', !!window.__paid)}`;
+}
+function paid(){ window.__paid=true; document.getElementById('paidRow').classList.remove('hide'); document.getElementById('nextBtn').disabled=false; }
+
+/* Step 4 – Provision */
+function screenProvision(){
+  return `<h3>Provision &amp; go live</h3>
+  <div class="lead">On payment, the package registers in Spotlight Secure and the 15 details captured at Register are provisioned to ONESYS — no re-entry, no manual key hand-off.</div>
+  <div class="pbody">
+    <div class="tl">
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Purchase registered in Spotlight Secure</div><div class="s">Package + payment written automatically; active flag set.</div></div></div>
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">15 company details provisioned to ONESYS</div><div class="s">Reused from Register — no re-keying, no email to Spyros.</div><span class="api">API · onesys/provision</span></div></div>
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Keys issued &amp; returned</div><div class="s">Approval-code step handled in-flow.</div><span class="api">API · onesys/keys</span></div></div>
+    </div>
+    <div class="callout" style="margin:16px 0 4px">${IC.info}<div><b>Approval-code rule:</b> if the customer’s email is new to Verinvo the code doesn’t expire; if the email already has an account it expires in 2 minutes — handled automatically here instead of by phone.</div></div>
+    <div class="done-hero">
+      <div class="ring">${IC.check}</div>
+      <h3>Customer is live</h3>
+      <p>Blue Wave Travel O.E. can now issue documents directly through the Spotlight ordering system.</p>
+      <div class="statusrow">${IC.check} Subscribed · Active</div>
+    </div>
+  </div>
+  <div class="pfoot"><button class="btn btn-g" onclick="back()">Back</button><button class="btn btn-n" onclick="restart()">Start another onboarding</button></div>`;
+}
+function restart(){ pStep=0;_max=0;window.__looked=false;window.__paid=false;fillMode='self';payMode='link';pkgSel=1;renderProto(); }
+function wireStep(){}
+
+renderStages();
+</script>
+</body>
+</html>
