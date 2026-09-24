@@ -74,7 +74,7 @@ table.ox tbody tr:hover{background:var(--bg)}
 .namecell .nn{font-weight:600;color:var(--ink)}
 .rowmenu{width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--mut);display:flex;align-items:center;justify-content:center}
 .rowmenu:hover{background:var(--bg)}
-.pill{display:inline-flex;align-items:center;font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--pill)}
+.pill{display:inline-flex;align-items:center;font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--pill);white-space:nowrap}
 .pill-amber{background:var(--amber-bg);color:var(--amber)}
 .pill-green{background:var(--green-bg);color:var(--green)}
 .pill-gray{background:var(--bg);color:var(--sec);border:1px solid var(--line2)}
@@ -149,7 +149,8 @@ table.ox tbody tr:hover{background:var(--bg)}
 .rtab.on .rc{background:var(--purple-bg);color:var(--purple)}
 .selink{border:1px solid var(--line2);border-radius:var(--pill);padding:11px 34px 11px 16px;font-size:14px;font-weight:600;color:var(--sec);background:var(--panel) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b8ba2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 13px center;-webkit-appearance:none;appearance:none;cursor:pointer}
 .reg thead th{white-space:nowrap}
-.reg .usecell{min-width:120px}
+.reg tbody td{vertical-align:top}
+.reg .usecell{min-width:130px}
 .unum{font-size:13px;font-weight:600}
 .uused{font-size:11px;color:var(--mut);margin:2px 0 5px}
 .usebar{height:6px;border-radius:4px;background:var(--bg);overflow:hidden;max-width:120px}
