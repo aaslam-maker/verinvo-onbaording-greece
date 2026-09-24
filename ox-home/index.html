@@ -29,7 +29,8 @@ input,select{font-family:inherit}
 
 /* ===== sidebar ===== */
 .sidebar{width:132px;flex:none;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:22px 12px;position:sticky;top:0;height:100vh;overflow-y:auto}
-.oxlogo{width:56px;height:56px;border:2.5px solid var(--navy);border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:800;font-size:20px;margin-bottom:26px;flex:none}
+.oxlogo{width:56px;height:56px;margin-bottom:26px;flex:none;display:flex;align-items:center;justify-content:center}
+.oxlogo svg{width:56px;height:56px;display:block}
 .snav{display:flex;flex-direction:column;gap:6px;width:100%}
 .nav{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:var(--r2);color:var(--mut);border:0;background:transparent;width:100%;transition:.12s}
 .nav svg{width:24px;height:24px}
@@ -248,7 +249,7 @@ table.ox tbody tr:hover{background:var(--bg)}
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="oxlogo">OX</div>
+    <div class="oxlogo"><svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2.75" y="2.75" width="50.5" height="50.5" rx="15" stroke="#252559" stroke-width="3.2"/><rect x="16.5" y="20" width="13.5" height="16" rx="6.2" stroke="#252559" stroke-width="3.4"/><path d="M32.8 20.4L42.4 35.6M42.4 20.4L32.8 35.6" stroke="#252559" stroke-width="3.4" stroke-linecap="round"/></svg></div>
     <div class="snav" id="snav"></div>
   </aside>
   <div class="main">
