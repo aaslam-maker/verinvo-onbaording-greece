@@ -301,6 +301,11 @@ ul.steps li .ic svg{width:12px;height:12px}
 .vs.on{color:var(--navy)}.vs.on .vn{border-color:var(--navy);color:var(--navy)}
 .vs .vt{flex:1}.vs .vtag{font-size:10.5px;font-weight:700;color:var(--teal600);background:var(--teal-bg);padding:2px 8px;border-radius:20px}
 .emptyj{background:var(--panel);border:1px dashed var(--line2);border-radius:var(--r2);padding:26px;text-align:center;color:var(--mut);font-size:13px}
+.dwctrl{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:14px}
+.dwctrl-row{display:flex;gap:10px}
+.dwctrl-row+.dwctrl-row{margin-top:10px}
+.dwctrl-row .btn{flex:1;justify-content:center;padding:11px 14px;font-size:13.5px}
+.dwctrl .note-sm{text-align:center;margin-top:10px}
 @media(max-width:640px){.kpis{grid-template-columns:1fr 1fr}}
 @media(max-width:860px){
   .cols{grid-template-columns:1fr}.col.auto{border-left:0;border-top:1px solid var(--line)}
@@ -589,10 +594,25 @@ function drawerHTML(){
       <div class="vstep">${WF.map((w,idx)=>`<div class="vs ${idx<c.stage?'done':''} ${idx===c.stage?'on':''}"><span class="vn">${idx<c.stage?'✓':idx+1}</span><span class="vt">${w}</span>${idx===c.stage?'<span class="vtag">Current</span>':''}</div>`).join('')}</div>
       <div class="dwsec">OneSign journey <span class="lvtag">● live via API</span></div>
       ${journey}
+      <div class="dwctrl">
+        <div class="dwctrl-row">
+          <button class="btn btn-g" onclick="dwStagePrev()" ${c.stage===0?'disabled':''}>◀ Previous stage</button>
+          <button class="btn btn-n" onclick="dwStageNext()" ${c.stage===4?'disabled':''}>Advance stage ▶</button>
+        </div>
+        ${c.stage===1?`<div class="dwctrl-row">
+          <button class="btn btn-g" onclick="dwOsPrev()" ${c.os===0?'disabled':''}>◀ Rewind journey</button>
+          <button class="btn btn-p" onclick="dwOsNext()" ${c.os>=7?'disabled':''}>Advance customer step ▶</button>
+        </div>`:''}
+        <div class="note-sm">Demo controls — move this client through the stages and their OneSign journey. The register updates to match.</div>
+      </div>
       <div class="callout" style="margin-top:16px">${IC.info}<div>Spotlight sees this state over API in real time — so ${c.stage<4?'the team knows exactly what the customer still needs to do, without chasing screenshots.':'no follow-up is needed; the customer is live.'}</div></div>
     </div>
   </aside>`;
 }
+function dwStageNext(){ const c=RC[drawerClient]; c.stage=Math.min(c.stage+1,4); if(c.stage>1)c.os=7; else if(c.stage===1&&c.os>=7)c.os=0; renderProto(); }
+function dwStagePrev(){ const c=RC[drawerClient]; c.stage=Math.max(c.stage-1,0); if(c.stage<1)c.os=0; else if(c.stage===1&&c.os>=7)c.os=6; renderProto(); }
+function dwOsNext(){ const c=RC[drawerClient]; c.os=Math.min(c.os+1,7); renderProto(); }
+function dwOsPrev(){ const c=RC[drawerClient]; c.os=Math.max(c.os-1,0); renderProto(); }
 
 /* ---- wizard ---- */
 function wfNavHTML(){
