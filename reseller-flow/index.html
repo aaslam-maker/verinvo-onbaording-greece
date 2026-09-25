@@ -25,6 +25,7 @@ html,body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sa
 body{min-height:100vh}
 a{color:inherit}
 button{font-family:inherit;cursor:pointer}
+svg{width:1em;height:1em}
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 
 /* ===== top bar ===== */
@@ -131,6 +132,7 @@ ul.steps li .ic svg{width:12px;height:12px}
 .btn-n{background:var(--navy);color:#fff}.btn-n:hover{filter:brightness(1.12)}
 .btn-g{background:var(--panel);border:1px solid var(--line2);color:var(--navy)}.btn-g:hover{background:var(--bg)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:16px;height:16px;flex:none}
 .pfoot{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
 .regcard{background:#fbfbfd;border:1px solid var(--line);border-radius:var(--r2);padding:16px 18px;margin-bottom:18px}
 .regcard .rt{font-size:12px;font-weight:700;color:var(--teal600);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px;display:flex;align-items:center;gap:7px}
@@ -173,6 +175,70 @@ ul.steps li .ic svg{width:12px;height:12px}
 .hide{display:none!important}
 .note-sm{font-size:12px;color:var(--mut);margin-top:10px}
 .foot{text-align:center;padding:30px 0 40px;color:var(--mut);font-size:12.5px}
+/* ---- embedded OneSign journey ---- */
+.osync{display:flex;align-items:center;gap:13px;background:linear-gradient(90deg,var(--teal-bg),#fff);border:1px solid #bfe9e5;border-radius:var(--r2);padding:12px 16px;margin-bottom:16px;flex-wrap:wrap}
+.osync .lv{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--teal600);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.osync .lv .d{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 1.4s infinite}
+.osync .tx{font-size:13px;color:var(--sec)}.osync .tx b{color:var(--ink)}
+.osframe{border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:var(--sh);background:#fff}
+.oschrome{display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f1f1f4;border-bottom:1px solid var(--line2)}
+.oschrome .dt{width:11px;height:11px;border-radius:50%;background:#d0d0d8}
+.oschrome .url{margin-left:10px;background:#fff;border-radius:20px;font-size:11px;color:var(--mut);padding:4px 12px;flex:1}
+.osbody{padding:18px 20px}
+.osbar2{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.oslogo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:#1f2a44;letter-spacing:.01em}
+.oslogo svg{width:22px;height:22px}
+.osblue{color:#2f8fd6}
+.osstepper{display:flex;align-items:flex-start;margin:4px 0 18px}
+.osstepper .sp{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative}
+.osstepper .sp .cir{width:26px;height:26px;border-radius:50%;border:2px solid var(--line2);background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--mut);z-index:2}
+.osstepper .sp.done .cir{background:#2f8fd6;border-color:#2f8fd6;color:#fff}
+.osstepper .sp.on .cir{border-color:#2f8fd6;color:#2f8fd6}
+.osstepper .sp .cir svg{width:13px;height:13px}
+.osstepper .sp .nm{font-size:10px;font-weight:600;color:var(--mut);text-align:center}
+.osstepper .sp.on .nm,.osstepper .sp.done .nm{color:#1f2a44}
+.osstepper .sp:not(:last-child)::after{content:"";position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--line2);z-index:1}
+.osstepper .sp.done:not(:last-child)::after{background:#2f8fd6}
+.oscols{display:grid;grid-template-columns:1fr 232px;gap:16px}
+.oscard{border:1px solid var(--line);border-radius:10px;padding:16px}
+.oscard h5{font-size:15px;font-weight:800;margin-bottom:3px}
+.oscard .sub{font-size:12px;color:var(--mut);margin-bottom:14px}
+.osfield{margin-bottom:12px}
+.osfield label{display:block;font-size:11px;font-weight:600;color:var(--sec);margin-bottom:5px}
+.osfield .fake{width:100%;border:1px solid var(--line2);border-radius:7px;padding:9px 11px;font-size:12.5px;background:#fff;color:var(--sec)}
+.osbtn{background:#2f8fd6;color:#fff;border:0;border-radius:7px;font-weight:700;font-size:12.5px;padding:9px 16px;cursor:default}
+.osbtn.wide{width:100%}
+.osprog{border:1px solid var(--line);border-radius:10px;padding:14px;align-self:start}
+.osprog .ph{font-size:13px;font-weight:800;margin-bottom:10px}
+.osprog .pr{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:6px}
+.osprog .bar{height:5px;border-radius:4px;background:var(--bg);overflow:hidden;margin-bottom:8px}
+.osprog .bar i{display:block;height:100%;background:#2f8fd6;transition:width .3s}
+.osli{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:12px}
+.osli .nm{font-weight:600;color:var(--sec)}
+.ospill{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
+.ospill.ok{background:var(--green-bg);color:var(--green)}
+.ospill.pend{background:var(--amber-bg);color:var(--amber)}
+.ospill.wait{background:var(--bg);color:var(--dis)}
+.ostot{display:flex;justify-content:space-between;font-size:14px;font-weight:800;margin-top:10px;padding-top:10px;border-top:2px solid var(--line2)}
+.osplans{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.osplan{border:1.5px solid var(--line2);border-radius:8px;padding:9px;font-size:11px;position:relative}
+.osplan.sel{border-color:#2f8fd6;background:#eaf4fc}
+.osplan .pnm{font-weight:800;font-size:11.5px}
+.osplan .pft{color:var(--mut);margin:2px 0}
+.osplan .ppr{font-weight:800;color:#1f2a44}
+.osplan .sl{position:absolute;top:-8px;right:8px;background:#2f8fd6;color:#fff;font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase}
+.osadv{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.osdoc{border:1px solid var(--line);border-radius:8px;padding:14px;font-size:11.5px;line-height:1.7;color:var(--sec);max-height:170px;overflow:auto;background:#fafafa}
+.osdoc .rd{color:#c0392b;font-weight:600}
+/* story preview strip */
+.embedcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--sh);padding:28px;display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+.embedcard h3{font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+.embedcard p{font-size:14.5px;color:var(--sec);line-height:1.6;margin-bottom:18px}
+.embedcard .mini{border:1px solid var(--line2);border-radius:12px;overflow:hidden;box-shadow:var(--sh)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.chips span{font-size:11.5px;font-weight:600;color:var(--sec);background:var(--bg);border:1px solid var(--line2);padding:5px 11px;border-radius:20px}
+@media(max-width:640px){.oscols{grid-template-columns:1fr}.osstepper .sp .nm{display:none}}
+@media(max-width:860px){.embedcard{grid-template-columns:1fr}}
 @media(max-width:860px){
   .cols{grid-template-columns:1fr}.col.auto{border-left:0;border-top:1px solid var(--line)}
   .metrics{grid-template-columns:1fr}.qgrid{grid-template-columns:1fr}
@@ -268,7 +334,7 @@ const STAGES=[
   ],pkg:true},
 
  {n:'02',title:'Link & authorise (Taxis)',maps:'Replaces manual Steps 3–4',who:'Customer / Accountant · ONESYS',
-  nowDays:'3–5 business days',autoDays:'1–1.5 days (customer-paced)',saved:'No manual status tracking or screenshot chasing',proto:1,
+  nowDays:'3–5 business days',autoDays:'1–1.5 days (customer-paced)',saved:'No manual status tracking or screenshot chasing',proto:2,
   now:[
    'Sales hand-writes an activation email and sets the Sales Excel status to “Awaiting”.',
    'Customer authorises ONESYS in Taxisnet and completes the provider declaration in MyData.',
@@ -283,7 +349,7 @@ const STAGES=[
   ]},
 
  {n:'03',title:'Collect payment',maps:'Replaces manual Step 5',who:'Customer · Sales · ONESYS',
-  nowDays:'1–3 business days',autoDays:'Instant on payment',saved:'Removes fraud risk & the double-check',proto:2,
+  nowDays:'1–3 business days',autoDays:'Instant on payment',saved:'Removes fraud risk & the double-check',proto:3,
   now:[
    'Customer either sends a payment screenshot, or Sales hunts for it in the ONESYS payment list.',
    ['Sales manually flips the Payment field ',{p:'Red → Green'},' / Non-Paid → Paid.'],
@@ -298,7 +364,7 @@ const STAGES=[
   ]},
 
  {n:'04',title:'Provision & go live',maps:'Replaces manual Steps 6–7',who:'Sales · Spyros · Customer',
-  nowDays:'0–1 working day (+ coordination)',autoDays:'~Same-day, hands-off',saved:'No manual key hand-off or approval-code calls',proto:3,
+  nowDays:'0–1 working day (+ coordination)',autoDays:'~Same-day, hands-off',saved:'No manual key hand-off or approval-code calls',proto:4,
   now:[
    'Sales opens Spotlight Secure, adds the purchase, fills package + payment, enables the active flag, clicks Create.',
    ['Sales contacts Spyros, who ',{p:'manually registers the 15 details'},' in the Verinvo portal.'],
@@ -367,20 +433,21 @@ function openProto(step){ pStep=step; setMode('proto'); }
 
 /* ---------- prototype ---------- */
 let pStep=0;
-const WF=['Register','Link & authorise','Payment','Provision & live'];
-let payMode='link', fillMode='self', pkgSel=1;
+const WF=['Register','OneSign journey','Link & authorise','Payment','Provision & live'];
+let payMode='link', fillMode='self', pkgSel=1, osStep=0;
+const LAST=WF.length-1;
 
 function renderProto(){
   document.getElementById('wfNav').innerHTML=WF.map((w,i)=>`
    <div class="st ${i<pStep?'done':''} ${i===pStep?'on':''}" onclick="if(${i}<=maxReached())gotoStep(${i})">
      <span class="num">${i<pStep?IC.check:(i+1)}</span>${w}</div>`).join('');
   const m=document.getElementById('pmain');
-  m.innerHTML=[screenRegister,screenLink,screenPay,screenProvision][pStep]();
+  m.innerHTML=[screenRegister,screenOneSign,screenLink,screenPay,screenProvision][pStep]();
   wireStep();
 }
 let _max=0; function maxReached(){return Math.max(_max,pStep);}
 function gotoStep(i){pStep=i;renderProto();}
-function next(){ _max=Math.max(_max,pStep+1); pStep=Math.min(pStep+1,3); renderProto(); }
+function next(){ _max=Math.max(_max,pStep+1); pStep=Math.min(pStep+1,LAST); renderProto(); }
 function back(){ pStep=Math.max(pStep-1,0); renderProto(); }
 
 function footer(nextLabel,canNext=true){
@@ -434,7 +501,86 @@ function screenRegister(){
 function lookup(){ window.__looked=true; renderProto(); }
 function suggestPkg(){ pkgSel=parseInt(document.getElementById('vol').value); renderProto(); }
 
-/* Step 2 – Link */
+/* Step 2 – Embedded OneSign journey */
+const OSLOGO=`<svg width="22" height="22" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="url(#osg)" stroke-width="3.4"/><path d="M26 14.5c-2.4-2.2-9-1.8-9.4 2.2-.4 4 8.4 1.8 8 6-.4 3.8-7.4 3.4-9.6.8" stroke="#2f8fd6" stroke-width="3.2" stroke-linecap="round" fill="none"/><defs><linearGradient id="osg" x1="4" y1="4" x2="36" y2="36"><stop stop-color="#e23fa0"/><stop offset=".5" stop-color="#8a4fd6"/><stop offset="1" stop-color="#2f8fd6"/></linearGradient></defs></svg><span>ONE<span class="osblue">SIGN</span></span>`;
+const OSLABELS=['Email','Company','Plan','Coupon','Review','Contract','Payment','Done'];
+const OSDOING=['verifying their corporate email with a one-time code','fetching company details from the ΑΦΜ registry','choosing an ONESIGN plan','applying a discount coupon','reviewing the summary before signing','signing the contract (Zoho Sign)','completing payment (Stripe)','done — onboarding complete'];
+function osProgRows(){
+  return ['Email','Company','Plan','Coupon','Review','Contract','Payment'].map((n,idx)=>{
+    let cls='wait',txt='Pending';
+    if(idx<osStep){cls='ok';txt='Complete';} else if(idx===osStep){cls='pend';txt='Pending';}
+    return `<div class="osli"><span class="nm">${n}</span><span class="ospill ${cls}">${txt}</span></div>`;
+  }).join('');
+}
+function osStepper(){
+  return `<div class="osstepper">${OSLABELS.map((l,i)=>`
+    <div class="sp ${i<osStep?'done':''} ${i===osStep?'on':''}">
+      <div class="cir">${i<osStep?IC.check:(i+1)}</div><div class="nm">${l}</div></div>`).join('')}</div>`;
+}
+function osScreenBody(){
+  switch(osStep){
+    case 0: return `<div class="oscard"><h5>Email Verification</h5><div class="sub">Enter your corporate email to receive a one-time verification code.</div>
+      <div class="osfield"><label>Corporate Email</label><div class="fake">info@onesys.gr</div></div><button class="osbtn">🔑 Send code</button></div>`;
+    case 1: return `<div class="oscard"><h5>Company · Get Company Data</h5><div class="sub">Auto-fetched from the ΑΦΜ registry.</div>
+      <div class="osfield"><label>ΑΦΜ εταιρίας</label><div class="fake">801988650</div></div>
+      <div class="osfield"><label>Company Name</label><div class="fake">GT ΛΑΜΜΑ Ι.Κ.Ε</div></div>
+      <div class="osfield"><label>Main Activity</label><div class="fake">Καταστήματα διαχείρισης ακινήτων…</div></div>
+      <button class="osbtn">Επόμενο βήμα →</button></div>`;
+    case 2: return `<div class="oscard"><h5>Πακέτο · Choose a plan</h5><div class="sub">7 plans · by annual document volume</div>
+      <div class="osplans">${[['ONESIGN-01','1,500 παραστ.','€120'],['ONESIGN-02','15,000 παραστ.','€180'],['ONESIGN-04','75,000 παραστ.','€410'],['ONESIGN-05','100,000 παραστ.','€520']].map(p=>`
+        <div class="osplan ${p[0]==='ONESIGN-05'?'sel':''}">${p[0]==='ONESIGN-05'?'<span class="sl">Selected</span>':''}<div class="pnm">${p[0]}</div><div class="pft">${p[1]}</div><div class="ppr">${p[2]}</div></div>`).join('')}</div></div>`;
+    case 3: return `<div class="oscard"><h5>Discount / Coupon</h5><div class="sub">Apply a coupon if you have one, or continue without it.</div>
+      <div class="osfield"><label>Coupon Code</label><div class="fake">COUPON11</div></div><button class="osbtn">Apply &amp; Continue</button></div>`;
+    case 4: return `<div class="oscard"><h5>Review</h5><div class="sub">Review and finalize.</div>
+      <div class="osli"><span class="nm">Company</span><span>GT ΛΑΜΜΑ Ι.Κ.Ε</span></div>
+      <div class="osli"><span class="nm">Plan</span><span>ONESIGN-05 · €520/yr</span></div>
+      <div class="osli"><span class="nm">Coupon</span><span>COUPON11 · 10%</span></div>
+      <button class="osbtn" style="margin-top:12px">Confirm &amp; Continue</button></div>`;
+    case 5: return `<div class="oscard"><h5>Contract · Sign</h5><div class="sub">DEMO ΣΥΜΒΑΣΗ — ΠΑΡΑΧΩΡΗΣΗΣ ΑΔΕΙΑΣ ΧΡΗΣΗΣ ΛΟΓΙΣΜΙΚΟΥ</div>
+      <div class="osdoc">Στην Αθήνα σήμερα, μεταξύ των κάτωθι συμβαλλομένων:<br><br>1. Αφενός της Ιδιωτικής Κεφαλαιουχικής Εταιρείας <b>«ONESYS Ι.Κ.Ε.»</b>, με Α.Φ.Μ. <span class="rd">XXXXXXXXX</span>, της Δ.Ο.Υ. Α΄ Αθηνών, οδός Καρόρη 23, εφεξής «<b>Πάροχος</b>».<br><br>Αφετέρου της εταιρείας «GT ΛΑΜΜΑ Ι.Κ.Ε», εφεξής «<b>Πελάτης</b>».</div>
+      <button class="osbtn" style="margin-top:12px">✍ Agree &amp; Sign</button></div>`;
+    case 6: return `<div class="oscard"><h5>Payment · Stripe</h5><div class="sub">Contract signed. Complete payment to continue.</div>
+      <div class="osfield"><label>Card number</label><div class="fake">•••• •••• •••• 4242</div></div>
+      <div class="osfield"><label>Country / Territory</label><div class="fake">Greece</div></div>
+      <button class="osbtn wide">Pay 468€ now</button></div>`;
+    default: return `<div class="oscard" style="text-align:center"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;margin:6px auto 12px">${IC.check}</div><h5>All done</h5><div class="sub">The customer completed the OneSign onboarding — subscribed &amp; provisioned.</div></div>`;
+  }
+}
+function osTotals(){
+  const done=Math.min(osStep,7);
+  return `<div class="osprog"><div class="ph">Progress Summary</div>
+    <div class="pr"><span>Progress</span><span>${done}/7 completed</span></div>
+    <div class="bar"><i style="width:${Math.round(done/7*100)}%"></i></div>
+    ${osProgRows()}
+    <div class="ostot"><span>Σύνολο</span><span>468€ / έτος</span></div></div>`;
+}
+function screenOneSign(){
+  return `<h3>The customer's OneSign journey — live</h3>
+  <div class="lead">This is the ONESYS (OneSign) self-service onboarding the customer completes. It's <b>embedded and mirrored into Spotlight over API</b>, so you see exactly which step they're on — no waiting on emailed screenshots, no guessing what's stuck.</div>
+  <div class="pbody">
+    <div class="osync"><span class="lv"><span class="d"></span>Live · via ONESYS API</span><span class="tx">Customer is on <b>Step ${Math.min(osStep+1,8)} · ${OSLABELS[osStep]}</b> — ${OSDOING[osStep]}.</span></div>
+    <div class="osframe">
+      <div class="oschrome"><span class="dt"></span><span class="dt"></span><span class="dt"></span><span class="url">onboarding.onesys.gr</span></div>
+      <div class="osbody">
+        <div class="osbar2"><div class="oslogo">${OSLOGO}</div><div style="font-size:11px;color:var(--mut)">en English ☀</div></div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:4px">Onboarding</div>
+        ${osStepper()}
+        <div class="oscols"><div>${osScreenBody()}</div>${osTotals()}</div>
+      </div>
+    </div>
+    <div class="osadv">
+      <button class="btn btn-g" onclick="osPrev()" ${osStep===0?'disabled':''}>◀ Rewind</button>
+      <button class="btn btn-p" onclick="osNext()" ${osStep>=7?'disabled':''}>Advance customer step ▶</button>
+      <span style="font-size:12px;color:var(--mut)">Demo control — in production this updates on its own.</span>
+    </div>
+    <div class="callout" style="margin-top:16px">${IC.info}<div>Because this journey is embedded via API, Spotlight always knows the exact state — <b>email verified, plan chosen, contract signed, payment done</b> — so Sales only steps in when something is genuinely stuck.</div></div>
+  </div>
+  ${footer('Continue to Taxis link →')}`;
+}
+function osNext(){ osStep=Math.min(osStep+1,7); renderProto(); }
+function osPrev(){ osStep=Math.max(osStep-1,0); renderProto(); }
+
+/* Step 3 – Link */
 function screenLink(){
   return `<h3>Link &amp; authorise (Taxis)</h3>
   <div class="lead">Activation instructions are emailed automatically. ONESYS confirms the Taxisnet link back to the dashboard over API — you just watch the status.</div>
