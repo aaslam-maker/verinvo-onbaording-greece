@@ -268,6 +268,17 @@ ul.steps li .ic svg{width:12px;height:12px}
 .csub2{font-size:12.5px;color:var(--sec)}
 .days{font-weight:700;color:var(--sec)}
 .chev-r{color:var(--dis)}
+/* 15-details groups */
+.detintro{font-size:13px;font-weight:800;margin:2px 0 12px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.detintro .cnt{font-size:11px;font-weight:700;color:var(--teal600);background:var(--teal-bg);padding:3px 10px;border-radius:20px}
+.detg{border:1px solid var(--line);border-radius:var(--r2);margin-bottom:12px;overflow:hidden}
+.detg-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#fbfbfd;border-bottom:1px solid var(--line);font-size:13px;font-weight:800}
+.detg-b{padding:4px 14px}
+.detr{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.detr:last-child{border-bottom:0}
+.dk{color:var(--mut)}.dv{font-weight:600;text-align:right;color:var(--ink)}
+.detg.mand{border-color:#f0d59a}.detg.mand .detg-h{background:var(--amber-bg);color:#8a5d0a}
+.detnote{font-size:11.5px;color:var(--amber);background:var(--amber-bg);border-radius:8px;padding:9px 12px;margin-top:2px;line-height:1.45}
 /* wizard back bar */
 .pbar{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .pbar-t{font-weight:800;font-size:16px}
@@ -601,6 +612,31 @@ function footer(nextLabel,canNext=true){
   </div>`;
 }
 
+/* the 15 required company details (from the ONESYS onboarding form) */
+const DETAILS={
+ company:[['Επωνυμία Εταιρείας','Blue Wave Travel O.E.'],['ΑΦΜ','800010000'],['ΔΟΥ','ΔΟΥ Ρόδου'],['Αρ. ΓΕΜΗ','123456789000'],['Διεύθυνση','Λεωφ. Ελευθερίας'],['Αριθμός','24'],['Πόλη','Ρόδος'],['Περιοχή','Ρόδος'],['Περιφέρεια','Νοτίου Αιγαίου'],['Χώρα','Ελλάδα'],['Τ.Κ.','85100']],
+ rep:[['Ονοματεπώνυμο (υπογράφων)','Γεώργιος Παπαδόπουλος'],['ΑΦΜ','045678912'],['ΑΔΤ','ΑΚ123456'],['Τηλέφωνο','+30 6944 000000'],['e-mail','g.papadopoulos@bluewave.gr'],['Διεύθυνση','Λεωφ. Ελευθερίας 24'],['Πόλη','Ρόδος'],['Τ.Κ.','85100'],['Χώρα','Ελλάδα']],
+ contact:[['Ονοματεπώνυμο','Μαρία Κ.'],['Τηλέφωνο','+30 6955 111111'],['e-mail','info@bluewave.gr']],
+ acct:[['e-mail','logistis@bluewave.gr'],['Τηλέφωνο','+30 2410 222222']],
+ setup:[['Κωδικός εγκατάστασης (έδρα/υποκ/μα)','0 — έδρα']],
+ net:[['Πάροχος','Cosmote'],['Τύπος','2η σταθερή'],['Ημ/νία έναρξης σύμβασης','01/03/2024']]
+};
+function detGroup(title,rows,tag,tagcls,mand){
+  return `<div class="detg ${mand?'mand':''}"><div class="detg-h"><span>${title}</span><span class="pill ${tagcls}">${tag}</span></div>
+    <div class="detg-b">${rows.map(r=>`<div class="detr"><span class="dk">${r[0]}</span><span class="dv">${r[1]}</span></div>`).join('')}</div></div>`;
+}
+function detailsHTML(){
+  const n=DETAILS.company.length+DETAILS.rep.length+DETAILS.contact.length+DETAILS.acct.length+DETAILS.setup.length+DETAILS.net.length;
+  return `<div class="detintro">Company details — the required onboarding fields <span class="cnt">${n} fields captured once</span></div>
+  ${detGroup('Company',DETAILS.company,'Auto-filled from registry','pill-green')}
+  ${detGroup('Legal representative (signer)',DETAILS.rep,'From customer form','pill-blue')}
+  ${detGroup('Contact person',DETAILS.contact,'From customer form','pill-blue')}
+  ${detGroup('Accountant',DETAILS.acct,'From customer form','pill-blue')}
+  ${detGroup('Installation',DETAILS.setup,'From customer form','pill-blue')}
+  ${detGroup('Alternative internet connection',DETAILS.net,'Mandatory · ΦΕΚ','pill-amber',true)}
+  <div class="detnote">** Alternative-internet details are now mandatory by ΦΕΚ — they must appear on the ONESYS invoicing contract so service keeps running if the main connection drops. Captured here once (from the customer's phone bill) instead of chased over email. **</div>`;
+}
+
 /* Step 1 – Register */
 function screenRegister(){
   return `<h3>Register the business</h3>
@@ -614,15 +650,8 @@ function screenRegister(){
       <div class="row2"><input id="vat" value="800010000" /><button class="btn btn-n" onclick="lookup()">Look up</button></div>
     </div>
     <div id="regResult" class="${window.__looked?'':'hide'}">
-      <div class="regcard">
-        <div class="rt">${IC.check} Registry details · auto-filled</div>
-        <div class="rgrid">
-          <div class="r"><div class="k">Legal name</div><div class="v">Blue Wave Travel O.E.</div></div>
-          <div class="r"><div class="k">Activity</div><div class="v">Travel agency</div></div>
-          <div class="r"><div class="k">City</div><div class="v">Rhodes</div></div>
-          <div class="r"><div class="k">Tax office</div><div class="v">ΔΟΥ Ρόδου</div></div>
-        </div>
-      </div>
+      <div class="regcard" style="display:flex;align-items:center;gap:10px;color:var(--teal600);font-weight:700;font-size:13px"><span style="display:inline-flex;width:20px;height:20px;border-radius:6px;background:var(--teal-bg);align-items:center;justify-content:center">${IC.check}</span> Registry + MyData details fetched — no Excel to email</div>
+      ${detailsHTML()}
       <div class="field"><label>Annual documents issued</label>
         <select id="vol" onchange="suggestPkg()">
           <option value="0">Up to 10,000</option>
