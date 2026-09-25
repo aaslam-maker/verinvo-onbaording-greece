@@ -339,7 +339,7 @@ ul.steps li .ic svg{width:12px;height:12px}
   </div></section>
 
   <section class="sec"><div class="wrap">
-    <div class="sec-h"><h2>The four automated stages</h2><span class="c">mapped from your current 7-step process</span></div>
+    <div class="sec-h"><h2>The five automated stages</h2><span class="c">mapped from your current 7-step process</span></div>
     <p class="sec-sub">Each card shows how the step works <b>today</b> (the manual reality from the process document) next to the <b>automated</b> Spotlight action. Click <b>Preview the screen</b> to jump into the working prototype at that stage.</p>
     <div id="stageList"></div>
   </div></section>
@@ -375,6 +375,19 @@ const IC={
 };
 
 /* ---- stage data (from the current 7-step process doc) ---- */
+/* real ONESYS/ONESIGN package catalogue (annual, + VAT) */
+const PACKAGES=[
+ {code:'ONESIGN-01',docs:'1,500',price:120},
+ {code:'ONESIGN-02',docs:'15,000',price:180},
+ {code:'ONESIGN-03',docs:'45,000',price:300},
+ {code:'ONESIGN-04',docs:'75,000',price:410},
+ {code:'ONESIGN-05',docs:'100,000',price:520},
+ {code:'ONESIGN-06',docs:'150,000',price:750},
+ {code:'ONESIGN-07',docs:'300,000',price:1100}
+];
+const VATRATE=0.24;
+function eur(n){return '€'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
 const STAGES=[
  {n:'01',title:'Register the business',maps:'Replaces manual Steps 1–2',who:'Reseller admin · Customer',
   nowDays:'4–7 business days',autoDays:'~15 minutes',saved:'Days of email back-and-forth → minutes',proto:0,
@@ -388,11 +401,24 @@ const STAGES=[
   auto:[
    'Admin starts onboarding and enters the business VAT — registry details auto-fill.',
    ['Customer verifies with email + OTP and completes ',{b:'one guided form'},' (or the admin fills it on their behalf).'],
-   ['Package is ',{b:'auto-suggested'},' from the annual document volume (A / B / C / D).'],
+   ['Package is ',{b:'auto-suggested'},' from the annual document volume (ONESIGN-01 → 07).'],
    ['Phone bill uploaded inline; all data is pushed to ONESYS via ',{api:'API'},' — no Excel, no re-keying.']
   ],pkg:true},
 
- {n:'02',title:'Link & authorise (Taxis)',maps:'Replaces manual Steps 3–4',who:'Customer / Accountant · ONESYS',
+ {n:'02',title:'OneSign journey — embedded & live',maps:'The customer’s ONESYS onboarding (email → contract → payment)',who:'Customer · ONESYS',
+  nowDays:'Opaque · days of waiting & chasing',autoDays:'Visible in real time',saved:'Full visibility — no screenshot chasing or guessing',proto:1,
+  now:[
+   ['The customer completes the ONESYS (OneSign) onboarding — ',{p:'entirely outside Spotlight'},' — email, company, plan, coupon, contract, payment.'],
+   ['Sales has ',{p:'no visibility'},' into where they are; they wait for the customer to email a screenshot at each stage.'],
+   ['If something stalls (declaration, contract, payment), ',{p:'no one knows until they ask'},'.']
+  ],
+  auto:[
+   ['The full 8-step OneSign journey is ',{b:'embedded and mirrored into Spotlight'},' over ',{api:'API'},'.'],
+   ['Every step shows live — ',{b:'email verified, plan chosen, contract signed, payment done'},'.'],
+   ['Sales sees the exact state and steps in ',{b:'only when something is genuinely stuck'},' — no chasing.']
+  ]},
+
+ {n:'03',title:'Link & authorise (Taxis)',maps:'Replaces manual Steps 3–4',who:'Customer / Accountant · ONESYS',
   nowDays:'1.5–2.5 business days',autoDays:'~1 day (customer-paced)',saved:'No hand-written emails, status tracking or screenshot chasing',proto:2,
   now:[
    'Sales hand-writes an activation email and sets the Sales Excel status to “Awaiting”.',
@@ -407,7 +433,7 @@ const STAGES=[
    ['Status moves Sent → Authorised → Confirmed on its own — ',{b:'no screenshots, no manual Excel'},'.']
   ]},
 
- {n:'03',title:'Collect payment',maps:'Replaces manual Step 5',who:'Customer · Sales · ONESYS',
+ {n:'04',title:'Collect payment',maps:'Replaces manual Step 5',who:'Customer · Sales · ONESYS',
   nowDays:'1–3 business days',autoDays:'Instant on payment',saved:'Removes fraud risk & the double-check',proto:3,
   now:[
    'Customer either sends a payment screenshot, or Sales hunts for it in the ONESYS payment list.',
@@ -422,7 +448,7 @@ const STAGES=[
    ['Status flips to ',{b:'Subscribed'},' and the technical team is notified automatically.']
   ]},
 
- {n:'04',title:'Provision & go live',maps:'Replaces manual Steps 6–7',who:'Sales · Spyros · Customer',
+ {n:'05',title:'Provision & go live',maps:'Replaces manual Steps 6–7',who:'Sales · Spyros · Customer',
   nowDays:'1–3 business days',autoDays:'~Same-day, hands-off',saved:'No manual key hand-off, retyping or approval-code calls',proto:4,
   now:[
    ['Sales opens Spotlight Secure and ',{p:'types every field by hand'},' (AFM, package, limit, price, discount, VAT, dates), sets the active flag, clicks Create.'],
@@ -447,11 +473,8 @@ function frag(part){
 }
 function line(item){ return Array.isArray(item)? item.map(frag).join('') : frag(item); }
 
-const PKG=`<div class="pkgtbl">
-  <div><span>Up to 10,000 docs / yr</span><span>Package A</span></div>
-  <div class="hl"><span>10,001 – 50,000</span><span>Package B</span></div>
-  <div><span>50,001 – 100,000</span><span>Package C</span></div>
-  <div><span>100,000+</span><span>Package D</span></div></div>`;
+const PKG=`<div class="pkgtbl">${PACKAGES.map(p=>`
+  <div class="${p.code==='ONESIGN-05'?'hl':''}"><span>Up to ${p.docs} docs / yr</span><span>${p.code} · €${p.price}+VAT</span></div>`).join('')}</div>`;
 
 function renderStages(){
   document.getElementById('stageList').innerHTML=STAGES.map((s,i)=>`
@@ -496,19 +519,6 @@ const WF=['Register','OneSign journey','Link & authorise','Payment','Provision &
 let payMode='link', fillMode='self', pkgSel=1, osStep=0;
 const LAST=WF.length-1;
 let protoView='register', drawerClient=null;
-
-/* real ONESYS/ONESIGN package catalogue (annual, + VAT) */
-const PACKAGES=[
- {code:'ONESIGN-01',docs:'1,500',price:120},
- {code:'ONESIGN-02',docs:'15,000',price:180},
- {code:'ONESIGN-03',docs:'45,000',price:300},
- {code:'ONESIGN-04',docs:'75,000',price:410},
- {code:'ONESIGN-05',docs:'100,000',price:520},
- {code:'ONESIGN-06',docs:'150,000',price:750},
- {code:'ONESIGN-07',docs:'300,000',price:1100}
-];
-const VATRATE=0.24;
-function eur(n){return '€'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 /* ---- reseller clients (dashboard listing) ---- */
 const RC=[
