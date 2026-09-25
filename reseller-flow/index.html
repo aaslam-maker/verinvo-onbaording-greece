@@ -327,7 +327,7 @@ ul.steps li .ic svg{width:12px;height:12px}
     <h1>Same 7 steps. Days of manual work, gone.</h1>
     <p>Today, onboarding a customer to the ONESYS e-invoicing provider runs on emailed Excel files, screenshots, manual status tracking and phone calls between Sales, the customer, ONESYS and Spyros. The Spotlight reseller dashboard replaces that with a guided flow and API hand-offs to ONESYS — so admins do less, mistakes drop, and the timeline shrinks from weeks to a couple of days.</p>
     <div class="metrics">
-      <div class="metric"><div class="k red">~12–18</div><div class="l">Business days today, end to end (manual)</div></div>
+      <div class="metric"><div class="k red">~10–15</div><div class="l">Business days today, end to end (manual)</div></div>
       <div class="metric"><div class="k teal">~2–3</div><div class="l">Business days with the reseller dashboard</div></div>
       <div class="metric"><div class="k green">0</div><div class="l">Excel files & payment screenshots to chase</div></div>
     </div>
@@ -346,7 +346,7 @@ ul.steps li .ic svg{width:12px;height:12px}
       <div class="qcard"><span class="tag">Contract</span><h4>Whose contract & T&C is the customer signing?</h4><p>Spotlight's, ONESYS's, or a co-branded agreement? Determines what the e-signature step in the flow presents to the customer.</p></div>
       <div class="qcard"><span class="tag">Money</span><h4>Who collects the money?</h4><p>Does the payment flow through Spotlight or straight to ONESYS? This sets who reconciles and who issues the receipt/invoice.</p></div>
       <div class="qcard"><span class="tag">Gateway</span><h4>Does ONESYS have a payment gateway?</h4><p>If yes, the “Pay” stage uses a hosted payment link + API confirmation. If not, Spotlight provides the gateway and pushes status to ONESYS.</p></div>
-      <div class="qcard"><span class="tag">Upgrade</span><h4>How are package upgrades handled?</h4><p>When a customer outgrows their tier (A→B→C→D by annual document volume), is it a new purchase in Spotlight Secure or an in-dashboard upgrade with a top-up payment?</p></div>
+      <div class="qcard"><span class="tag">Upgrade</span><h4>How are package upgrades handled?</h4><p>When a customer outgrows their tier (ONESIGN-01 → 07 by annual document volume), is it a new purchase in Spotlight Secure or an in-dashboard upgrade with a top-up payment?</p></div>
     </div>
   </div></section>
   <div class="foot">Spotlight Reseller Dashboard · concept flow for review · not connected to live ONESYS APIs</div>
@@ -388,7 +388,7 @@ const STAGES=[
   ],pkg:true},
 
  {n:'02',title:'Link & authorise (Taxis)',maps:'Replaces manual Steps 3–4',who:'Customer / Accountant · ONESYS',
-  nowDays:'3–5 business days',autoDays:'1–1.5 days (customer-paced)',saved:'No manual status tracking or screenshot chasing',proto:2,
+  nowDays:'1.5–2.5 business days',autoDays:'~1 day (customer-paced)',saved:'No hand-written emails, status tracking or screenshot chasing',proto:2,
   now:[
    'Sales hand-writes an activation email and sets the Sales Excel status to “Awaiting”.',
    'Customer authorises ONESYS in Taxisnet and completes the provider declaration in MyData.',
@@ -418,18 +418,18 @@ const STAGES=[
   ]},
 
  {n:'04',title:'Provision & go live',maps:'Replaces manual Steps 6–7',who:'Sales · Spyros · Customer',
-  nowDays:'0–1 working day (+ coordination)',autoDays:'~Same-day, hands-off',saved:'No manual key hand-off or approval-code calls',proto:4,
+  nowDays:'1–3 business days',autoDays:'~Same-day, hands-off',saved:'No manual key hand-off, retyping or approval-code calls',proto:4,
   now:[
-   'Sales opens Spotlight Secure, adds the purchase, fills package + payment, enables the active flag, clicks Create.',
+   ['Sales opens Spotlight Secure and ',{p:'types every field by hand'},' (AFM, package, limit, price, discount, VAT, dates), sets the active flag, clicks Create.'],
    ['Sales contacts Spyros, who ',{p:'manually registers the 15 details'},' in the Verinvo portal.'],
    ['Sales phones the customer for the ',{p:'approval code'},' (expires in 2 min if the email already has an account).'],
-   'Spyros generates the keys and inputs them into Spotlight before the customer can issue documents.'
+   ['Spyros generates the keys and inputs them into Spotlight; then the technical team ',{p:'phones the customer to schedule installation'},'.']
   ],
   auto:[
-   ['The package purchase is registered in Spotlight Secure ',{b:'automatically'},' on payment.'],
-   ['The 15 details already captured at Register are provisioned to ONESYS over ',{api:'API'},' — no re-entry.'],
-   ['Keys are issued and returned via ',{api:'API'},'; the approval-code step is handled in-flow.'],
-   ['Customer can ',{b:'issue documents immediately'},' through the Spotlight ordering system.']
+   ['The Spotlight Secure record is written ',{b:'automatically'},' on payment — no hand-typing, no errors.'],
+   ['The company details already captured at Register are provisioned to ONESYS & the technician over ',{api:'API'},' — no re-entry.'],
+   ['Keys are issued and returned via ',{api:'API'},'; the approval-code rule is handled in-flow.'],
+   ['Customer books the ',{b:'installation slot in-dashboard'},' and can issue documents immediately.']
   ]}
 ];
 
@@ -492,14 +492,27 @@ let payMode='link', fillMode='self', pkgSel=1, osStep=0;
 const LAST=WF.length-1;
 let protoView='register', drawerClient=null;
 
+/* real ONESYS/ONESIGN package catalogue (annual, + VAT) */
+const PACKAGES=[
+ {code:'ONESIGN-01',docs:'1,500',price:120},
+ {code:'ONESIGN-02',docs:'15,000',price:180},
+ {code:'ONESIGN-03',docs:'45,000',price:300},
+ {code:'ONESIGN-04',docs:'75,000',price:410},
+ {code:'ONESIGN-05',docs:'100,000',price:520},
+ {code:'ONESIGN-06',docs:'150,000',price:750},
+ {code:'ONESIGN-07',docs:'300,000',price:1100}
+];
+const VATRATE=0.24;
+function eur(n){return '€'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
 /* ---- reseller clients (dashboard listing) ---- */
 const RC=[
- {name:'Blue Wave Travel O.E.',vat:'800010000',city:'Rhodes',by:'Assisted',stage:1,os:5,pkg:'B',owner:'Maria K.',days:'2d'},
- {name:'Olympus Retail I.K.E.',vat:'800567123',city:'Thessaloniki',by:'Self',stage:1,os:2,pkg:'A',owner:'Sales team',days:'1d'},
+ {name:'Blue Wave Travel O.E.',vat:'800010000',city:'Rhodes',by:'Assisted',stage:1,os:5,pkg:'ONESIGN-05',owner:'Maria K.',days:'2d'},
+ {name:'Olympus Retail I.K.E.',vat:'800567123',city:'Thessaloniki',by:'Self',stage:1,os:2,pkg:'ONESIGN-01',owner:'Sales team',days:'1d'},
  {name:'Aegean Foods A.E.',vat:'094512377',city:'Piraeus',by:'Assisted',stage:0,os:0,pkg:'—',owner:'Sales team',days:'1d'},
- {name:'Ionian Logistics O.E.',vat:'800245190',city:'Patras',by:'Self',stage:2,os:7,pkg:'B',owner:'Eleni T.',days:'3d'},
- {name:'Meltemi Hotels A.E.',vat:'998120044',city:'Santorini',by:'Assisted',stage:3,os:7,pkg:'D',owner:'Maria K.',days:'4d'},
- {name:'Κτήμα Νεμέας Ε.Π.Ε.',vat:'557225081',city:'Nemea',by:'Self',stage:4,os:7,pkg:'C',owner:'Nikos P.',days:'—'}
+ {name:'Ionian Logistics O.E.',vat:'800245190',city:'Patras',by:'Self',stage:2,os:7,pkg:'ONESIGN-02',owner:'Eleni T.',days:'3d'},
+ {name:'Meltemi Hotels A.E.',vat:'998120044',city:'Santorini',by:'Assisted',stage:3,os:7,pkg:'ONESIGN-07',owner:'Maria K.',days:'4d'},
+ {name:'Κτήμα Νεμέας Ε.Π.Ε.',vat:'557225081',city:'Nemea',by:'Self',stage:4,os:7,pkg:'ONESIGN-03',owner:'Nikos P.',days:'—'}
 ];
 const STG=[
  {t:'Registering',cls:'pill-blue'},
@@ -543,7 +556,7 @@ function registerView(){
         <td><span class="pill ${c.by==='Assisted'?'pill-purple':'pill-blue'}">${c.by}</span></td>
         <td><span class="pill ${s.cls}">${s.t}</span></td>
         <td class="csub2">${progressText(c)}</td>
-        <td>${c.pkg==='—'?'<span class="csub">Not selected</span>':'Package '+c.pkg}</td>
+        <td>${c.pkg==='—'?'<span class="csub">Not selected</span>':c.pkg}</td>
         <td>${c.owner}</td>
         <td><span class="days">${c.days}</span></td>
         <td class="chev-r">${IC.chev}</td>
@@ -619,7 +632,7 @@ const DETAILS={
  contact:[['Ονοματεπώνυμο','Μαρία Κ.'],['Τηλέφωνο','+30 6955 111111'],['e-mail','info@bluewave.gr']],
  acct:[['e-mail','logistis@bluewave.gr'],['Τηλέφωνο','+30 2410 222222']],
  setup:[['Κωδικός εγκατάστασης (έδρα/υποκ/μα)','0 — έδρα']],
- net:[['Πάροχος','Cosmote'],['Τύπος','2η σταθερή'],['Ημ/νία έναρξης σύμβασης','01/03/2024']]
+ net:[['Πάροχος','Cosmote'],['Τύπος','2η σταθερή / 4G-5G SIM'],['Αριθμός τηλεφώνου σύνδεσης','+30 2241 090000'],['Ημ/νία έναρξης σύμβασης','01/03/2024']]
 };
 function detGroup(title,rows,tag,tagcls,mand){
   return `<div class="detg ${mand?'mand':''}"><div class="detg-h"><span>${title}</span><span class="pill ${tagcls}">${tag}</span></div>
@@ -654,18 +667,16 @@ function screenRegister(){
       ${detailsHTML()}
       <div class="field"><label>Annual documents issued</label>
         <select id="vol" onchange="suggestPkg()">
-          <option value="0">Up to 10,000</option>
-          <option value="1" selected>10,001 – 50,000</option>
-          <option value="2">50,001 – 100,000</option>
-          <option value="3">100,000+</option>
+          ${PACKAGES.map((p,i)=>`<option value="${i}" ${i===pkgSel?'selected':''}>Up to ${p.docs} documents</option>`).join('')}
         </select>
       </div>
-      <label style="font-size:12.5px;font-weight:700;color:var(--sec);display:block;margin-bottom:10px">Package <span style="color:var(--mut);font-weight:500">· suggested from volume</span></label>
-      <div class="pkgs" id="pkgs">${['A','B','C','D'].map((p,i)=>`
+      <label style="font-size:12.5px;font-weight:700;color:var(--sec);display:block;margin-bottom:10px">Package <span style="color:var(--mut);font-weight:500">· suggested from volume · annual + VAT</span></label>
+      <div class="pkgs" id="pkgs">${PACKAGES.map((p,i)=>`
         <div class="pkg ${i===pkgSel?'sel':''}" onclick="pkgSel=${i};renderProto()">
           ${i===pkgSel?'<span class="sug">Suggested</span>':''}
-          <div class="pn">${p}</div><div class="pv">${['≤10k','≤50k','≤100k','100k+'][i]}</div><div class="pp">€${['12','29','59','119'][i]}/mo</div>
+          <div class="pn">${p.code.split('-')[1]}</div><div class="pv">${p.docs} docs</div><div class="pp">€${p.price}</div>
         </div>`).join('')}</div>
+      <div class="detnote" style="color:var(--mut);background:var(--bg)">A ONESYS <b>cancellation policy</b> and pricing sheet are attached to the customer's confirmation automatically — no separate email.</div>
       <div class="callout" style="margin-top:16px">${IC.info}<div>${fillMode==='self'?'The customer receives an <b>email + OTP</b> to verify and confirm this form. Their phone bill is uploaded in that same step.':'You’re completing this on the customer’s behalf. The <b>phone bill upload</b> and an OTP confirmation are still required before data is pushed to ONESYS.'} Everything is sent to ONESYS via <span class="api">API</span> — no Excel.</div></div>
     </div>
   </div>
@@ -700,8 +711,8 @@ function osScreenBody(osStep){
       <div class="osfield"><label>Main Activity</label><div class="fake">Καταστήματα διαχείρισης ακινήτων…</div></div>
       <button class="osbtn">Επόμενο βήμα →</button></div>`;
     case 2: return `<div class="oscard"><h5>Πακέτο · Choose a plan</h5><div class="sub">7 plans · by annual document volume</div>
-      <div class="osplans">${[['ONESIGN-01','1,500 παραστ.','€120'],['ONESIGN-02','15,000 παραστ.','€180'],['ONESIGN-04','75,000 παραστ.','€410'],['ONESIGN-05','100,000 παραστ.','€520']].map(p=>`
-        <div class="osplan ${p[0]==='ONESIGN-05'?'sel':''}">${p[0]==='ONESIGN-05'?'<span class="sl">Selected</span>':''}<div class="pnm">${p[0]}</div><div class="pft">${p[1]}</div><div class="ppr">${p[2]}</div></div>`).join('')}</div></div>`;
+      <div class="osplans">${PACKAGES.map(p=>`
+        <div class="osplan ${p.code==='ONESIGN-05'?'sel':''}">${p.code==='ONESIGN-05'?'<span class="sl">Selected</span>':''}<div class="pnm">${p.code}</div><div class="pft">${p.docs} παραστ.</div><div class="ppr">€${p.price} + ΦΠΑ</div></div>`).join('')}</div></div>`;
     case 3: return `<div class="oscard"><h5>Discount / Coupon</h5><div class="sub">Apply a coupon if you have one, or continue without it.</div>
       <div class="osfield"><label>Coupon Code</label><div class="fake">COUPON11</div></div><button class="osbtn">Apply &amp; Continue</button></div>`;
     case 4: return `<div class="oscard"><h5>Review</h5><div class="sub">Review and finalize.</div>
@@ -764,7 +775,14 @@ function screenLink(){
       <div class="ev live"><div class="mk">${IC.clock}</div><div class="tx"><div class="t">ONESYS confirming the link…</div><div class="s">Waiting on confirmation from ONESYS.</div><span class="api">API · onesys/link-status</span></div></div>
       <div class="ev"><div class="mk"></div><div class="tx"><div class="t">Link confirmed · ready for payment</div><div class="s">Status updates on its own — no screenshots, no manual Excel.</div></div></div>
     </div>
-    <div class="callout" style="margin-top:20px">${IC.info}<div>Today this stage is the biggest time sink — hand-written emails, screenshot proof and manual “No → Yes” status flips. Here it’s <b>tracked live</b> and paced only by the customer.</div></div>
+    <div class="detg" style="margin-top:18px"><div class="detg-h"><span>Auto-generated activation email</span><span class="pill pill-green">No hand-writing</span></div>
+      <div class="detg-b">
+        <div class="detr"><span class="dk">1 · Authorization (AADE)</span><span class="dv">Certified Provider VAT 801361524</span></div>
+        <div class="detr"><span class="dk">2 · Declaration (MyData)</span><span class="dv">COSMOTE · contract 0716 · B2B + B2C</span></div>
+        <div class="detr"><span class="dk">3 · Payment reference</span><span class="dv">Store VAT · IBAN (Alpha/Piraeus/NBG)</span></div>
+        <div class="detr"><span class="dk">Contract for e-signature</span><span class="dv">from accountingsupport@onesys.gr</span></div>
+      </div></div>
+    <div class="callout" style="margin-top:16px">${IC.info}<div>Today this is the biggest time sink — a <b>hand-written email</b>, screenshot proof, and manual “No → Yes” status flips. Here the email is <b>generated with the right details</b>, and the link status is tracked live — paced only by the customer.</div></div>
   </div>
   ${footer('Mark link confirmed →')}`;
 }
@@ -779,9 +797,9 @@ function screenPay(){
       <button class="${payMode==='api'?'on':''}" onclick="payMode='api';renderProto()">Confirmed via ONESYS</button>
     </div>
     <div class="paybox">
-      <div style="font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.04em">Package ${['A','B','C','D'][pkgSel]} · monthly</div>
-      <div class="amt">€${['12','29','59','119'][pkgSel]}.00</div>
-      <div class="desc">Blue Wave Travel O.E. · VAT 800010000</div>
+      <div style="font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.04em">${PACKAGES[pkgSel].code} · annual subscription</div>
+      <div class="amt">${eur(PACKAGES[pkgSel].price*(1+VATRATE))}</div>
+      <div class="desc">${PACKAGES[pkgSel].docs} docs/yr · ${eur(PACKAGES[pkgSel].price)} + VAT ${eur(PACKAGES[pkgSel].price*VATRATE)}<br>Blue Wave Travel O.E. · VAT 800010000</div>
       ${payMode==='link'
         ? `<button class="btn btn-p" style="width:100%;justify-content:center" onclick="paid()">Send payment link to customer ${IC.mail}</button><div class="note-sm">Customer pays through the hosted gateway — no screenshot needed.</div>`
         : `<button class="btn btn-p" style="width:100%;justify-content:center" onclick="paid()">Confirm payment from ONESYS ${IC.check}</button><div class="note-sm">Payment status pulled directly from ONESYS.</div>`}
@@ -796,14 +814,23 @@ function paid(){ window.__paid=true; document.getElementById('paidRow').classLis
 /* Step 4 – Provision */
 function screenProvision(){
   return `<h3>Provision &amp; go live</h3>
-  <div class="lead">On payment, the package registers in Spotlight Secure and the 15 details captured at Register are provisioned to ONESYS — no re-entry, no manual key hand-off.</div>
+  <div class="lead">On payment, the purchase registers in Spotlight Secure and the details captured at Register are provisioned to ONESYS — no re-entry, no manual key hand-off, no error-prone typing.</div>
   <div class="pbody">
     <div class="tl">
-      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Purchase registered in Spotlight Secure</div><div class="s">Package + payment written automatically; active flag set.</div></div></div>
-      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">15 company details provisioned to ONESYS</div><div class="s">Reused from Register — no re-keying, no email to Spyros.</div><span class="api">API · onesys/provision</span></div></div>
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Purchase registered in Spotlight Secure</div><div class="s">Every field written automatically; active flag set.</div></div></div>
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Company details provisioned to ONESYS &amp; technician</div><div class="s">Reused from Register — no re-keying, no email to Spyros.</div><span class="api">API · onesys/provision</span></div></div>
       <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Keys issued &amp; returned</div><div class="s">Approval-code step handled in-flow.</div><span class="api">API · onesys/keys</span></div></div>
+      <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Installation appointment booked</div><div class="s">Customer picks a slot in-dashboard — no phone call from the technical team.</div></div></div>
     </div>
-    <div class="callout" style="margin:16px 0 4px">${IC.info}<div><b>Approval-code rule:</b> if the customer’s email is new to Verinvo the code doesn’t expire; if the email already has an account it expires in 2 minutes — handled automatically here instead of by phone.</div></div>
+    <div class="detg" style="margin-top:16px"><div class="detg-h"><span>Spotlight Secure record · auto-filled</span><span class="pill pill-green">No manual entry</span></div>
+      <div class="detg-b">
+        <div class="detr"><span class="dk">AFM / TIN · Company</span><span class="dv">800010000 · Blue Wave Travel O.E.</span></div>
+        <div class="detr"><span class="dk">ONESYS package · limit</span><span class="dv">${PACKAGES[pkgSel].code} · ${PACKAGES[pkgSel].docs} docs</span></div>
+        <div class="detr"><span class="dk">Price · discount · after disc.</span><span class="dv">${eur(PACKAGES[pkgSel].price)} · 10% · ${eur(PACKAGES[pkgSel].price*0.9)}</span></div>
+        <div class="detr"><span class="dk">VAT · amount paid</span><span class="dv">${eur(PACKAGES[pkgSel].price*0.9*VATRATE)} · ${eur(PACKAGES[pkgSel].price*0.9*(1+VATRATE))}</span></div>
+        <div class="detr"><span class="dk">Start · end · flag</span><span class="dv">Today · +1 year · Active ✓</span></div>
+      </div></div>
+    <div class="callout" style="margin:14px 0 4px">${IC.info}<div><b>Removes the main issue today:</b> in Spotlight Secure everything is typed by hand, which increases errors. Here it’s written from data already captured. <b>Approval-code rule</b> (new email → no expiry; existing email → 2-min expiry) is handled automatically, not by phone.</div></div>
     <div class="done-hero">
       <div class="ring">${IC.check}</div>
       <h3>Customer is live</h3>
