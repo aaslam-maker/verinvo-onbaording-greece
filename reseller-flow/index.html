@@ -239,6 +239,58 @@ ul.steps li .ic svg{width:12px;height:12px}
 .chips span{font-size:11.5px;font-weight:600;color:var(--sec);background:var(--bg);border:1px solid var(--line2);padding:5px 11px;border-radius:20px}
 @media(max-width:640px){.oscols{grid-template-columns:1fr}.osstepper .sp .nm{display:none}}
 @media(max-width:860px){.embedcard{grid-template-columns:1fr}}
+/* ---- reseller register (prototype landing) ---- */
+.pill{display:inline-flex;align-items:center;font-size:12px;font-weight:700;padding:4px 12px;border-radius:var(--pill);white-space:nowrap}
+.pill-blue{background:var(--blue-bg);color:var(--blue)}
+.pill-purple{background:var(--purple-bg);color:var(--purple)}
+.pill-amber{background:var(--amber-bg);color:var(--amber)}
+.pill-green{background:var(--green-bg);color:var(--green)}
+.rvhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.rvhead h2{font-size:24px;font-weight:800;letter-spacing:-.01em}
+.rvhead p{color:var(--sec);font-size:14px;margin-top:5px;max-width:60ch;line-height:1.5}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:16px 18px;box-shadow:var(--sh)}
+.kpi .k{font-size:26px;font-weight:800;letter-spacing:-.01em}
+.kpi .k.amber{color:var(--amber)}.kpi .k.green{color:var(--green)}.kpi .k.purple{color:var(--purple)}
+.kpi .l{font-size:12.5px;color:var(--mut);margin-top:3px;font-weight:500}
+.rtable{background:var(--panel);border:1px solid var(--line);border-radius:var(--r3);box-shadow:var(--sh);overflow-x:auto}
+.rtable table{width:100%;border-collapse:collapse;min-width:860px}
+.rtable th{text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);padding:14px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+.rtable td{padding:14px 16px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+.rtable tbody tr{cursor:pointer;transition:background .12s}
+.rtable tbody tr:hover{background:#fbfbfd}
+.rtable tbody tr:last-child td{border-bottom:0}
+.namecell{display:flex;align-items:center;gap:11px}
+.av{width:38px;height:38px;flex:none;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;text-transform:uppercase}
+.av.lg{width:46px;height:46px;font-size:15px}
+.nn{font-weight:700;font-size:14px}
+.csub{font-size:12px;color:var(--mut)}
+.csub2{font-size:12.5px;color:var(--sec)}
+.days{font-weight:700;color:var(--sec)}
+.chev-r{color:var(--dis)}
+/* wizard back bar */
+.pbar{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.pbar-t{font-weight:800;font-size:16px}
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,18,44,.42);z-index:60;animation:fade .2s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:580px;max-width:94vw;background:var(--bg);z-index:61;box-shadow:-8px 0 44px rgba(20,18,44,.2);display:flex;flex-direction:column;animation:slide .24s ease}
+@keyframes slide{from{transform:translateX(34px);opacity:.5}to{transform:none;opacity:1}}
+.dwhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px;background:var(--panel);border-bottom:1px solid var(--line)}
+.xbtn{border:1px solid var(--line2);background:var(--panel);width:34px;height:34px;flex:none;border-radius:10px;font-size:15px;color:var(--sec)}
+.xbtn:hover{background:var(--bg)}
+.dwbody{padding:20px 22px 40px;overflow:auto}
+.dwsec{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:4px 0 12px;display:flex;align-items:center;gap:8px}
+.lvtag{color:var(--teal600);font-weight:800;font-size:10px;letter-spacing:.02em}
+.vstep{margin-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:6px 16px}
+.vs{display:flex;align-items:center;gap:12px;padding:11px 0;font-size:13.5px;font-weight:600;color:var(--mut)}
+.vs:not(:last-child){border-bottom:1px solid var(--line)}
+.vs .vn{width:24px;height:24px;flex:none;border-radius:50%;border:2px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:var(--panel)}
+.vs.done{color:var(--ink)}.vs.done .vn{background:var(--teal);border-color:var(--teal);color:#fff}
+.vs.on{color:var(--navy)}.vs.on .vn{border-color:var(--navy);color:var(--navy)}
+.vs .vt{flex:1}.vs .vtag{font-size:10.5px;font-weight:700;color:var(--teal600);background:var(--teal-bg);padding:2px 8px;border-radius:20px}
+.emptyj{background:var(--panel);border:1px dashed var(--line2);border-radius:var(--r2);padding:26px;text-align:center;color:var(--mut);font-size:13px}
+@media(max-width:640px){.kpis{grid-template-columns:1fr 1fr}}
 @media(max-width:860px){
   .cols{grid-template-columns:1fr}.col.auto{border-left:0;border-top:1px solid var(--line)}
   .metrics{grid-template-columns:1fr}.qgrid{grid-template-columns:1fr}
@@ -253,7 +305,7 @@ ul.steps li .ic svg{width:12px;height:12px}
   <div class="brand"><img class="blogo" src="../ox-home/ox-logo.png" alt="OX" onerror="this.style.display='none'">Spotlight Reseller<span class="bsub">· powered by ONESYS</span></div>
   <div class="seg">
     <button id="tabStory" class="on" onclick="setMode('story')">Automation story</button>
-    <button id="tabProto" onclick="setMode('proto')">Live prototype</button>
+    <button id="tabProto" onclick="openRegister()">Live prototype</button>
   </div>
 </div></div>
 
@@ -291,16 +343,7 @@ ul.steps li .ic svg{width:12px;height:12px}
 
 <!-- ============ PROTOTYPE ============ -->
 <main id="proto" class="hide">
-  <section class="proto"><div class="wrap">
-    <div class="pshell">
-      <aside class="pside">
-        <div class="lab">New onboarding</div>
-        <div class="wf" id="wfNav"></div>
-      </aside>
-      <div class="pmain" id="pmain"></div>
-    </div>
-    <div class="foot">This is a click-through concept — data is illustrative. Real hand-offs to ONESYS happen over API where you see the <span class="api" style="padding:1px 5px">API</span> tag.</div>
-  </div></section>
+  <section class="proto"><div class="wrap" id="protoWrap"></div></section>
 </main>
 
 <script>
@@ -429,22 +472,123 @@ function setMode(m){
   if(m==='proto')renderProto();
   window.scrollTo(0,0);
 }
-function openProto(step){ pStep=step; setMode('proto'); }
+function openProto(step){ pStep=step; _max=Math.max(_max,step); protoView='wizard'; setMode('proto'); }
 
 /* ---------- prototype ---------- */
 let pStep=0;
 const WF=['Register','OneSign journey','Link & authorise','Payment','Provision & live'];
 let payMode='link', fillMode='self', pkgSel=1, osStep=0;
 const LAST=WF.length-1;
+let protoView='register', drawerClient=null;
 
+/* ---- reseller clients (dashboard listing) ---- */
+const RC=[
+ {name:'Blue Wave Travel O.E.',vat:'800010000',city:'Rhodes',by:'Assisted',stage:1,os:5,pkg:'B',owner:'Maria K.',days:'2d'},
+ {name:'Olympus Retail I.K.E.',vat:'800567123',city:'Thessaloniki',by:'Self',stage:1,os:2,pkg:'A',owner:'Sales team',days:'1d'},
+ {name:'Aegean Foods A.E.',vat:'094512377',city:'Piraeus',by:'Assisted',stage:0,os:0,pkg:'—',owner:'Sales team',days:'1d'},
+ {name:'Ionian Logistics O.E.',vat:'800245190',city:'Patras',by:'Self',stage:2,os:7,pkg:'B',owner:'Eleni T.',days:'3d'},
+ {name:'Meltemi Hotels A.E.',vat:'998120044',city:'Santorini',by:'Assisted',stage:3,os:7,pkg:'D',owner:'Maria K.',days:'4d'},
+ {name:'Κτήμα Νεμέας Ε.Π.Ε.',vat:'557225081',city:'Nemea',by:'Self',stage:4,os:7,pkg:'C',owner:'Nikos P.',days:'—'}
+];
+const STG=[
+ {t:'Registering',cls:'pill-blue'},
+ {t:'OneSign journey',cls:'pill-purple'},
+ {t:'Linking · Taxis',cls:'pill-amber'},
+ {t:'Awaiting payment',cls:'pill-amber'},
+ {t:'Live',cls:'pill-green'}
+];
+function initials(n){return n.replace(/[^A-Za-zΑ-Ωα-ω ]/g,'').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('');}
+function progressText(c){
+  if(c.stage===1) return `Step ${c.os+1}/8 · ${OSLABELS[c.os]}`;
+  return ['Awaiting customer form','','Taxis authorisation confirmed','Payment link sent','Live · issuing documents'][c.stage];
+}
+
+/* ---- render dispatcher ---- */
 function renderProto(){
-  document.getElementById('wfNav').innerHTML=WF.map((w,i)=>`
+  const w=document.getElementById('protoWrap');
+  if(protoView==='wizard'){ w.innerHTML=wizardView(); }
+  else { w.innerHTML=registerView()+drawerHTML(); }
+}
+
+/* ---- register (listing) ---- */
+function registerView(){
+  const total=RC.length, live=RC.filter(c=>c.stage===4).length, onb=RC.filter(c=>c.stage<4).length, pay=RC.filter(c=>c.stage===3).length;
+  return `
+  <div class="rvhead">
+    <div><h2>Client register</h2><p>Every client and exactly where they are in onboarding — stages mirrored live from ONESYS. Click a client to see their journey.</p></div>
+    <button class="btn btn-p" onclick="openWizard()">＋ New onboarding</button>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="k">${total}</div><div class="l">Total clients</div></div>
+    <div class="kpi"><div class="k purple">${onb}</div><div class="l">In onboarding</div></div>
+    <div class="kpi"><div class="k amber">${pay}</div><div class="l">Awaiting payment</div></div>
+    <div class="kpi"><div class="k green">${live}</div><div class="l">Live</div></div>
+  </div>
+  <div class="rtable"><table>
+    <thead><tr><th>Client</th><th>Created by</th><th>Stage</th><th>Progress</th><th>Package</th><th>Owner</th><th>Updated</th><th></th></tr></thead>
+    <tbody>${RC.map((c,i)=>{const s=STG[c.stage];return `
+      <tr onclick="openDrawer(${i})">
+        <td><div class="namecell"><span class="av">${initials(c.name)}</span><div><div class="nn">${c.name}</div><div class="csub">VAT ${c.vat} · ${c.city}</div></div></div></td>
+        <td><span class="pill ${c.by==='Assisted'?'pill-purple':'pill-blue'}">${c.by}</span></td>
+        <td><span class="pill ${s.cls}">${s.t}</span></td>
+        <td class="csub2">${progressText(c)}</td>
+        <td>${c.pkg==='—'?'<span class="csub">Not selected</span>':'Package '+c.pkg}</td>
+        <td>${c.owner}</td>
+        <td><span class="days">${c.days}</span></td>
+        <td class="chev-r">${IC.chev}</td>
+      </tr>`;}).join('')}</tbody>
+  </table></div>
+  <div class="foot">Click-through concept — data is illustrative. Live hand-offs to ONESYS happen over API where you see the <span class="api" style="padding:1px 5px">API</span> tag.</div>`;
+}
+
+/* ---- drawer ---- */
+function openDrawer(i){ drawerClient=i; renderProto(); }
+function closeDrawer(){ drawerClient=null; renderProto(); }
+function drawerHTML(){
+  if(drawerClient===null) return '';
+  const c=RC[drawerClient];
+  const journey = c.stage<1
+    ? `<div class="emptyj">Customer hasn’t started the OneSign journey yet — they’ll get an email + OTP once the form is sent.</div>`
+    : `<div class="osframe">
+        <div class="oschrome"><span class="dt"></span><span class="dt"></span><span class="dt"></span><span class="url">onboarding.onesys.gr</span></div>
+        <div class="osbody"><div class="osbar2"><div class="oslogo">${OSLOGO}</div><div style="font-size:11px;color:var(--mut)">en English ☀</div></div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:4px">Onboarding</div>${osStepper(c.os)}
+        <div class="oscols"><div>${osScreenBody(c.os)}</div>${osTotals(c.os)}</div></div></div>`;
+  return `<div class="scrim" onclick="closeDrawer()"></div>
+  <aside class="drawer">
+    <div class="dwhead">
+      <div class="namecell"><span class="av lg">${initials(c.name)}</span><div><div class="nn" style="font-size:17px">${c.name}</div><div class="csub">VAT ${c.vat} · ${c.city} · ${c.owner}</div></div></div>
+      <button class="xbtn" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="dwbody">
+      <div class="dwsec">Onboarding stages</div>
+      <div class="vstep">${WF.map((w,idx)=>`<div class="vs ${idx<c.stage?'done':''} ${idx===c.stage?'on':''}"><span class="vn">${idx<c.stage?'✓':idx+1}</span><span class="vt">${w}</span>${idx===c.stage?'<span class="vtag">Current</span>':''}</div>`).join('')}</div>
+      <div class="dwsec">OneSign journey <span class="lvtag">● live via API</span></div>
+      ${journey}
+      <div class="callout" style="margin-top:16px">${IC.info}<div>Spotlight sees this state over API in real time — so ${c.stage<4?'the team knows exactly what the customer still needs to do, without chasing screenshots.':'no follow-up is needed; the customer is live.'}</div></div>
+    </div>
+  </aside>`;
+}
+
+/* ---- wizard ---- */
+function wfNavHTML(){
+  return WF.map((w,i)=>`
    <div class="st ${i<pStep?'done':''} ${i===pStep?'on':''}" onclick="if(${i}<=maxReached())gotoStep(${i})">
      <span class="num">${i<pStep?IC.check:(i+1)}</span>${w}</div>`).join('');
-  const m=document.getElementById('pmain');
-  m.innerHTML=[screenRegister,screenOneSign,screenLink,screenPay,screenProvision][pStep]();
-  wireStep();
 }
+function wizardView(){
+  return `
+  <div class="pbar"><button class="btn btn-g" onclick="closeWizard()">← Back to register</button><div class="pbar-t">New onboarding</div></div>
+  <div class="pshell">
+    <aside class="pside"><div class="lab">New onboarding</div><div class="wf">${wfNavHTML()}</div></aside>
+    <div class="pmain" id="pmain">${[screenRegister,screenOneSign,screenLink,screenPay,screenProvision][pStep]()}</div>
+  </div>
+  <div class="foot">Real hand-offs to ONESYS happen over API where you see the <span class="api" style="padding:1px 5px">API</span> tag.</div>`;
+}
+function openWizard(){ pStep=0;_max=0;window.__looked=false;window.__paid=false;fillMode='self';payMode='link';pkgSel=1;osStep=0;protoView='wizard';renderProto();window.scrollTo(0,0); }
+function closeWizard(){ protoView='register';renderProto();window.scrollTo(0,0); }
+function openRegister(){ protoView='register';drawerClient=null;setMode('proto'); }
+
 let _max=0; function maxReached(){return Math.max(_max,pStep);}
 function gotoStep(i){pStep=i;renderProto();}
 function next(){ _max=Math.max(_max,pStep+1); pStep=Math.min(pStep+1,LAST); renderProto(); }
@@ -505,19 +649,19 @@ function suggestPkg(){ pkgSel=parseInt(document.getElementById('vol').value); re
 const OSLOGO=`<svg width="22" height="22" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="url(#osg)" stroke-width="3.4"/><path d="M26 14.5c-2.4-2.2-9-1.8-9.4 2.2-.4 4 8.4 1.8 8 6-.4 3.8-7.4 3.4-9.6.8" stroke="#2f8fd6" stroke-width="3.2" stroke-linecap="round" fill="none"/><defs><linearGradient id="osg" x1="4" y1="4" x2="36" y2="36"><stop stop-color="#e23fa0"/><stop offset=".5" stop-color="#8a4fd6"/><stop offset="1" stop-color="#2f8fd6"/></linearGradient></defs></svg><span>ONE<span class="osblue">SIGN</span></span>`;
 const OSLABELS=['Email','Company','Plan','Coupon','Review','Contract','Payment','Done'];
 const OSDOING=['verifying their corporate email with a one-time code','fetching company details from the ΑΦΜ registry','choosing an ONESIGN plan','applying a discount coupon','reviewing the summary before signing','signing the contract (Zoho Sign)','completing payment (Stripe)','done — onboarding complete'];
-function osProgRows(){
+function osProgRows(s){
   return ['Email','Company','Plan','Coupon','Review','Contract','Payment'].map((n,idx)=>{
     let cls='wait',txt='Pending';
-    if(idx<osStep){cls='ok';txt='Complete';} else if(idx===osStep){cls='pend';txt='Pending';}
+    if(idx<s){cls='ok';txt='Complete';} else if(idx===s){cls='pend';txt='Pending';}
     return `<div class="osli"><span class="nm">${n}</span><span class="ospill ${cls}">${txt}</span></div>`;
   }).join('');
 }
-function osStepper(){
+function osStepper(s){
   return `<div class="osstepper">${OSLABELS.map((l,i)=>`
-    <div class="sp ${i<osStep?'done':''} ${i===osStep?'on':''}">
-      <div class="cir">${i<osStep?IC.check:(i+1)}</div><div class="nm">${l}</div></div>`).join('')}</div>`;
+    <div class="sp ${i<s?'done':''} ${i===s?'on':''}">
+      <div class="cir">${i<s?IC.check:(i+1)}</div><div class="nm">${l}</div></div>`).join('')}</div>`;
 }
-function osScreenBody(){
+function osScreenBody(osStep){
   switch(osStep){
     case 0: return `<div class="oscard"><h5>Email Verification</h5><div class="sub">Enter your corporate email to receive a one-time verification code.</div>
       <div class="osfield"><label>Corporate Email</label><div class="fake">info@onesys.gr</div></div><button class="osbtn">🔑 Send code</button></div>`;
@@ -546,12 +690,12 @@ function osScreenBody(){
     default: return `<div class="oscard" style="text-align:center"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;margin:6px auto 12px">${IC.check}</div><h5>All done</h5><div class="sub">The customer completed the OneSign onboarding — subscribed &amp; provisioned.</div></div>`;
   }
 }
-function osTotals(){
-  const done=Math.min(osStep,7);
+function osTotals(s){
+  const done=Math.min(s,7);
   return `<div class="osprog"><div class="ph">Progress Summary</div>
     <div class="pr"><span>Progress</span><span>${done}/7 completed</span></div>
     <div class="bar"><i style="width:${Math.round(done/7*100)}%"></i></div>
-    ${osProgRows()}
+    ${osProgRows(s)}
     <div class="ostot"><span>Σύνολο</span><span>468€ / έτος</span></div></div>`;
 }
 function screenOneSign(){
@@ -564,8 +708,8 @@ function screenOneSign(){
       <div class="osbody">
         <div class="osbar2"><div class="oslogo">${OSLOGO}</div><div style="font-size:11px;color:var(--mut)">en English ☀</div></div>
         <div style="font-size:13px;font-weight:800;margin-bottom:4px">Onboarding</div>
-        ${osStepper()}
-        <div class="oscols"><div>${osScreenBody()}</div>${osTotals()}</div>
+        ${osStepper(osStep)}
+        <div class="oscols"><div>${osScreenBody(osStep)}</div>${osTotals(osStep)}</div>
       </div>
     </div>
     <div class="osadv">
@@ -640,7 +784,7 @@ function screenProvision(){
   </div>
   <div class="pfoot"><button class="btn btn-g" onclick="back()">Back</button><button class="btn btn-n" onclick="restart()">Start another onboarding</button></div>`;
 }
-function restart(){ pStep=0;_max=0;window.__looked=false;window.__paid=false;fillMode='self';payMode='link';pkgSel=1;renderProto(); }
+function restart(){ closeWizard(); }
 function wireStep(){}
 
 renderStages();
