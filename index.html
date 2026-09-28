@@ -1449,7 +1449,7 @@ function wstepper(){const cur=wstage[flow.screen];return '<div class="stepper">'
 function cshell(inner,showStepper=true){$('#customer').innerHTML=`<div class="cust-top"><div class="l"><span class="logo2">${IC.logo}</span> ONESYS e-invoicing <span class="poweredby">· powered by Verinvo</span></div><button class="exit" id="exitp">${IC.back} ${role==='client'?'Back to my setup':'Exit preview'}</button></div><div class="wizwrap">${showStepper?wstepper():''}<div class="screen">${inner}</div></div>`;$('#exitp').onclick=exitCustomer;}
 function wnext(){const s=wseq();const i=s.indexOf(flow.screen);flow.screen=s[Math.min(i+1,s.length-1)];renderWizard();}
 function wprev(){const s=wseq();const i=s.indexOf(flow.screen);flow.screen=s[Math.max(i-1,0)];renderWizard();}
-function renderWizard(){({inbox:wInbox,email:wEmail,form15:wForm15,pkg15:wPkg15,sent15:wSent15,landing:wLanding,oxregister:wOxRegister,oxdash:wOxDash,verify:wVerify,identify:wIdentify,plan:wPlan,signpay:wSignPay,gov:wGov,provision:wProvision,live:wLive})[flow.screen]();}
+function renderWizard(){({inbox:wInbox,email:wEmail,otp15:wOtp15,form15:wForm15,pkg15:wPkg15,sent15:wSent15,landing:wLanding,oxregister:wOxRegister,oxdash:wOxDash,verify:wVerify,identify:wIdentify,plan:wPlan,signpay:wSignPay,gov:wGov,provision:wProvision,live:wLive})[flow.screen]();}
 /* ===== streamlined invited-client flow: email app -> 15-field form -> package -> API ===== */
 const GM={
  menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>',
@@ -1533,7 +1533,21 @@ function wEmail(){
    </div>`;
  gmShell(msg);
  const b=$('#gmBack');if(b)b.onclick=()=>{flow.screen='inbox';renderWizard();};
- const s=$('#gmStart');if(s)s.onclick=()=>{flow.screen='form15';renderWizard();};
+ const s=$('#gmStart');if(s)s.onclick=()=>{flow.screen='otp15';renderWizard();};
+}
+function wOtp15(){
+ cshell(`<div style="max-width:430px;margin:0 auto;text-align:center">
+   <span class="logo2" style="width:46px;height:46px;font-size:20px;border-radius:13px;margin:0 auto 14px;display:flex">${IC.logo}</span>
+   <h2>Verify it's you</h2><p class="lead">We sent a 6-digit code to <b>${flow.email||'your email'}</b>. Enter it to continue your secure setup.</p>
+   <div class="otp" id="otp15" style="justify-content:center">${[0,1,2,3,4,5].map(i=>`<input maxlength="1" inputmode="numeric" data-i="${i}">`).join('')}</div>
+   <div style="margin:2px 0 4px"><button class="btn" style="border:0;background:transparent;color:var(--brand600);font-weight:800" id="resend15">Resend code</button></div>
+   <div class="navrow"><button class="btn" id="oBack">${IC.back} Back</button><button class="btn btn-primary" id="oNext" disabled>Verify ${IC.arrow}</button></div></div>`,false);
+ const inps=[...document.querySelectorAll('#otp15 input')];
+ inps.forEach((inp,i)=>{inp.oninput=()=>{if(inp.value&&i<5)inps[i+1].focus();$('#oNext').disabled=!inps.every(x=>x.value);};inp.onkeydown=e=>{if(e.key==='Backspace'&&!inp.value&&i>0)inps[i-1].focus();};});
+ if(inps[0])inps[0].focus();
+ $('#resend15').onclick=()=>toast('Code re-sent to your email');
+ $('#oBack').onclick=()=>{flow.screen='email';renderWizard();};
+ $('#oNext').onclick=()=>{toast('Email verified');flow.screen='form15';renderWizard();};
 }
 const CFIELDS=[
  ['Company','auto','Auto-filled from registry',[['Επωνυμία Εταιρείας','__CUST__'],['ΑΦΜ','094117852'],['ΔΟΥ',"ΙΒ' Αθηνών"],['Αρ. ΓΕΜΗ','140218903000'],['Διεύθυνση','Ερμού 12'],['Αριθμός','12'],['Πόλη','Αθήνα'],['Περιοχή','Αθήνα'],['Περιφέρεια','Αττικής'],['Χώρα','Ελλάδα'],['Τ.Κ.','10563']]],
@@ -1553,7 +1567,7 @@ function wForm15(){
      ${flow.phonebill?`<div class="two"><div class="field done"><label>Πάροχος</label><input value="COSMOTE"></div><div class="field done"><label>Τύπος</label><input value="5G"></div></div><div class="two"><div class="field done"><label>Αριθμός σύνδεσης</label><input value="2284053130"></div><div class="field done"><label>Έναρξη σύμβασης</label><input value="19/05/2025"></div></div>`:''}</div></div>
    <div class="navrow"><button class="btn" id="fBack">${IC.back} Back</button><button class="btn btn-primary" id="fNext" ${flow.phonebill?'':'disabled'}>Continue to package ${IC.arrow}</button></div>`,false);
  $('#dz15').onclick=()=>{flow.phonebill=true;renderWizard();toast('Phone bill attached — ΦΕΚ details extracted');};
- $('#fBack').onclick=()=>{flow.screen='email';renderWizard();};
+ $('#fBack').onclick=()=>{flow.screen='otp15';renderWizard();};
  const nx=$('#fNext');if(nx&&flow.phonebill)nx.onclick=()=>{flow.screen='pkg15';renderWizard();};
 }
 function wPkg15(){
