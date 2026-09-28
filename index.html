@@ -1301,17 +1301,12 @@ function actionPanel(c){
     <div class="aptask ${t.wait?'wait':t.done?'done':''}">${t.done?IC.check:(t.wait?'⏳':IC.bolt)}<span>${t.label}</span></div>
     ${t.btn?`<button class="btn btn-primary btn-block" id="onesysdo">${t.btn}</button>`:''}</div>`;
  }
- const t=salesTask(c);const stepName=STEPS[Math.min(c.stage,6)-1];
- const mkbtn=(bb,cls)=>bb?`<button class="btn ${cls}" id="${bb.id}">${bb.t}</button>`:'';
  const canAssist=payCode(c)!=='paid'&&lifeCode(c)!=='closed'&&c.stage<=3;
  const assistBlock=canAssist?`<div class="actpanel" style="border:1px solid var(--brand);background:var(--brand-bg);margin-bottom:14px">
     <div class="aplab" style="color:var(--brand600)">Complete on the client's behalf${c.createdBy==='assisted'?' · in progress':''}</div>
     <div class="apnote" style="margin:0 0 12px">If the client can't finish, fill their company details &amp; package yourself — then email them just the payment.</div>
     <button class="btn btn-primary btn-block" id="assist">Complete on behalf of client ${IC.arrow}</button></div>`:'';
- return assistBlock+`<div class="actpanel"><div class="aplab">Move it along · ${c.stage>6?'Live':stepName}</div>
-   <div class="aptask ${t.waitOn?'wait':t.done?'done':''}">${t.done?IC.check:(t.waitOn?'⏳':IC.bolt)}<span>${t.label}</span></div>
-   ${t.waitOn?`<div class="apnote">The ball is with ${t.waitOn} — it moves here on its own once they act.</div>`:''}
-   ${(t.primary||t.secondary)?`<div class="aprow">${mkbtn(t.primary,'btn-primary')}${mkbtn(t.secondary,'')}</div>`:''}</div>`;
+ return assistBlock;
 }
 function partiesBlock(c){
  const P=(bg,in_,t,r,tag)=>`<div class="party"><span class="pav" style="background:${bg}">${in_}</span><div><div style="font-weight:800">${t}</div><div class="role">${r}</div></div><span class="tagm">${tag}</span></div>`;
