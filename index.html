@@ -312,6 +312,32 @@ tbody tr:hover{background:var(--soft)}
 .modal{background:#fff;border-radius:18px;width:100%;max-width:440px;box-shadow:var(--sh-lg);overflow:hidden}
 .modal-h{padding:18px 20px 6px}.modal-h h3{margin:0;font-size:17px;font-weight:800}
 .modal-b{padding:8px 20px 20px}.modal-f{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;background:var(--soft)}
+/* Register-on-Secure wizard */
+.regsteps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.regsteps .s{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--mut);background:var(--soft);border:1px solid var(--line);padding:7px 13px;border-radius:40px}
+.regsteps .s .n{width:18px;height:18px;flex:none;border-radius:50%;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px}
+.regsteps .s .n svg{width:11px;height:11px}
+.regsteps .s.done{color:#1c9d6b;background:#E3F5EC;border-color:#bfe6ce}
+.regsteps .s.done .n{background:#1c9d6b}
+.regsteps .s.on{color:var(--brand);background:#fff;border-color:var(--brand)}
+.regsteps .s.on .n{background:var(--brand)}
+.emailc{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:6px}
+.emailc .eh{background:var(--soft);border-bottom:1px solid var(--line);padding:12px 15px}
+.emailc .eh .subj{font-weight:800;font-size:14px}
+.emailc .eh .meta{font-size:11.5px;color:var(--mut);margin-top:3px}
+.emailc .eb{padding:15px}
+.emailc .eb p{font-size:13px;line-height:1.55;color:var(--ink);margin:0 0 10px}
+.emailc .eb .cta{display:inline-block;background:var(--brand);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:40px;margin:4px 0}
+.emailc ol{margin:0 0 10px;padding-left:0;list-style:none}
+.emailc ol li{display:flex;gap:9px;font-size:12.5px;color:var(--ink);padding:5px 0;border-bottom:1px solid var(--line)}
+.emailc ol li:last-child{border-bottom:0}
+.emailc ol li .no{width:20px;height:20px;flex:none;border-radius:50%;background:var(--brand-bg);color:var(--brand600);font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center}
+.backupbar{display:flex;align-items:center;gap:12px;justify-content:space-between;background:#FBF1DC;border:1px solid #f0d59a;border-radius:12px;padding:11px 15px;margin:0 0 16px;flex-wrap:wrap}
+.backupbar.admin{background:#EFEBFA;border-color:#cdc7f2}
+.backupbar .t{font-size:12.5px;color:#8a5d0a;font-weight:600;flex:1;min-width:170px}
+.backupbar.admin .t{color:#5b4bb0}
+.reg2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.regapi{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--brand600);background:var(--brand-bg);padding:3px 9px;border-radius:20px;letter-spacing:.02em}
 .field{margin-bottom:14px}.field label{display:block;font-size:12px;font-weight:800;color:var(--sec);margin-bottom:5px}
 .field input,.field select{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;color:var(--ink)}
 .field input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-bg)}
@@ -607,6 +633,7 @@ const COLS={
 const COL_ORDER=['wants','sent','todecl','details','awaiting','pay','setup','golive','live'];
 
 let nav='overview',filter='all',ovScope='mine',drawerId=null,drawerTab='steps',msgSel=0;
+let regFlow=null;
 let adFilter={q:'',res:'all',tab:'all',life:'all'};
 function scoped(){
  if(role==='reseller')return clients.filter(c=>c.reseller==='Spotlight');
@@ -670,12 +697,13 @@ function sidebar(){const R=ROLES[role];const counts={clients:scoped().length,mes
 function renderApp(){
  $('#launcher').style.display='none';$('#customer').style.display='none';$('#shell').style.display='block';
  $('#shell').innerHTML=`<div class="app">${sidebar()}<div class="main"><div class="content" id="content"></div></div></div>`;
- $('#shell').querySelectorAll('.nav').forEach(b=>b.onclick=()=>{nav=b.dataset.nav;renderApp();});
- $('#switchrole').onclick=renderLauncher;$('#invite').onclick=openInvite;
+ $('#shell').querySelectorAll('.nav').forEach(b=>b.onclick=()=>{nav=b.dataset.nav;regFlow=null;renderApp();});
+ $('#switchrole').onclick=renderLauncher;$('#invite').onclick=startReg;
  fillContent();
 }
 function fillContent(){
  const c=$('#content');if(!c)return;
+ if(regFlow){c.innerHTML=regHTML();c.classList.add('wide');wireReg();return;}
  if(role==='admin')c.innerHTML=adminHTML();
  else if(nav==='overview')c.innerHTML=overviewHTML();
  else if(nav==='pipeline')c.innerHTML=kanbanHTML();
@@ -990,6 +1018,83 @@ function renderInviteMessage(c,ch,contact){
  $('#ivView2').onclick=()=>{closeScrim();flow={screen:ch==='email'?'oxregister':'landing',channel:ch,email:ch==='email'?contact:'',customer:c.name,looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};enterCustomer();};
 }
 function closeScrim(){$('#scrim').classList.remove('open');$('#scrim').innerHTML='';}
+
+/* ===== Register on Secure — new-registration wizard (in the workspace) ===== */
+const REG_SUBS=['Start','Email sent','Verify (OTP)','Form & package','Sent to ONESYS'];
+function startReg(){ regFlow={sub:0,looked:false,fillBy:'client',plan:4,bill:false,vat:'094117852',name:'',city:'Athens',email:''}; fillContent(); $('#content').scrollTop=0; }
+function regSteps(){return `<div class="regsteps">${REG_SUBS.map((l,i)=>`<div class="s ${i<regFlow.sub?'done':''} ${i===regFlow.sub?'on':''}"><span class="n">${i<regFlow.sub?IC.check:(i+1)}</span>${l}</div>`).join('')}</div>`;}
+function regDetails(){
+ const f='<span style="font-size:11px;font-weight:800;color:#1c9d6b;background:#E3F5EC;border:1px solid #bfe6ce;padding:2px 8px;border-radius:20px">Auto-filled from registry</span>';
+ const cust='<span style="font-size:11px;font-weight:800;color:var(--brand600);background:var(--brand-bg);padding:2px 8px;border-radius:20px">From customer form</span>';
+ const mand='<span style="font-size:11px;font-weight:800;color:#c98a12;background:#FBF1DC;padding:2px 8px;border-radius:20px">Mandatory · ΦΕΚ</span>';
+ const grp=(t,tag,rows)=>`<div class="lookcard filled" style="margin-top:12px"><div class="lab" style="display:flex;justify-content:space-between;align-items:center">${t} ${tag}</div>${rows}</div>`;
+ const two=(a,b)=>`<div class="two">${a}${b}</div>`;
+ const fd=(l,v)=>`<div class="field done"><label>${l}</label><input value="${v}"></div>`;
+ return grp('Company',f,two(fd('Επωνυμία',regFlow.name||'Νέα Εταιρεία Ο.Ε.'),fd('ΑΦΜ',regFlow.vat))+two(fd('ΔΟΥ',"ΙΒ' Αθηνών"),fd('Αρ. ΓΕΜΗ','140218903000'))+two(fd('Διεύθυνση','Ερμού 12'),fd('Πόλη',regFlow.city)))
+   +grp('Legal representative',cust,two(fd('Ονοματεπώνυμο','Μανώλης Πέτρου'),fd('ΑΦΜ','045678912'))+two(fd('ΑΔΤ','ΑΚ123456'),fd('Τηλέφωνο','+30 6944 000000')))
+   +grp('Contact & accountant',cust,two(fd('Contact e-mail','info@company.gr'),fd('Accountant e-mail','logistis@company.gr')))
+   +grp('Alternative internet connection',mand,two(fd('Πάροχος','COSMOTE'),fd('Τύπος','5G'))+two(fd('Αριθμός σύνδεσης','2284053130'),fd('Έναρξη σύμβασης','19/05/2025')));
+}
+function regHTML(){
+ const s=regFlow.sub; let body='';
+ if(s===0){
+  body=`<div class="field"><label>Business VAT number (AFM)</label><div style="display:flex;gap:9px"><input id="rVat" value="${regFlow.vat}" style="flex:1"><button class="btn btn-primary" id="rLook">${regFlow.looked?'Looked up':'Look up'}</button></div>${!regFlow.looked?'<div class="hint">Try any number — simulated registry lookup.</div>':''}</div>
+   ${regFlow.looked?`<div class="lookcard filled"><div class="lab" style="display:flex;align-items:center;gap:8px;color:#1c9d6b">${IC.check} Registry details fetched · ${regFlow.name||'Νέα Εταιρεία Ο.Ε.'} · info@company.gr</div></div>
+   <div class="lab" style="margin-top:16px">Onboarding email — auto-composed, ready to send</div>
+   <div class="emailc"><div class="eh"><div class="subj">Activate e-Invoicing for ${regFlow.name||'your business'}</div><div class="meta">From: onboarding@spotlight.gr · To: info@company.gr</div></div>
+     <div class="eb"><p>Dear customer,</p><p>To activate your ONESYS e-invoicing provider, please complete your secure setup — about 5–10 minutes:</p>
+     <ol><li><span class="no">1</span><span><b>Verify your email</b> with the one-time code we send.</span></li>
+     <li><span class="no">2</span><span><b>Complete the company form</b> (pre-filled from the public registry).</span></li>
+     <li><span class="no">3</span><span><b>Upload a recent phone bill</b> for the mandatory alternative-internet details.</span></li>
+     <li><span class="no">4</span><span><b>Select your package</b> by annual document volume.</span></li></ol>
+     <span class="cta">Start my secure setup →</span>
+     <p style="margin-top:10px">Attached: ONESYS package &amp; pricing sheet · cancellation policy.</p></div></div>`:''}
+   <div class="navrow"><span></span><button class="btn btn-primary" id="rNext" ${regFlow.looked?'':'disabled'}>${IC_MAIL} Send onboarding email ${IC.arrow}</button></div>`;
+ } else if(s===1){
+  body=`<div class="backupbar"><span class="t">Waiting on the client to verify their email.</span><button class="btn" id="rBackup">Complete on client's behalf</button></div>
+   <div class="lookcard filled" style="text-align:center"><div class="lab" style="justify-content:center;color:var(--brand600)">What the client sees</div>
+    <div style="font-weight:800;font-size:15px;margin:2px 0 3px">Enter your verification code</div><div style="font-size:12px;color:var(--mut);margin-bottom:6px">Sent to info@company.gr</div>
+    <div class="otp" style="justify-content:center">${['4','1','9','2','',''].map(v=>`<input maxlength="1" value="${v}" disabled style="${v?'border-color:var(--brand);background:var(--brand-bg)':''}">`).join('')}</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:8px">Code expires in 09:58</div></div>
+   <div class="navrow"><button class="btn" id="rPrev">${IC.back} Back</button><button class="btn btn-primary" id="rNext">Client verified ✓ (simulate) ${IC.arrow}</button></div>`;
+ } else if(s===2){
+  const admin=regFlow.fillBy==='admin';
+  body=`<div class="seg" style="display:inline-flex;gap:0;background:var(--soft);border:1px solid var(--line);border-radius:40px;padding:3px;margin-bottom:16px">
+     <button class="btn" id="rmClient" style="border:0;border-radius:40px;padding:8px 15px;font-size:12.5px;${!admin?'background:#fff;box-shadow:var(--sh)':'background:transparent'}">Client is completing</button>
+     <button class="btn" id="rmAdmin" style="border:0;border-radius:40px;padding:8px 15px;font-size:12.5px;${admin?'background:#fff;box-shadow:var(--sh)':'background:transparent'}">Fill on client's behalf</button></div>
+   ${admin?`<div class="backupbar admin"><span class="t">Backup mode — the admin is completing the form on the client's behalf from the dashboard.</span></div>`
+          :`<div class="backupbar"><span class="t">Client left the form <b>incomplete</b> (phone bill + accountant missing).</span><button class="btn" id="rBackup">Complete on client's behalf</button></div>`}
+   ${regDetails()}
+   <div class="lab" style="margin-top:18px">Package · suggested from volume · annual + VAT</div>
+   <div class="plans" id="rPlans">${PLANS.map((p,i)=>`<div class="planopt ${regFlow.plan===i?'sel':''}" data-p="${i}"><div class="tick">${IC.check}</div><div class="docs">${p.docs}</div><div class="sub">docs / year</div><div class="price">€${p.price}<span style="color:var(--mut);font-weight:600"> +VAT</span></div></div>`).join('')}</div>
+   <div class="navrow"><button class="btn" id="rPrev">${IC.back} Back</button><button class="btn btn-primary" id="rNext">Confirm details &amp; package ${IC.arrow}</button></div>`;
+ } else {
+  const p=PLANS[regFlow.plan];
+  body=`<div class="lookcard filled"><div class="lab" style="color:#1c9d6b;display:flex;align-items:center;gap:8px">${IC.check} Email verified &amp; form completed <span style="color:var(--mut);font-weight:600">· ${regFlow.fillBy==='admin'?'by the admin (backup)':'by the client'}</span></div>
+    <div style="font-size:13px;margin-top:8px">Package: <b>${p.docs} docs/year</b> · €${p.price} + VAT</div>
+    <div style="margin-top:10px"><span class="regapi">${IC.bolt} API · onesys/register</span> <span style="font-size:12.5px;color:var(--mut)">All fields pushed in one call — no Excel, no manual extraction.</span></div></div>
+   <div class="livehero" style="padding:22px 0"><div class="livebadge">${IC.spark}</div><h2 style="font-size:20px">Registered on Secure</h2><p>The business is registered and handed to ONESYS. It now appears on your Clients register, and the customer continues their OneSign journey.</p>
+    <button class="btn btn-primary btn-lg" id="rDone">View in Clients ${IC.arrow}</button></div>`;
+ }
+ return `<div class="phead"><div><h1>Register a client on Spotlight Secure</h1><p>Start onboarding, send a structured email, the client verifies &amp; completes the form and picks a package — or the admin fills it on their behalf. When done, the data is sent to ONESYS via API.</p></div><button class="btn" id="rClose">${IC.back} Back to clients</button></div>${regSteps()}<div style="max-width:640px">${body}</div>`;
+}
+function wireReg(){
+ $('#rClose')&&($('#rClose').onclick=()=>{regFlow=null;nav='clients';renderApp();});
+ $('#rLook')&&($('#rLook').onclick=()=>{const b=$('#rLook');const v=$('#rVat');if(v)regFlow.vat=v.value.trim()||regFlow.vat;b.innerHTML='<span class="spin" style="width:14px;height:14px;border-top-color:#fff;border-color:rgba(255,255,255,.4)"></span>';setTimeout(()=>{regFlow.looked=true;regFlow.name=regFlow.name||'Νέα Εταιρεία Ο.Ε.';fillContent();toast('Details auto-filled from registry');},700);});
+ $('#rNext')&&($('#rNext').onclick=()=>{regFlow.sub++;fillContent();$('#content').scrollTop=0;});
+ $('#rPrev')&&($('#rPrev').onclick=()=>{regFlow.sub=Math.max(regFlow.sub-1,0);fillContent();$('#content').scrollTop=0;});
+ $('#rBackup')&&($('#rBackup').onclick=()=>{regFlow.fillBy='admin';regFlow.sub=2;fillContent();$('#content').scrollTop=0;});
+ $('#rmClient')&&($('#rmClient').onclick=()=>{regFlow.fillBy='client';fillContent();});
+ $('#rmAdmin')&&($('#rmAdmin').onclick=()=>{regFlow.fillBy='admin';fillContent();});
+ const pl=$('#rPlans');if(pl)pl.onclick=e=>{const o=e.target.closest('[data-p]');if(o){regFlow.plan=+o.dataset.p;fillContent();}};
+ $('#rDone')&&($('#rDone').onclick=regFinish);
+}
+function regFinish(){
+ const p=PLANS[regFlow.plan];
+ const id=Math.max(...clients.map(c=>c.id))+1;
+ clients.push({id,name:regFlow.name||'Νέα Εταιρεία Ο.Ε.',city:regFlow.city||'Athens',vat:regFlow.vat,reseller:'Spotlight',owner:ROLES[role].user||'Maria K.',pack:p.docs,stage:2,state:'move',days:0,acct:'pending',grp:'new',lifeOv:'onboarding',subOv:'none',payOv:'notpaid',createdBy:regFlow.fillBy==='admin'?'assisted':'self'});
+ regFlow=null;nav='clients';renderApp();toast('Registered on Secure — sent to ONESYS');
+}
 
 /* ===== case drawer ===== */
 function openCase(id){drawerId=id;drawerTab='steps';renderDrawer();$('#drawer').classList.add('open');$('#scrim').classList.add('open');$('#scrim').onclick=closeCase;}
