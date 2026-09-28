@@ -1469,7 +1469,7 @@ const GM={
  rocket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
  gmail:'<svg width="30" height="23" viewBox="0 0 52 40"><path d="M3.6 40h8.7V19.1L0 9.9v26.4C0 38.3 1.6 40 3.6 40z" fill="#4285F4"/><path d="M39.7 40h8.7c2 0 3.6-1.6 3.6-3.6V9.9l-12.3 9.2" fill="#34A853"/><path d="M39.7 3.6v15.5L52 9.9V5.5c0-4.1-4.6-6.4-7.9-4L39.7 3.6z" fill="#FBBC04"/><path d="M12.3 19.1V3.6L26 13.9 39.7 3.6v15.5L26 29.4 12.3 19.1z" fill="#EA4335"/><path d="M0 5.5v4.4l12.3 9.2V3.6L7.9 1.5C4.6-.9 0 1.4 0 5.5z" fill="#C5221F"/></svg>'
 };
-const ONESIGN_LOGO=`<svg width="36" height="36" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="url(#osg2)" stroke-width="3.4"/><path d="M26 14.5c-2.4-2.2-9-1.8-9.4 2.2-.4 4 8.4 1.8 8 6-.4 3.8-7.4 3.4-9.6.8" stroke="#2f8fd6" stroke-width="3.2" stroke-linecap="round" fill="none"/><defs><linearGradient id="osg2" x1="4" y1="4" x2="36" y2="36"><stop stop-color="#e23fa0"/><stop offset=".5" stop-color="#8a4fd6"/><stop offset="1" stop-color="#2f8fd6"/></linearGradient></defs></svg><div style="text-align:left"><div style="font-weight:800;font-size:20px;letter-spacing:1.5px;color:#1a2b4a;line-height:1">ONESIGN</div><div style="font-size:9px;color:#9aa0b0;letter-spacing:.4px;margin-top:2px">Integrity, security, compliance</div></div>`;
+const ONESIGN_LOGO=`<span style="width:42px;height:42px;border-radius:12px;background:#2F6BE8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px">S</span><div style="text-align:left"><div style="font-weight:800;font-size:22px;letter-spacing:.3px;color:#1a2b4a;line-height:1">Spotlight</div><div style="font-size:10px;color:#9aa0b0;letter-spacing:.4px;margin-top:3px">e-invoicing onboarding</div></div>`;
 function gmShell(content){
  $('#customer').innerHTML=`<div class="gm">
    <div class="gmtop">
@@ -1498,7 +1498,7 @@ function gmShell(content){
  $('#cexit').onclick=exitCustomer;
 }
 const GMROWS=[
- {a:'S',from:'Onesign',subj:'Your account is ready',snip:'Finish setup in about 3 minutes and start issuing e-invoices',dt:'10:28 AM',star:true,unread:true,open:true},
+ {a:'S',from:'Spotlight',subj:'Your account is ready',snip:'Finish setup in about 3 minutes and start issuing e-invoices',dt:'10:28 AM',star:true,unread:true,open:true},
  {from:'Τράπεζα Πειραιώς',subj:'Ηλεκτρονική ενημέρωση λογαριασμού',snip:'Η μηνιαία σας κατάσταση είναι διαθέσιμη',dt:'Sep 21'},
  {from:'ΑΑΔΕ myDATA',subj:'Υπενθύμιση διαβίβασης',snip:'Ενημέρωση για τις προθεσμίες διαβίβασης παραστατικών',dt:'Sep 20'},
  {from:'Aegean Airlines',subj:'Your boarding pass',snip:'Rhodes → Athens, 24 Sep',dt:'Sep 19'},
@@ -1519,12 +1519,12 @@ function wEmail(){
  const nm=flow.customer||'there';
  const msg=`<div class="gmmsgtop"><button class="gmback" id="gmBack">${GM.back}</button></div>
    <div class="emsubj">Your account is ready</div>
-   <div class="emailhdr"><span class="ea">O</span><div><div class="from">Onesign | Oxinus <span>&lt;no-reply@oxinus.io&gt;</span></div><div class="to">to ${nm} ▾</div></div><div class="date">10:28 AM</div></div>
+   <div class="emailhdr"><span class="ea" style="background:#2F6BE8">S</span><div><div class="from">Spotlight <span>&lt;onboarding@spotlight.gr&gt;</span></div><div class="to">to ${nm} ▾</div></div><div class="date">10:28 AM</div></div>
    <div class="emailcard">
      <div class="oslogo2">${ONESIGN_LOGO}</div>
      <div class="rocket">${GM.rocket}</div>
      <h2>Your account is ready</h2>
-     <div class="greet">Hi <b>${nm}</b>, welcome to ONESYS e-invoicing.</div>
+     <div class="greet">Hi <b>${nm}</b>, welcome to Spotlight e-invoicing onboarding.</div>
      <div class="para">Your account is ready. Finish setup in about 3 minutes — confirm your company details, choose a plan, and start issuing e-invoices.</div>
      <div class="bl"><span class="ck">${GM.check}</span> Access your dashboard and complete your company details</div>
      <div class="bl"><span class="ck">${GM.check}</span> Review packages and pick the plan for your volume</div>
