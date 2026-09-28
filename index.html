@@ -1361,7 +1361,7 @@ function assistFormHTML(c){
  return `<div class="lab" style="display:flex;justify-content:space-between;align-items:center"><span>Complete setup — for ${c.name}</span><button class="btn" id="aBack" style="padding:5px 11px">${IC.back} Back</button></div>
   <div class="apnote" style="margin:8px 0 14px">Fill the company details, upload the phone bill, then choose a package on the client's behalf. On save they move to <b>Onboarding · Pending Activation</b>; the client pays through their own link.</div>
   <div class="field"><label>VAT number (AFM)</label><div style="display:flex;gap:8px"><input id="aVat" placeholder="e.g. 094117852" value="${c.vat&&c.vat!=='—'?c.vat:''}" style="flex:1"><button class="btn btn-primary" id="aLook">${assistLooked?'Looked up':'Look up'}</button></div></div>
-  ${assistLooked?assistDetails(c)+assistBillBlock():'<div style="text-align:center;color:var(--mut);font-size:12.5px;padding:12px 0">Company details appear here after lookup.</div>'}
+  ${assistLooked?cfieldsHTML(c.name!=='—'?c.name:'')+assistBillGroup():'<div style="text-align:center;color:var(--mut);font-size:12.5px;padding:12px 0">Company details appear here after lookup.</div>'}
   ${ready?`<div class="lab" style="margin-top:16px">Choose a package</div>
   <div class="plans" id="aPlans">${PLANS.map((p,i)=>`<div class="planopt ${assistPlan===i?'sel':''}" data-p="${i}"><div class="tick">${IC.check}</div><div class="docs">${p.docs}</div><div class="sub">docs / year</div><div class="price">€${p.price}<span style="color:var(--mut);font-weight:600"> +VAT</span></div></div>`).join('')}</div>
   <button class="btn btn-primary btn-block" id="aSave" style="margin-top:16px" ${assistPlan!=null?'':'disabled'}>${IC_MAIL} Save &amp; send payment link to client</button>`:''}`;}
@@ -1372,7 +1372,7 @@ function wireAssist(c){
  const plans=$('#aPlans');if(plans)plans.onclick=e=>{const o=e.target.closest('[data-p]');if(o){assistPlan=+o.dataset.p;$('#drawerbody').innerHTML=assistFormHTML(c);wireAssist(c);}};
  const save=$('#aSave');if(save)save.onclick=()=>{
    if(!(assistLooked&&assistBill&&assistPlan!=null))return;
-   c.pack=PLANS[assistPlan].docs;const nm=$('#aName');if(nm&&nm.value.trim())c.name=nm.value.trim();const vt=$('#aVat');if(vt&&vt.value.trim())c.vat=vt.value.trim();
+   c.pack=PLANS[assistPlan].docs;const vt=$('#aVat');if(vt&&vt.value.trim())c.vat=vt.value.trim();
    c.stage=4;c.state='wait';c.lifeOv='onboarding';c.subOv='pending';c.payOv='awaiting';c.createdBy='assisted';c.looked=true;
    refreshAfterAction('Setup saved · payment link sent to '+c.name);
  };
@@ -1560,10 +1560,14 @@ const CFIELDS=[
  ['Contact person','you','Please confirm',[['Ονοματεπώνυμο','Μανώλης Πέτρου'],['Τηλέφωνο','+30 6944 000000'],['e-mail','info@business.gr']]],
  ['Accountant','you','Please confirm',[['e-mail','logistis@business.gr'],['Τηλέφωνο','+30 2410 222222']]]
 ];
-function cfieldsHTML(){
+function cfieldsHTML(name){
+ const cust=name||(typeof flow!=='undefined'&&flow.customer)||'Νέα Εταιρεία Ο.Ε.';
  return CFIELDS.map(g=>`<div class="formgrp"><div class="gh"><span>${g[0]}</span><span class="gtag ${g[1]}">${g[2]}</span></div>
-   <div class="gb">${(()=>{let out='';for(let i=0;i<g[3].length;i+=2){const a=g[3][i],b=g[3][i+1];const f=(x)=>x?`<div class="field done" style="margin-bottom:10px"><label>${x[0]}</label><input value="${(x[1]||'').replace('__CUST__',flow.customer||'Νέα Εταιρεία Ο.Ε.')}"></div>`:'<div></div>';out+=`<div class="two">${f(a)}${f(b)}</div>`;}return out;})()}</div></div>`).join('');
+   <div class="gb">${(()=>{let out='';for(let i=0;i<g[3].length;i+=2){const a=g[3][i],b=g[3][i+1];const f=(x)=>x?`<div class="field done" style="margin-bottom:10px"><label>${x[0]}</label><input value="${(x[1]||'').replace('__CUST__',cust)}"></div>`:'<div></div>';out+=`<div class="two">${f(a)}${f(b)}</div>`;}return out;})()}</div></div>`).join('');
 }
+function assistBillGroup(){return `<div class="formgrp" style="margin-top:12px"><div class="gh"><span>Alternative internet connection</span><span class="gtag mand">Mandatory · ΦΕΚ</span></div>
+   <div class="gb"><div class="field"><label>Recent phone bill (we read the details from it)</label><div class="dropzone ${assistBill?'has':''}" id="aDz">${assistBill?IC.check+' COSMOTE-bill.pdf added':'Drag &amp; drop or tap to upload the phone bill'}</div></div>
+   ${assistBill?`<div class="two"><div class="field done"><label>Πάροχος</label><input value="COSMOTE"></div><div class="field done"><label>Τύπος</label><input value="5G"></div></div><div class="two"><div class="field done"><label>Αριθμός σύνδεσης</label><input value="2284053130"></div><div class="field done"><label>Έναρξη σύμβασης</label><input value="19/05/2025"></div></div>`:''}</div></div>`;}
 function wForm15(){
  cshell(`<div style="display:flex;align-items:center;gap:11px;margin-bottom:14px"><span class="logo2" style="width:36px;height:36px;border-radius:10px">${IC.logo}</span><div><h2 style="margin:0;font-size:19px">Your company details</h2><p class="lead" style="margin:2px 0 0">Pre-filled from the registry — confirm the required fields.</p></div></div>
    ${cfieldsHTML()}
