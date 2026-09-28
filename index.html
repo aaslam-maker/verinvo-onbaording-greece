@@ -338,6 +338,42 @@ tbody tr:hover{background:var(--soft)}
 .backupbar.admin .t{color:#5b4bb0}
 .reg2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
 .regapi{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--brand600);background:var(--brand-bg);padding:3px 9px;border-radius:20px;letter-spacing:.02em}
+/* client email app + onboarding */
+.custbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line);background:#fff}
+.custbar .l{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px}
+.custbar .exit{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:700;color:var(--sec);display:flex;align-items:center;gap:6px}
+.mailwrap{max-width:720px;margin:22px auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh-lg);overflow:hidden}
+.mgmark{width:26px;height:26px;border-radius:7px;background:#EA4335;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px}
+.mailtabs{display:flex;gap:0;padding:0 10px;border-bottom:1px solid var(--line);background:var(--soft)}
+.mailtab{padding:11px 14px;font-size:13px;font-weight:700;color:var(--mut);border-bottom:2px solid transparent;background:none;border-top:0;border-left:0;border-right:0}
+.mailtab.on{color:var(--ink);border-bottom-color:var(--brand)}
+.mailrow{display:flex;align-items:center;gap:13px;padding:14px 18px;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;width:100%;background:none;border-left:0;border-right:0;border-top:0}
+.mailrow:hover{background:var(--soft)}
+.mailrow .avatar{width:38px;height:38px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px}
+.mailrow .body{flex:1;min-width:0}
+.mailrow .from{font-weight:800;font-size:13.5px;display:flex;align-items:center;gap:8px}
+.mailrow .subj{font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mailrow .subj b{font-weight:700}
+.mailrow .subj .snip{color:var(--mut);font-weight:400}
+.mailrow .rt{margin-left:auto;text-align:right;flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.mailrow .time{font-size:12px;color:var(--mut)}
+.mailrow .unreaddot{width:9px;height:9px;border-radius:50%;background:var(--brand)}
+.msgview{padding:22px 24px;max-width:720px;margin:0 auto}
+.msgview .subj{font-size:20px;font-weight:800;margin-bottom:14px}
+.msgview .sender{display:flex;align-items:center;gap:11px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.msgview .sender .avatar{width:42px;height:42px;border-radius:50%;background:var(--brand);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.msgview .mb p{font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 13px}
+.emailsteps{list-style:none;margin:0 0 16px;padding:0}
+.emailsteps li{display:flex;gap:10px;font-size:13.5px;color:var(--ink);padding:7px 0;border-bottom:1px solid var(--line)}
+.emailsteps li:last-child{border-bottom:0}
+.emailsteps li .no{width:22px;height:22px;flex:none;border-radius:50%;background:var(--brand-bg);color:var(--brand600);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+.formgrp{border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.formgrp .gh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 15px;background:var(--soft);border-bottom:1px solid var(--line);font-weight:800;font-size:13.5px}
+.formgrp .gb{padding:13px 15px}
+.gtag{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:20px}
+.gtag.auto{color:#1c9d6b;background:#E3F5EC}
+.gtag.you{color:var(--brand600);background:var(--brand-bg)}
+.gtag.mand{color:#c98a12;background:#FBF1DC}
 .field{margin-bottom:14px}.field label{display:block;font-size:12px;font-weight:800;color:var(--sec);margin-bottom:5px}
 .field input,.field select{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;color:var(--ink)}
 .field input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-bg)}
@@ -698,7 +734,7 @@ function renderApp(){
  $('#launcher').style.display='none';$('#customer').style.display='none';$('#shell').style.display='block';
  $('#shell').innerHTML=`<div class="app">${sidebar()}<div class="main"><div class="content" id="content"></div></div></div>`;
  $('#shell').querySelectorAll('.nav').forEach(b=>b.onclick=()=>{nav=b.dataset.nav;regFlow=null;renderApp();});
- $('#switchrole').onclick=renderLauncher;$('#invite').onclick=startReg;
+ $('#switchrole').onclick=renderLauncher;$('#invite').onclick=openInvite;
  fillContent();
 }
 function fillContent(){
@@ -1004,7 +1040,7 @@ function renderInviteSent(c,ch,contact){
   <div class="modal-f"><button class="btn" id="ivDone">Done</button><button class="btn" id="ivSee">See the invitation</button><button class="btn btn-primary" id="ivView">Open client view ${IC.arrow}</button></div></div>`;
  $('#ivDone').onclick=()=>{closeScrim();toast(( v?'Viber':'Email')+' invite sent to '+c.name);};
  $('#ivSee').onclick=()=>renderInviteMessage(c,ch,contact);
- $('#ivView').onclick=()=>{closeScrim();flow={screen:ch==='email'?'oxregister':'landing',channel:ch,email:ch==='email'?contact:'',customer:c.name,looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};enterCustomer();};
+ $('#ivView').onclick=()=>{closeScrim();flow={screen:'inbox',channel:ch,email:ch==='email'?contact:'',customer:c.name,looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};enterCustomer();};
 }
 function renderInviteMessage(c,ch,contact){
  const v=ch==='viber';
@@ -1015,7 +1051,7 @@ function renderInviteMessage(c,ch,contact){
   </div>
   <div class="modal-f"><button class="btn" id="ivBack">← Back</button><button class="btn btn-primary" id="ivView2">Open client view ${IC.arrow}</button></div></div>`;
  $('#ivBack').onclick=()=>renderInviteSent(c,ch,contact);
- $('#ivView2').onclick=()=>{closeScrim();flow={screen:ch==='email'?'oxregister':'landing',channel:ch,email:ch==='email'?contact:'',customer:c.name,looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};enterCustomer();};
+ $('#ivView2').onclick=()=>{closeScrim();flow={screen:'inbox',channel:ch,email:ch==='email'?contact:'',customer:c.name,looked:false,plan:3,coupon:'',phonebill:false,signed:false,paid:false,auth:'todo',decl:'todo',provDone:false};enterCustomer();};
 }
 function closeScrim(){$('#scrim').classList.remove('open');$('#scrim').innerHTML='';}
 
@@ -1115,7 +1151,7 @@ function renderDrawer(){
   <div class="drawer-f"><button class="btn ${(role==='sales'||role==='reseller')?'btn-primary':''} btn-block" id="viewas">${role==='onesys'?'Preview the client onboarding':"Open the client's view"} ${IC.arrow}</button></div>`;
  $('#dx').onclick=closeCase;
  d.querySelectorAll('[data-dt]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.dt;d.querySelectorAll('[data-dt]').forEach(x=>x.classList.toggle('on',x.dataset.dt===drawerTab));$('#drawerbody').innerHTML=drawerBody(c);wireDrawerBody(c);$('#drawerbody').scrollTop=0;});
- const va=$('#viewas');if(va)va.onclick=()=>{closeCase();flow.customer=c.name;const map={1:'landing',2:'identify',3:'gov',4:'signpay',5:'provision',6:'provision',7:'live'};flow.screen=map[c.stage]||'landing';enterCustomer();};
+ const va=$('#viewas');if(va)va.onclick=()=>{closeCase();flow.customer=c.name;flow.plan=(typeof flow.plan==='number'?flow.plan:4);flow.screen=(c.stage>=5?'live':'inbox');enterCustomer();};
  wireDrawerBody(c);
 }
 function drawerBody(c){if(drawerTab==='docs')return docsBody(c);if(drawerTab==='msgs')return msgsBody(c);if(drawerTab==='activity')return activityBody(c);return stepsBody(c);}
@@ -1349,7 +1385,86 @@ function wstepper(){const cur=wstage[flow.screen];return '<div class="stepper">'
 function cshell(inner,showStepper=true){$('#customer').innerHTML=`<div class="cust-top"><div class="l"><span class="logo2">${IC.logo}</span> ONESYS e-invoicing <span class="poweredby">· powered by Verinvo</span></div><button class="exit" id="exitp">${IC.back} ${role==='client'?'Back to my setup':'Exit preview'}</button></div><div class="wizwrap">${showStepper?wstepper():''}<div class="screen">${inner}</div></div>`;$('#exitp').onclick=exitCustomer;}
 function wnext(){const s=wseq();const i=s.indexOf(flow.screen);flow.screen=s[Math.min(i+1,s.length-1)];renderWizard();}
 function wprev(){const s=wseq();const i=s.indexOf(flow.screen);flow.screen=s[Math.max(i-1,0)];renderWizard();}
-function renderWizard(){({landing:wLanding,oxregister:wOxRegister,oxdash:wOxDash,verify:wVerify,identify:wIdentify,plan:wPlan,signpay:wSignPay,gov:wGov,provision:wProvision,live:wLive})[flow.screen]();}
+function renderWizard(){({inbox:wInbox,email:wEmail,form15:wForm15,pkg15:wPkg15,sent15:wSent15,landing:wLanding,oxregister:wOxRegister,oxdash:wOxDash,verify:wVerify,identify:wIdentify,plan:wPlan,signpay:wSignPay,gov:wGov,provision:wProvision,live:wLive})[flow.screen]();}
+/* ===== streamlined invited-client flow: email app -> 15-field form -> package -> API ===== */
+function custWrap(inner){$('#customer').innerHTML=`<div class="custbar"><div class="l"><span class="mgmark">M</span> Mail <span style="color:var(--mut);font-weight:600">· ${flow.email||'client@business.gr'}</span></div><button class="exit" id="cexit">${IC.back} ${role==='client'?'Back to my setup':'Exit preview'}</button></div>${inner}`;$('#cexit').onclick=exitCustomer;}
+function wInbox(){
+ const rows=[
+  {a:'S',c:'var(--brand)',from:'Spotlight · ONESYS e-invoicing',subj:'Set up your ONESYS e-invoicing',snip:' — verify, complete your details and choose a package',t:'now',unread:true,open:true},
+  {a:'A',c:'#1c9d6b',from:'AADE / myDATA',subj:'Υπενθύμιση ηλεκτρονικής τιμολόγησης',snip:' — προθεσμία υποβολής',t:'2h',unread:false},
+  {a:'B',c:'#c98a12',from:'Alpha Bank',subj:'Your e-statement is ready',snip:' — March 2026',t:'Mon',unread:false}
+ ];
+ custWrap(`<div class="mailwrap">
+   <div class="mailtabs"><button class="mailtab on">Primary</button><button class="mailtab">Promotions</button><button class="mailtab">Social</button></div>
+   ${rows.map((r,i)=>`<button class="mailrow" ${r.open?'id="openInvite0"':''}>
+     <span class="avatar" style="background:${r.c}">${r.a}</span>
+     <div class="body"><div class="from">${r.from} ${r.unread?'<span class="unreaddot"></span>':''}</div>
+       <div class="subj"><b>${r.subj}</b><span class="snip">${r.snip}</span></div></div>
+     <div class="rt"><span class="time">${r.t}</span></div></button>`).join('')}
+ </div>`);
+ $('#openInvite0').onclick=()=>{flow.screen='email';renderWizard();};
+}
+function wEmail(){
+ custWrap(`<div class="mailwrap"><div class="msgview">
+   <div class="subj">Set up your ONESYS e-invoicing</div>
+   <div class="sender"><span class="avatar">S</span><div><div style="font-weight:800;font-size:14px">Spotlight · ONESYS e-invoicing</div><div style="font-size:12.5px;color:var(--mut)">onboarding@spotlight.gr · to ${flow.email||'you'}</div></div></div>
+   <div class="mb"><p>Dear ${flow.customer||'customer'},</p>
+   <p>You've been invited to activate the ONESYS e-invoicing provider. It takes about 5–10 minutes — just complete your secure setup:</p>
+   <ul class="emailsteps">
+     <li><span class="no">1</span><span><b>Confirm your company details</b> (pre-filled from the public registry).</span></li>
+     <li><span class="no">2</span><span><b>Upload a recent phone bill</b> for the mandatory alternative-internet details.</span></li>
+     <li><span class="no">3</span><span><b>Choose your package</b> by annual document volume.</span></li>
+     <li><span class="no">4</span><span><b>Confirm</b> — we send everything to ONESYS automatically.</span></li>
+   </ul>
+   <p>Attached: ONESYS package &amp; pricing sheet · cancellation policy.</p></div>
+   <div style="display:flex;gap:10px;margin-top:8px"><button class="btn" id="mBack">${IC.back} Inbox</button><button class="btn btn-primary btn-lg" id="mStart">Start onboarding ${IC.arrow}</button></div>
+ </div></div>`);
+ $('#mBack').onclick=()=>{flow.screen='inbox';renderWizard();};
+ $('#mStart').onclick=()=>{flow.screen='form15';renderWizard();};
+}
+const CFIELDS=[
+ ['Company','auto','Auto-filled from registry',[['Επωνυμία Εταιρείας','__CUST__'],['ΑΦΜ','094117852'],['ΔΟΥ',"ΙΒ' Αθηνών"],['Αρ. ΓΕΜΗ','140218903000'],['Διεύθυνση','Ερμού 12'],['Αριθμός','12'],['Πόλη','Αθήνα'],['Περιοχή','Αθήνα'],['Περιφέρεια','Αττικής'],['Χώρα','Ελλάδα'],['Τ.Κ.','10563']]],
+ ['Legal representative (signer)','you','Please confirm',[['Ονοματεπώνυμο','Μανώλης Πέτρου'],['ΑΦΜ','045678912'],['ΑΔΤ','ΑΚ123456'],['Τηλέφωνο','+30 6944 000000'],['e-mail','manolis@business.gr']]],
+ ['Contact person','you','Please confirm',[['Ονοματεπώνυμο','Μανώλης Πέτρου'],['Τηλέφωνο','+30 6944 000000'],['e-mail','info@business.gr']]],
+ ['Accountant','you','Please confirm',[['e-mail','logistis@business.gr'],['Τηλέφωνο','+30 2410 222222']]]
+];
+function cfieldsHTML(){
+ return CFIELDS.map(g=>`<div class="formgrp"><div class="gh"><span>${g[0]}</span><span class="gtag ${g[1]}">${g[2]}</span></div>
+   <div class="gb">${(()=>{let out='';for(let i=0;i<g[3].length;i+=2){const a=g[3][i],b=g[3][i+1];const f=(x)=>x?`<div class="field done" style="margin-bottom:10px"><label>${x[0]}</label><input value="${(x[1]||'').replace('__CUST__',flow.customer||'Νέα Εταιρεία Ο.Ε.')}"></div>`:'<div></div>';out+=`<div class="two">${f(a)}${f(b)}</div>`;}return out;})()}</div></div>`).join('');
+}
+function wForm15(){
+ custWrap(`<div class="mailwrap" style="max-width:640px"><div class="msgview"><div style="display:flex;align-items:center;gap:11px;margin-bottom:6px"><span class="logo2" style="width:36px;height:36px;border-radius:10px">${IC.logo}</span><div><div style="font-weight:800;font-size:17px">Your company details</div><div style="font-size:12.5px;color:var(--mut)">Pre-filled from the registry — confirm the required fields.</div></div></div>
+   ${cfieldsHTML()}
+   <div class="formgrp"><div class="gh"><span>Alternative internet connection</span><span class="gtag mand">Mandatory · ΦΕΚ</span></div>
+     <div class="gb"><div class="field"><label>Recent phone bill (we read the details from it)</label><div class="dropzone ${flow.phonebill?'has':''}" id="dz15">${flow.phonebill?IC.check+' COSMOTE-bill.pdf added':'Drag &amp; drop or tap to upload'}</div></div>
+     ${flow.phonebill?`<div class="two"><div class="field done"><label>Πάροχος</label><input value="COSMOTE"></div><div class="field done"><label>Τύπος</label><input value="5G"></div></div><div class="two"><div class="field done"><label>Αριθμός σύνδεσης</label><input value="2284053130"></div><div class="field done"><label>Έναρξη σύμβασης</label><input value="19/05/2025"></div></div>`:''}</div></div>
+   <div class="navrow"><button class="btn" id="fBack">${IC.back} Back</button><button class="btn btn-primary" id="fNext" ${flow.phonebill?'':'disabled'}>Continue to package ${IC.arrow}</button></div>
+ </div></div>`);
+ $('#dz15').onclick=()=>{flow.phonebill=true;renderWizard();toast('Phone bill attached — ΦΕΚ details extracted');};
+ $('#fBack').onclick=()=>{flow.screen='email';renderWizard();};
+ const nx=$('#fNext');if(nx&&flow.phonebill)nx.onclick=()=>{flow.screen='pkg15';renderWizard();};
+}
+function wPkg15(){
+ custWrap(`<div class="mailwrap" style="max-width:640px"><div class="msgview"><div style="font-weight:800;font-size:17px;margin-bottom:3px">Choose your package</div><div style="font-size:12.5px;color:var(--mut);margin-bottom:14px">Priced by the number of documents you issue per year — annual + VAT.</div>
+   <div class="plans" id="p15">${PLANS.map((p,i)=>`<div class="planopt ${flow.plan===i?'sel':''}" data-p="${i}"><div class="tick">${IC.check}</div><div class="docs">${p.docs}</div><div class="sub">documents / year</div><div class="price">€${p.price}<span style="color:var(--mut);font-weight:600"> +VAT</span></div></div>`).join('')}</div>
+   <div class="field" style="margin-top:16px"><label>Coupon (optional)</label><input id="cp15" placeholder="Enter code" value="${flow.coupon||''}"></div>
+   <div class="navrow"><button class="btn" id="pBack">${IC.back} Back</button><button class="btn btn-primary" id="pNext">Confirm &amp; send ${IC.arrow}</button></div>
+ </div></div>`);
+ $('#p15').onclick=e=>{const o=e.target.closest('[data-p]');if(o){flow.plan=+o.dataset.p;renderWizard();}};
+ $('#pBack').onclick=()=>{flow.screen='form15';renderWizard();};
+ $('#pNext').onclick=()=>{flow.coupon=($('#cp15')||{}).value||'';flow.screen='sent15';renderWizard();};
+}
+function wSent15(){
+ const p=PLANS[flow.plan]||PLANS[4];
+ custWrap(`<div class="mailwrap" style="max-width:560px"><div class="msgview" style="text-align:center">
+   <div class="livebadge" style="margin:6px auto 14px">${IC.spark}</div>
+   <h2 style="font-size:22px;margin:0 0 6px">All set — sent to ONESYS</h2>
+   <p class="lead" style="margin:0 auto 18px;max-width:420px">Your details and package (<b>${p.docs} docs/year · €${p.price} + VAT</b>) have been submitted. Everything was sent to ONESYS automatically.</p>
+   <div class="lookcard filled" style="text-align:left;max-width:420px;margin:0 auto 20px"><div class="lab" style="display:flex;align-items:center;gap:8px;color:var(--brand600)">${IC.bolt} <span class="regapi">API · onesys/register</span> ONESYS notified</div><div style="font-size:13px;color:var(--sec);margin-top:8px">No Excel, no manual re-entry. You'll continue with Taxisnet authorization and go live shortly.</div></div>
+   <button class="btn btn-primary btn-lg" id="s15done">${role==='client'?'Back to my setup':'Back to dashboard'}</button>
+ </div></div>`);
+ $('#s15done').onclick=exitCustomer;
+}
 function wLanding(){cshell(`<div style="text-align:center;padding:8px 0"><span class="logo2" style="width:48px;height:48px;font-size:22px;border-radius:14px;margin:0 auto 16px;display:flex">${IC.logo}</span><h2>Set up ONESYS e-invoicing</h2><p class="lead">You've been invited to activate electronic invoicing for <b>${flow.customer}</b>. About 10 minutes — we'll guide each step.</p><div style="display:flex;flex-direction:column;gap:9px;max-width:340px;margin:0 auto 22px;text-align:left">${['Confirm your company details','Choose a plan and pay','Authorize in Taxisnet & myDATA','Go live automatically'].map((t,i)=>`<div style="display:flex;gap:10px;align-items:center;font-size:13.5px"><span style="width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand600);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">${i+1}</span>${t}</div>`).join('')}</div><button class="btn btn-primary btn-lg" id="start">Get started ${IC.arrow}</button></div>`,false);$('#start').onclick=wnext;}
 function wOxRegister(){cshell(`<div style="text-align:center;padding:4px 0"><span class="logo2" style="width:48px;height:48px;font-size:22px;border-radius:14px;margin:0 auto 14px;display:flex">${IC.logo}</span><h2>Create your account</h2><p class="lead">You've been invited to set up ONESYS e-invoicing for <b>${flow.customer}</b>. Create your OX HOME account to continue.</p></div>
   <div class="field"><label>Full name</label><input id="oxn" placeholder="Your name"></div>
