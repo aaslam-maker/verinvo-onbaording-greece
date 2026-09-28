@@ -306,6 +306,35 @@ ul.steps li .ic svg{width:12px;height:12px}
 .dwctrl-row+.dwctrl-row{margin-top:10px}
 .dwctrl-row .btn{flex:1;justify-content:center;padding:11px 14px;font-size:13.5px}
 .dwctrl .note-sm{text-align:center;margin-top:10px}
+/* Register sub-flow */
+.substep{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.substep .ss{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--mut);background:var(--bg);border:1px solid var(--line2);padding:7px 13px;border-radius:var(--pill)}
+.substep .ss .n{width:18px;height:18px;flex:none;border-radius:50%;background:var(--line2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px}
+.substep .ss .n svg{width:11px;height:11px}
+.substep .ss.done{color:var(--teal600);background:var(--teal-bg);border-color:#bfe9e5}
+.substep .ss.done .n{background:var(--teal)}
+.substep .ss.on{color:var(--navy);background:var(--panel);border-color:var(--navy);box-shadow:var(--sh)}
+.substep .ss.on .n{background:var(--navy)}
+.email{border:1px solid var(--line2);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh)}
+.email-h{background:#fbfbfd;border-bottom:1px solid var(--line);padding:14px 18px}
+.email-h .subj{font-weight:800;font-size:15px}
+.email-h .meta{font-size:12px;color:var(--mut);margin-top:3px}
+.email-b{padding:18px}
+.email-b p{font-size:13.5px;line-height:1.6;color:var(--sec);margin:0 0 12px}
+.email-cta{display:inline-block;background:var(--teal);color:#fff;font-weight:700;font-size:13.5px;padding:11px 22px;border-radius:var(--pill);margin:4px 0}
+.email-list{list-style:none;margin:0 0 14px;padding:0}
+.email-list li{display:flex;gap:9px;font-size:13px;color:var(--sec);padding:6px 0;border-bottom:1px solid var(--line)}
+.email-list li:last-child{border-bottom:0}
+.email-list li b{color:var(--ink)}
+.email-list .num{width:20px;height:20px;flex:none;border-radius:50%;background:var(--teal-bg);color:var(--teal600);font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center}
+.otp{display:flex;gap:10px;justify-content:center;margin:20px 0}
+.otp span{width:44px;height:52px;border:1.5px solid var(--line2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--navy)}
+.otp span.f{border-color:var(--teal);background:var(--teal-bg)}
+.clientframe{border:1px dashed var(--line2);border-radius:var(--r2);padding:20px;background:#fbfbfd;text-align:center}
+.clientframe .tag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--purple);background:var(--purple-bg);padding:3px 11px;border-radius:20px;margin-bottom:6px}
+.backupbar{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--amber-bg);border:1px solid #f0d59a;border-radius:var(--r2);padding:12px 16px;margin:0 0 16px;flex-wrap:wrap}
+.backupbar .t{font-size:13px;color:#8a5d0a;font-weight:600;flex:1;min-width:180px}
+.backupbar .btn{padding:9px 16px;font-size:13px}
 @media(max-width:640px){.kpis{grid-template-columns:1fr 1fr}}
 @media(max-width:860px){
   .cols{grid-template-columns:1fr}.col.auto{border-left:0;border-top:1px solid var(--line)}
@@ -511,12 +540,13 @@ function setMode(m){
   if(m==='proto')renderProto();
   window.scrollTo(0,0);
 }
-function openProto(step){ pStep=step; _max=Math.max(_max,step); protoView='wizard'; setMode('proto'); }
+function openProto(step){ pStep=step; _max=Math.max(_max,step); regSub=0; regFillBy='client'; protoView='wizard'; setMode('proto'); }
 
 /* ---------- prototype ---------- */
 let pStep=0;
 const WF=['Register','OneSign journey','Link & authorise','Payment','Provision & live'];
 let payMode='link', fillMode='self', pkgSel=1, osStep=0;
+let regSub=0, regFillBy='client';
 const LAST=WF.length-1;
 let protoView='register', drawerClient=null;
 
@@ -639,7 +669,7 @@ function wizardView(){
   </div>
   <div class="foot">Real hand-offs to ONESYS happen over API where you see the <span class="api" style="padding:1px 5px">API</span> tag.</div>`;
 }
-function openWizard(){ pStep=0;_max=0;window.__looked=false;window.__paid=false;fillMode='self';payMode='link';pkgSel=1;osStep=0;protoView='wizard';renderProto();window.scrollTo(0,0); }
+function openWizard(){ pStep=0;_max=0;window.__looked=false;window.__paid=false;fillMode='self';payMode='link';pkgSel=1;osStep=0;regSub=0;regFillBy='client';protoView='wizard';renderProto();window.scrollTo(0,0); }
 function closeWizard(){ protoView='register';renderProto();window.scrollTo(0,0); }
 function openRegister(){ protoView='register';drawerClient=null;setMode('proto'); }
 
@@ -648,12 +678,13 @@ function gotoStep(i){pStep=i;renderProto();}
 function next(){ _max=Math.max(_max,pStep+1); pStep=Math.min(pStep+1,LAST); renderProto(); }
 function back(){ pStep=Math.max(pStep-1,0); renderProto(); }
 
-function footer(nextLabel,canNext=true){
+function footer(nextLabel,canNext=true,act='next()',backAct='back()',backDisabled=(pStep===0)){
   return `<div class="pfoot">
-    <button class="btn btn-g" onclick="back()" ${pStep===0?'disabled':''}>Back</button>
-    <button class="btn btn-p" id="nextBtn" onclick="next()" ${canNext?'':'disabled'}>${nextLabel} ${IC.chev}</button>
+    <button class="btn btn-g" onclick="${backAct}" ${backDisabled?'disabled':''}>Back</button>
+    <button class="btn btn-p" id="nextBtn" onclick="${act}" ${canNext?'':'disabled'}>${nextLabel} ${IC.chev}</button>
   </div>`;
 }
+function regBack(){ regSub=Math.max(regSub-1,0); renderProto(); }
 
 /* the 15 required company details (from the ONESYS onboarding form) */
 const DETAILS={
@@ -680,40 +711,93 @@ function detailsHTML(){
   <div class="detnote">** Alternative-internet details are now mandatory by ΦΕΚ — they must appear on the ONESYS invoicing contract so service keeps running if the main connection drops. Captured here once (from the customer's phone bill) instead of chased over email. **</div>`;
 }
 
-/* Step 1 – Register */
+/* Step 1 – Register on Secure (Start → Email → OTP → Form & package → API) */
+const REGSUBS=['Start','Email sent','Verify (OTP)','Form & package','Sent to ONESYS'];
+function subStepper(){
+  return `<div class="substep">${REGSUBS.map((l,i)=>`
+    <div class="ss ${i<regSub?'done':''} ${i===regSub?'on':''}"><span class="n">${i<regSub?IC.check:(i+1)}</span>${l}</div>`).join('')}</div>`;
+}
+function pkgBlockHTML(){
+  return `<div class="field"><label>Annual documents issued</label>
+      <select id="vol" onchange="suggestPkg()">
+        ${PACKAGES.map((p,i)=>`<option value="${i}" ${i===pkgSel?'selected':''}>Up to ${p.docs} documents</option>`).join('')}
+      </select></div>
+    <label style="font-size:12.5px;font-weight:700;color:var(--sec);display:block;margin-bottom:10px">Package <span style="color:var(--mut);font-weight:500">· suggested from volume · annual + VAT</span></label>
+    <div class="pkgs">${PACKAGES.map((p,i)=>`
+      <div class="pkg ${i===pkgSel?'sel':''}" onclick="pkgSel=${i};renderProto()">
+        ${i===pkgSel?'<span class="sug">Suggested</span>':''}
+        <div class="pn">${p.code.split('-')[1]}</div><div class="pv">${p.docs} docs</div><div class="pp">€${p.price}</div>
+      </div>`).join('')}</div>`;
+}
 function screenRegister(){
-  return `<h3>Register the business</h3>
-  <div class="lead">Look up the VAT to auto-fill registry details, choose who completes the form, and the package is suggested from document volume.</div>
-  <div class="pbody">
-    <div class="seg2">
-      <button class="${fillMode==='self'?'on':''}" onclick="fillMode='self';renderProto()">Customer self-completes</button>
-      <button class="${fillMode==='admin'?'on':''}" onclick="fillMode='admin';renderProto()">Fill on customer's behalf</button>
-    </div>
-    <div class="field"><label>Business VAT number</label>
-      <div class="row2"><input id="vat" value="800010000" /><button class="btn btn-n" onclick="lookup()">Look up</button></div>
-    </div>
-    <div id="regResult" class="${window.__looked?'':'hide'}">
-      <div class="regcard" style="display:flex;align-items:center;gap:10px;color:var(--teal600);font-weight:700;font-size:13px"><span style="display:inline-flex;width:20px;height:20px;border-radius:6px;background:var(--teal-bg);align-items:center;justify-content:center">${IC.check}</span> Registry + MyData details fetched — no Excel to email</div>
-      ${detailsHTML()}
-      <div class="field"><label>Annual documents issued</label>
-        <select id="vol" onchange="suggestPkg()">
-          ${PACKAGES.map((p,i)=>`<option value="${i}" ${i===pkgSel?'selected':''}>Up to ${p.docs} documents</option>`).join('')}
-        </select>
+  let body='', foot='';
+  if(regSub===0){ /* Start — compose & send the onboarding email */
+    body = `<div class="field"><label>Business VAT number</label>
+        <div class="row2"><input id="vat" value="800010000" /><button class="btn btn-n" onclick="lookup()">Look up</button></div></div>
+      <div id="regResult" class="${window.__looked?'':'hide'}">
+        <div class="regcard" style="display:flex;align-items:center;gap:10px;color:var(--teal600);font-weight:700;font-size:13px"><span style="display:inline-flex;width:20px;height:20px;border-radius:6px;background:var(--teal-bg);align-items:center;justify-content:center">${IC.check}</span> Registry details fetched · Blue Wave Travel O.E. · info@bluewave.gr</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--sec);margin:4px 0 10px">Onboarding email — auto-composed, ready to send</div>
+        <div class="email">
+          <div class="email-h"><div class="subj">Activate e-Invoicing for Blue Wave Travel O.E.</div><div class="meta">From: onboarding@spotlight.gr &nbsp;·&nbsp; To: info@bluewave.gr</div></div>
+          <div class="email-b">
+            <p>Dear Blue Wave Travel O.E.,</p>
+            <p>To activate your ONESYS e-invoicing provider, please complete your secure setup — it takes about 5–10 minutes:</p>
+            <ul class="email-list">
+              <li><span class="num">1</span><span><b>Verify your email</b> with the one-time code we send you.</span></li>
+              <li><span class="num">2</span><span><b>Complete the company form</b> (pre-filled from the public registry).</span></li>
+              <li><span class="num">3</span><span><b>Upload a recent phone bill</b> for the mandatory alternative-internet details.</span></li>
+              <li><span class="num">4</span><span><b>Select your package</b> by annual document volume.</span></li>
+            </ul>
+            <a class="email-cta">Start my secure setup →</a>
+            <p style="margin-top:12px">Attached: ONESYS package &amp; pricing sheet · cancellation policy. Questions? Reply to this email or call +30 210 300 3330.</p>
+          </div>
+        </div>`;
+    foot = footer('Send onboarding email →', !!window.__looked, 'regNext()', 'back()', true);
+  }
+  else if(regSub===1){ /* OTP — client verifies */
+    body = `<div class="backupbar"><span class="t">Waiting on the client to verify their email.</span><button class="btn btn-g" onclick="adminBackup()">Complete on client's behalf</button></div>
+      <div class="clientframe">
+        <div class="tag">What the client sees</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:4px">Enter your verification code</div>
+        <div style="font-size:12.5px;color:var(--mut)">Sent to info@bluewave.gr</div>
+        <div class="otp"><span class="f">4</span><span class="f">1</span><span class="f">9</span><span class="f">2</span><span>_</span><span>_</span></div>
+        <div style="font-size:12px;color:var(--mut)">Code expires in 09:58</div>
       </div>
-      <label style="font-size:12.5px;font-weight:700;color:var(--sec);display:block;margin-bottom:10px">Package <span style="color:var(--mut);font-weight:500">· suggested from volume · annual + VAT</span></label>
-      <div class="pkgs" id="pkgs">${PACKAGES.map((p,i)=>`
-        <div class="pkg ${i===pkgSel?'sel':''}" onclick="pkgSel=${i};renderProto()">
-          ${i===pkgSel?'<span class="sug">Suggested</span>':''}
-          <div class="pn">${p.code.split('-')[1]}</div><div class="pv">${p.docs} docs</div><div class="pp">€${p.price}</div>
-        </div>`).join('')}</div>
-      <div class="detnote" style="color:var(--mut);background:var(--bg)">A ONESYS <b>cancellation policy</b> and pricing sheet are attached to the customer's confirmation automatically — no separate email.</div>
-      <div class="callout" style="margin-top:16px">${IC.info}<div>${fillMode==='self'?'The customer receives an <b>email + OTP</b> to verify and confirm this form. Their phone bill is uploaded in that same step.':'You’re completing this on the customer’s behalf. The <b>phone bill upload</b> and an OTP confirmation are still required before data is pushed to ONESYS.'} Everything is sent to ONESYS via <span class="api">API</span> — no Excel.</div></div>
-    </div>
-  </div>
-  ${footer(fillMode==='self'?'Send verification & form':'Save & continue', !!window.__looked)}`;
+      <div class="callout" style="margin-top:16px">${IC.info}<div>The onboarding email has been delivered. In the admin dashboard this client shows as <b>Awaiting verification</b>. If they stall, use <b>Complete on client's behalf</b> — the same form, filled by the admin.</div></div>`;
+    foot = footer('Client verified ✓ (simulate) →', true, 'regNext()', 'regBack()', false);
+  }
+  else if(regSub===2){ /* Form & package */
+    const admin = regFillBy==='admin';
+    body = `<div class="seg2">
+        <button class="${!admin?'on':''}" onclick="regFillBy='client';renderProto()">Client is completing</button>
+        <button class="${admin?'on':''}" onclick="regFillBy='admin';renderProto()">Fill on client's behalf</button>
+      </div>
+      ${admin
+        ? `<div class="backupbar" style="background:var(--purple-bg);border-color:#cdc7f2"><span class="t" style="color:var(--purple)">Backup mode — the admin is completing the form on the client's behalf from the dashboard.</span></div>`
+        : `<div class="backupbar"><span class="t">Client left the form <b>incomplete</b> (phone bill + accountant missing).</span><button class="btn btn-g" onclick="regFillBy='admin';renderProto()">Complete on client's behalf</button></div>`}
+      ${detailsHTML()}
+      ${pkgBlockHTML()}
+      <div class="detnote" style="color:var(--mut);background:var(--bg)">A ONESYS <b>cancellation policy</b> and pricing sheet are attached to the confirmation automatically — no separate email.</div>`;
+    foot = footer('Confirm details & package →', true, 'regNext()', 'regBack()', false);
+  }
+  else { /* Sent to ONESYS */
+    body = `<div class="tl">
+        <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Email verified &amp; form completed</div><div class="s">${regFillBy==='admin'?'Completed by the admin (backup).':'Completed by the client.'}</div></div></div>
+        <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Package selected</div><div class="s">${PACKAGES[pkgSel].code} · ${PACKAGES[pkgSel].docs} docs · ${eur(PACKAGES[pkgSel].price)} + VAT</div></div></div>
+        <div class="ev done"><div class="mk">${IC.check}</div><div class="tx"><div class="t">Registration data sent to ONESYS</div><div class="s">All fields pushed in one call — no Excel, no manual extraction.</div><span class="api">API · onesys/register</span></div></div>
+      </div>
+      <div class="done-hero"><div class="ring">${IC.check}</div><h3>Registered on Secure</h3><p>Blue Wave Travel O.E. is registered and handed to ONESYS. The customer now continues their OneSign journey.</p></div>`;
+    foot = footer('Continue to OneSign journey →', true, 'next()', 'regBack()', false);
+  }
+  return `<h3>Register on Spotlight Secure</h3>
+  <div class="lead">Start onboarding, send the client a structured email, they verify + complete the form and pick a package — or the admin fills it on their behalf. When done, the data is sent to ONESYS via API.</div>
+  <div class="pbody">${subStepper()}${body}</div>
+  ${foot}`;
 }
 function lookup(){ window.__looked=true; renderProto(); }
 function suggestPkg(){ pkgSel=parseInt(document.getElementById('vol').value); renderProto(); }
+function adminBackup(){ regFillBy='admin'; regSub=2; renderProto(); }
+function regNext(){ regSub++; renderProto(); }
 
 /* Step 2 – Embedded OneSign journey */
 const OSLOGO=`<svg width="22" height="22" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="url(#osg)" stroke-width="3.4"/><path d="M26 14.5c-2.4-2.2-9-1.8-9.4 2.2-.4 4 8.4 1.8 8 6-.4 3.8-7.4 3.4-9.6.8" stroke="#2f8fd6" stroke-width="3.2" stroke-linecap="round" fill="none"/><defs><linearGradient id="osg" x1="4" y1="4" x2="36" y2="36"><stop stop-color="#e23fa0"/><stop offset=".5" stop-color="#8a4fd6"/><stop offset="1" stop-color="#2f8fd6"/></linearGradient></defs></svg><span>ONE<span class="osblue">SIGN</span></span>`;
